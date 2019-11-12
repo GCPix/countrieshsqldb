@@ -1,2 +1,3 @@
 com\countries\countriesAPI\CountriesAPIRestApplication.class
+com\countries\Helpers\HttpClientHandler.class
 com\countries\countriesAPI\HelloController.class
