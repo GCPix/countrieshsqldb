@@ -1,6 +1,6 @@
 com\countries\countriesAPI\Currency.class
-com\countries\Helpers\HttpClientHandler.class
 com\countries\countriesAPI\HelloController.class
 com\countries\countriesAPI\CountriesAPIRestApplication.class
 com\countries\countriesAPI\Language.class
 com\countries\countriesAPI\Country.class
+com\countries\Helpers\HCHandler.class
