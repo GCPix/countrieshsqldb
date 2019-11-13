@@ -21,7 +21,7 @@ public class HCHandler {
         }
          return jsonString;
     }
-
+    // Think this should be in a class of it's own and would call the HCHandler but leaving here for now.
     public List<Country> jsonToCountry(String jsonString){
         Gson gson  = new Gson();
         Country[] countriesArray = gson.fromJson(jsonString, Country[].class);

@@ -2,6 +2,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - RunGui",
+            "request": "launch",
+            "mainClass": "com.countries.Helpers.RunGui",
+            "projectName": "countriesAPI"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Runner",
+            "request": "launch",
+            "mainClass": "com.countries.countriesAPI.Runner",
+            "projectName": "countriesAPI"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DbConnection",
+            "request": "launch",
+            "mainClass": "com.db.DbConnection",
+            "projectName": "countriesAPI"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - HttpClientHandler",
             "request": "launch",
             "mainClass": "com.countries.Helpers.HttpClientHandler",
