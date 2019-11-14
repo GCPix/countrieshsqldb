@@ -1,0 +1,1 @@
+INSERT INTO border(name)VALUES(?);
