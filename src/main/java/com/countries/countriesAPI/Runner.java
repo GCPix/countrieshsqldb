@@ -1,15 +1,12 @@
 package com.countries.countriesAPI;
 
-import static com.db.DbConnection.connection;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.countries.Helpers.HCHandler;
+import com.db.BorderDbDataTransfer;
 import com.db.CountryDbDataTransfer;
 import com.db.DbConnection;
 
@@ -23,10 +20,10 @@ public class Runner {
         String jsonString = hch.getAPIData("https://restcountries.eu/rest/v2/all");
         List<Country> countryList = new ArrayList<Country>();
         countryList = hch.jsonToCountry(jsonString);
-        System.out.println(countryList.get(0).getName());
-        Connection conn = dbc.getConnection();
-        CountryDbDataTransfer cddt = new CountryDbDataTransfer(conn);
+        CountryDbDataTransfer cddt = new CountryDbDataTransfer();
         cddt.populateCountryTable(countryList);
-        dbc.closeConnection(conn);
+        BorderDbDataTransfer bddt = new BorderDbDataTransfer();
+        bddt.populateBorderTable(countryList);
+        
     }
 }

@@ -37,7 +37,7 @@ public class DbConnection {
             connection = DriverManager.getConnection(connectionString, "SA", "");
             
         } catch (Exception e) {
-            // TODO: handle exception
+            // TODO: handle exception - shouldn't use exception but what should it be?
             e.printStackTrace();
         } 
         return connection;
