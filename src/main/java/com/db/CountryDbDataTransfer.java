@@ -1,10 +1,15 @@
 package com.db;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Scanner;
 
 import com.countries.countriesAPI.Country;
 
@@ -20,12 +25,19 @@ public class CountryDbDataTransfer {
             DbConnection dbc = new DbConnection();
         try{
             connection = dbc.getConnection();
-            //inputstream not working in preparedstatement need to find a way to handle that if poss?
-            // InputStream is = getClass().getResourceAsStream("populateCountryTable.sql");
-                
-            // SqlFile populateCountries = new SqlFile(new InputStreamReader(is), "init", System.out, "UTF-8", false, new File("."));
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO country (name, capital, population) VALUES (?,?,?);");
-            // populateCountries.setConnection(connection);
+       
+            InputStream is = getClass().getResourceAsStream("populateCountryTable.sql");
+            
+            Scanner sc = new Scanner(is);
+            
+            StringBuffer sb = new StringBuffer();
+            
+            while(sc.hasNext()){
+                sb.append(sc.nextLine());
+            }
+            
+            PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
+            
             
 
             for(Country c: countryList){
@@ -33,12 +45,16 @@ public class CountryDbDataTransfer {
                 ps.setString(2, c.getCapital());
                 ps.setLong(3, c.getPopulation());
                 ps.execute();
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                int returnedId = rs.getInt("id");
+                c.setId(returnedId);
             }
             
-            // populateCountries.execute();
+            
     
             } catch (Exception exception) {
-    
+                exception.printStackTrace();
             }finally {
                 dbc.closeConnection(connection);
             }

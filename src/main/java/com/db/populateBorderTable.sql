@@ -1,1 +1,1 @@
-INSERT INTO border(name)VALUES(?);
+INSERT INTO border(country_id, country_border_id)VALUES(?,?);

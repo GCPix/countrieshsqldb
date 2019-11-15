@@ -3,12 +3,14 @@ package com.countries.countriesAPI;
 import java.util.List;
 
 public class Country {
+    private int id;
     private String  name;
     private String capital;
     private List<Language> languages;
     private List<String> borders;
     private List<Currency>  currencies;
     private long population;
+    private String alpha3Code;
 
 
     public Country(){
@@ -92,5 +94,28 @@ public class Country {
     public void setCurrencies(List<Currency> currencies) {
         this.currencies = currencies;
     }
-    
+    /**
+     * @param alpha3Code the alpha3Code to set
+     */
+    public void setAlpha3Code(String alpha3Code) {
+        this.alpha3Code = alpha3Code;
+    }
+    /**
+     * @return the alpha3Code
+     */
+    public String getAlpha3Code() {
+        return alpha3Code;
+    }
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 }
