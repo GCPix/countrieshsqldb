@@ -2,6 +2,8 @@ create table if not exists
     country (id INT IDENTITY PRIMARY KEY, name varchar(150),capital varchar(150),population BIGINT);
 create table if not exists 
     currency (id INT IDENTITY PRIMARY KEY, code varchar(45), name varchar(150), symbol varchar(5));
+create table if not exists
+    country_currency(id INT IDENTITY PRIMARY KEY, country_id INT FOREIGN KEY REFERENCES country(id), currency_id INT FOREIGN KEY REFERENCES currency(id));
 create table if not exists 
     border (id INT IDENTITY PRIMARY KEY, country_id INT FOREIGN KEY REFERENCES country(id), country_border_id INT);
 create table if not exists 

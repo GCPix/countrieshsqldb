@@ -28,12 +28,5 @@ public class HCHandler {
         List<Country> countries = new ArrayList<Country>(Arrays.asList(countriesArray));
         return countries;
     }    
-    
-
-    public static void main(String[] args) {
-        HCHandler hpc = new HCHandler();
-        hpc.jsonToCountry(hpc.getAPIData("https://restcountries.eu/rest/v2/all"));
-       
-    }
    
 }

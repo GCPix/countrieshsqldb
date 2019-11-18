@@ -1,13 +1,12 @@
 package com.db;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,15 +20,37 @@ public class CountryDbDataTransfer {
 
     }
 
-    public void populateCountryTable(List<Country> countryList) throws SQLException {
-            DbConnection dbc = new DbConnection();
+    public List<Country> getCountryList() throws SQLException {
+        DbConnection dbc = new DbConnection();
+        ArrayList<Country> countryList = new ArrayList<>();
+        
         try{
             connection = dbc.getConnection();
-       
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM country");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Country country = new Country();
+                country.setId(rs.getInt("id"));
+                country.setName(rs.getString("name"));
+                country.setCapital(rs.getString("capital"));
+                country.setPopulation((long)rs.getInt("population"));
+                countryList.add(country);
+            }
+        
+        }finally {
+            dbc.closeConnection(connection);
+        }
+        return countryList;
+    }
+
+    public void populateCountryTable(List<Country> countryList) throws SQLException {
+            DbConnection dbc = new DbConnection();
             InputStream is = getClass().getResourceAsStream("populateCountryTable.sql");
             
             Scanner sc = new Scanner(is);
-            
+        try{
+            connection = dbc.getConnection();
+
             StringBuffer sb = new StringBuffer();
             
             while(sc.hasNext()){
@@ -49,6 +70,7 @@ public class CountryDbDataTransfer {
                 rs.next();
                 int returnedId = rs.getInt("id");
                 c.setId(returnedId);
+                
             }
             
             
@@ -57,6 +79,7 @@ public class CountryDbDataTransfer {
                 exception.printStackTrace();
             }finally {
                 dbc.closeConnection(connection);
+                sc.close();
             }
 
     }

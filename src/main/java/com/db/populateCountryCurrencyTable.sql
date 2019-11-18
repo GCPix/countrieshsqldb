@@ -1,0 +1,1 @@
+INSERT INTO country_currency (country_id, currency_id) VALUES(?,?);

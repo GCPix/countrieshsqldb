@@ -26,7 +26,6 @@ public class DbConnection {
         try {
             Class.forName(dbDriver);
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -37,7 +36,6 @@ public class DbConnection {
             connection = DriverManager.getConnection(connectionString, "SA", "");
             
         } catch (Exception e) {
-            // TODO: handle exception - shouldn't use exception but what should it be?
             e.printStackTrace();
         } 
         return connection;
@@ -54,7 +52,7 @@ public class DbConnection {
             createTables.execute();
 
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+  
             e.printStackTrace();
         }
     }
@@ -65,11 +63,5 @@ public class DbConnection {
         this.createTables(connection);
         this.closeConnection(connection);
     }
-    public static void main(String[] args) throws SQLException, SqlToolError {
-        DbConnection dc = new DbConnection();
-        dc.createDatabase();
-    }
-
-
 
 }

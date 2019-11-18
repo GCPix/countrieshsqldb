@@ -1,6 +1,5 @@
 package com.countries.countriesAPI;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +7,7 @@ import java.util.List;
 import com.countries.Helpers.HCHandler;
 import com.db.BorderDbDataTransfer;
 import com.db.CountryDbDataTransfer;
+import com.db.CurrencyDbdataTransfer;
 import com.db.DbConnection;
 
 import org.hsqldb.cmdline.SqlToolError;
@@ -24,6 +24,8 @@ public class Runner {
         cddt.populateCountryTable(countryList);
         BorderDbDataTransfer bddt = new BorderDbDataTransfer();
         bddt.populateBorderTable(countryList);
-        
+        CurrencyDbdataTransfer curddt = new CurrencyDbdataTransfer();
+        curddt.populateCurrencyTable(countryList);
+        curddt.populateCountryCurrencyTable(countryList, curddt.getCurrencyList());
     }
 }

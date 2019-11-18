@@ -19,22 +19,22 @@ public class BorderDbDataTransfer {
 
     public void populateBorderTable(List<Country> countryList) throws SQLException {
             DbConnection dbc = new DbConnection();
+            InputStream is = getClass().getResourceAsStream("populateBorderTable.sql");
+            Scanner sc = new Scanner(is);
+
         try{
             connection = dbc.getConnection();
-            InputStream is = getClass().getResourceAsStream("populateBorderTable.sql");
-            
-            Scanner sc = new Scanner(is);
             
             StringBuffer sb = new StringBuffer();
             
             while(sc.hasNext()){
                 sb.append(sc.nextLine());
             }
-            
+
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
             
             for(Country c: countryList){
-                for(String b: c.getBorders()){
+                for(String b: c.getborders()){
                     int cid = 0;
                     for(Country bc: countryList){
                         if (bc.getAlpha3Code().equalsIgnoreCase(b)){
@@ -43,15 +43,16 @@ public class BorderDbDataTransfer {
                     }
                         ps.setInt(1, c.getId());
                         ps.setInt(2, cid);
-                        // ps.setString(3, b);
                         ps.execute();   
                 }      
             }
     
             } catch (Exception exception) {
+                exception.printStackTrace();
     
             }finally {
                 dbc.closeConnection(connection);
+                sc.close();
             }
 
     }

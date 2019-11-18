@@ -7,7 +7,11 @@ public class Country {
     private String  name;
     private String capital;
     private List<Language> languages;
+    //borders is the 3 letter string from the borders array, if I change the name GSON doesn't work
+    //borders is only used to populate the database
     private List<String> borders;
+    //borderCountriesList is for all CRUD and API work
+    private List<Country> borderCountriesList;
     private List<Currency>  currencies;
     private long population;
     private String alpha3Code;
@@ -34,13 +38,13 @@ public class Country {
     /**
      * @return the borders
      */
-    public List<String> getBorders() {
+    public List<String> getborders() {
         return borders;
     }
     /**
      * @param borders the borders to set
      */
-    public void setBorders(List<String> borders) {
+    public void setborders(List<String> borders) {
         this.borders = borders;
     }
 
@@ -117,5 +121,19 @@ public class Country {
      */
     public void setId(int id) {
         this.id = id;
+    }
+
+    /**
+     * @return the borderCountriesList
+     */
+    public List<Country> getBorderCountriesList() {
+        return borderCountriesList;
+    }
+
+    /**
+     * @param borderCountriesList the borderCountriesList to set
+     */
+    public void setBorderCountriesList(List<Country> borderCountriesList) {
+        this.borderCountriesList = borderCountriesList;
     }
 }
