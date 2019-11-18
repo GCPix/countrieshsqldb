@@ -29,7 +29,7 @@ public class CurrencyDbdataTransfer {
     DbConnection dbc = new DbConnection();
     
     public void populateCurrencyTable(List<Country> countryList) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("populateCurrencyTable.sql");
+        InputStream is = getClass().getResourceAsStream("sqlScripts/populateCurrencyTable.sql");
         Scanner sc = new Scanner(is);
         try {
             connection = dbc.getConnection();
@@ -88,7 +88,7 @@ public class CurrencyDbdataTransfer {
 
     public void populateCountryCurrencyTable(List<Country> countryList, List<Currency> currencyList)
             throws SQLException {
-        InputStream is = getClass().getResourceAsStream("populateCountryCurrencyTable.sql");
+        InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryCurrencyTable.sql");
         Scanner sc = new Scanner(is);
         try {
             connection = dbc.getConnection();

@@ -46,7 +46,7 @@ public class DbConnection {
     }
     private void createTables(Connection connection) throws SQLException, SqlToolError {
         
-        try(InputStream is = getClass().getResourceAsStream("createTables.sql")) {
+        try(InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql")) {
             SqlFile createTables = new SqlFile(new InputStreamReader(is), "init", System.out, "UTF-8", false, new File("."));
             createTables.setConnection(connection);
             createTables.execute();

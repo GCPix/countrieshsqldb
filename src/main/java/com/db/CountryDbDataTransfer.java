@@ -45,7 +45,7 @@ public class CountryDbDataTransfer {
 
     public void populateCountryTable(List<Country> countryList) throws SQLException {
             DbConnection dbc = new DbConnection();
-            InputStream is = getClass().getResourceAsStream("populateCountryTable.sql");
+            InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryTable.sql");
             
             Scanner sc = new Scanner(is);
         try{

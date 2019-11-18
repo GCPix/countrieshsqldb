@@ -19,7 +19,7 @@ public class BorderDbDataTransfer {
 
     public void populateBorderTable(List<Country> countryList) throws SQLException {
             DbConnection dbc = new DbConnection();
-            InputStream is = getClass().getResourceAsStream("populateBorderTable.sql");
+            InputStream is = getClass().getResourceAsStream("sqlScripts/populateBorderTable.sql");
             Scanner sc = new Scanner(is);
 
         try{

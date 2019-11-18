@@ -1,6 +1,7 @@
 package com.countries.countriesAPI;
 
 public class Language {
+    private int id;
     private String iso639_1;
     private String iso639_2;
     private String name;
@@ -9,6 +10,20 @@ public class Language {
 
     public Language(){
 
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
