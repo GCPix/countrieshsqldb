@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
@@ -46,7 +48,8 @@ public class DbConnection {
     }
     private void createTables(Connection connection) throws SQLException, SqlToolError {
         
-        try(InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql")) {
+        try{
+            InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql");
             SqlFile createTables = new SqlFile(new InputStreamReader(is), "init", System.out, "UTF-8", false, new File("."));
             createTables.setConnection(connection);
             createTables.execute();

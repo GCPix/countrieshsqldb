@@ -9,9 +9,9 @@ import com.countries.countriesAPI.Country;
 
 import org.hsqldb.cmdline.SqlToolError;
 
-public class DbDataTransfer {
+public class DbInitialPopulate {
 
-    public DbDataTransfer() {
+    public DbInitialPopulate() {
 
     }
 
