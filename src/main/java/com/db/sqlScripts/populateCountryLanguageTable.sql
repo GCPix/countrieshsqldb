@@ -1,0 +1,1 @@
+INSERT INTO country_language(country_id, language_id) VALUES(?,?);

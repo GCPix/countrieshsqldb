@@ -11,19 +11,19 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.countries.countriesAPI.Country;
-import com.countries.countriesAPI.Currency;
+import com.countries.countriesAPI.Language;
 
-public class CurrencyDbdataTransfer {
+public class LanguageDBDataTransfer {
     private Connection connection;
 
-    public CurrencyDbdataTransfer(){
+    public LanguageDBDataTransfer(){
 
     }
  
     DbConnection dbc = new DbConnection();
     
-    public void populateCurrencyTable(List<Country> countryList) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("sqlScripts/populateCurrencyTable.sql");
+    public void populateLanguageTable(List<Country> countryList) throws SQLException {
+        InputStream is = getClass().getResourceAsStream("sqlScripts/populateLanguageTable.sql");
         Scanner sc = new Scanner(is);
         try {
             connection = dbc.getConnection();
@@ -36,16 +36,17 @@ public class CurrencyDbdataTransfer {
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
 
             for(Country c: countryList){
-                for (Currency cu: c.getCurrencies()){
-                    ps.setString(1, cu.getCode());
-                    ps.setString(2, cu.getName());
-                    ps.setString(3, cu.getSymbol());
-                    ps.setString(4, cu.getName());
+                for (Language l: c.getLanguages()){
+                    ps.setString(1, l.getIso639_1());
+                    ps.setString(2, l.getIso639_2());
+                    ps.setString(3, l.getName());
+                    ps.setString(4, l.getNativeName());
+                    ps.setString(5, l.getName());
                     ps.execute();
                     if(ps.getUpdateCount() > 0){
                         ResultSet rs = ps.getGeneratedKeys();
                         rs.next();
-                        cu.setId(rs.getInt("id"));
+                        l.setId(rs.getInt("id"));
                     }
                    
                     }
@@ -59,30 +60,31 @@ public class CurrencyDbdataTransfer {
         }
     }
 
-    public ArrayList<Currency> getCurrencyList() throws SQLException {
-        ArrayList<Currency> currencyList = new ArrayList<>();
+    public ArrayList<Language> getLanguageList() throws SQLException {
+        ArrayList<Language> languageList = new ArrayList<>();
         try{
             connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM currency");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM language");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Currency cur = new Currency();
-                cur.setId(rs.getInt("id"));
-                cur.setCode(rs.getString("code"));
-                cur.setName(rs.getString("name"));
-                cur.setSymbol(rs.getString("symbol"));
-                currencyList.add(cur);
+                Language lan = new Language();
+                lan.setId(rs.getInt("id"));
+                lan.setIso639_1(rs.getString("iso639_1"));
+                lan.setIso639_2(rs.getString("iso639_2"));
+                lan.setName(rs.getString("name"));
+                lan.setNativeName(rs.getString("nativeName"));
+                languageList.add(lan);
             }
         
         }finally {
             dbc.closeConnection(connection);
         }
-        return currencyList;
+        return languageList;
     }
-
-    public void populateCountryCurrencyTable(List<Country> countryList, List<Currency> currencyList)
+// need to tidy this up to get rid of currency and replace with language
+    public void populateCountryLanguageTable(List<Country> countryList, List<Language> LanguageList)
             throws SQLException {
-        InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryCurrencyTable.sql");
+        InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryLanguageTable.sql");
         Scanner sc = new Scanner(is);
         try {
             connection = dbc.getConnection();
@@ -95,11 +97,11 @@ public class CurrencyDbdataTransfer {
             PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
             
             for(Country c: countryList){
-                for(Currency cocu: c.getCurrencies()){
-                    for(Currency cu: currencyList){
-                        if(cocu.getName()!= null && cu.getName() != null && cu.getName().equalsIgnoreCase(cocu.getName())){
+                for(Language lan: c.getLanguages()){
+                    for(Language l: LanguageList){
+                        if(lan.getName()!= null && l.getName() != null && l.getName().equalsIgnoreCase(lan.getName())){
                             ps.setInt(1, c.getId());
-                            ps.setInt(2, cu.getId());
+                            ps.setInt(2, l.getId());
                             ps.execute();
                         }
                     }
