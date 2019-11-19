@@ -6,16 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 import org.hsqldb.cmdline.SqlFile;
 import org.hsqldb.cmdline.SqlToolError;
 
 public class DbConnection {
 
-    public static Connection connection;
+    public Connection connection;
     static final String connectionString = "jdbc:hsqldb:file:db-data/countries";
     static String dbDriver = "org.hsqldb.jdbc.JDBCDriver";
 
@@ -23,8 +21,8 @@ public class DbConnection {
     public DbConnection(){
 
     }
-
-    private void loadDriver() {
+    
+    public void loadDriver() {
         try {
             Class.forName(dbDriver);
         } catch (ClassNotFoundException e) {

@@ -1,6 +1,7 @@
 package com.countries.countriesAPI;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.db.DbInitialPopulate;
 
@@ -10,5 +11,11 @@ public class Runner {
     public static void main(String[] args) throws SqlToolError, SQLException {
         DbInitialPopulate dip = new DbInitialPopulate();
         dip.populateDatabase();
+        // ArrayList<Language> la;
+        // Language l = new Language();
+        // la = l.getLanguageList();
+        // for(Language lan: la){
+        //     System.out.print(lan.getId() + " ");
+        // }
     }
 }
