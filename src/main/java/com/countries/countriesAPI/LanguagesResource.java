@@ -1,9 +1,7 @@
 package com.countries.countriesAPI;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-import javax.json.JsonString;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
