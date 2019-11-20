@@ -1,3 +1,10 @@
+drop table if exists country_language;
+drop table if exists country_currency;
+drop table if exists language;
+drop table if exists border;
+drop table if exists currency;
+drop table if exists country;
+
 create table if not exists 
     country (id INT IDENTITY PRIMARY KEY, name varchar(150),capital varchar(150),population BIGINT);
 create table if not exists 
