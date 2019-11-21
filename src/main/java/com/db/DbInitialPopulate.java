@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.countries.Helpers.HCHandler;
-import com.countries.countriesAPI.Country;
+import com.countries.countriesAPI.models.Country;
 
 import org.hsqldb.cmdline.SqlToolError;
 

@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.countries.countriesAPI.Country;
-import com.countries.countriesAPI.Language;
+import com.countries.countriesAPI.models.Country;
+import com.countries.countriesAPI.models.Language;
 
 public class LanguageDBDataTransfer {
     private Connection connection;

@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Scanner;
 
-import com.countries.countriesAPI.Country;
+import com.countries.countriesAPI.models.Country;
 
 public class BorderDbDataTransfer {
     private Connection connection;

@@ -8,7 +8,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
 
-import com.countries.countriesAPI.Country;
+import com.countries.countriesAPI.models.Country;
 import com.google.gson.Gson;
 
 public class HCHandler {

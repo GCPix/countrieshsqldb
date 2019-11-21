@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.countries.countriesAPI.Country;
+import com.countries.countriesAPI.models.Country;
 
 public class CountryDbDataTransfer {
 

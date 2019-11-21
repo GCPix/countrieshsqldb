@@ -1,4 +1,4 @@
-package com.countries.countriesAPI;
+package com.countries.countriesAPI.models;
 
 public class Currency {
     private int id;
