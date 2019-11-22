@@ -96,6 +96,7 @@ public class CurrencyDataAccess {
             e.printStackTrace();
         } finally {
             dbc.closeConnection(con);
+            sc.close();
         }
 		return id;
 	}

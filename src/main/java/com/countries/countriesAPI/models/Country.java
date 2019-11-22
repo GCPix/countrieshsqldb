@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Country {
@@ -136,4 +137,18 @@ public class Country {
     public void setBorderCountriesList(List<Country> borderCountriesList) {
         this.borderCountriesList = borderCountriesList;
     }
+
+	public void addCurrency(Currency c) {
+        if(this.currencies == null){
+            this.currencies = new ArrayList<Currency>();
+        }
+        this.currencies.add(c);
+	}
+
+	public void addLanguage(Language l) {
+        if(this.languages == null){
+            this.languages = new ArrayList<Language>();
+        }
+        this.languages.add(l);
+	}
 }
