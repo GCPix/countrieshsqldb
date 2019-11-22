@@ -47,8 +47,7 @@ public class LanguageDBDataTransfer {
                         ResultSet rs = ps.getGeneratedKeys();
                         rs.next();
                         l.setId(rs.getInt("id"));
-                    }
-                   
+                        }
                     }
                 }
             
