@@ -22,12 +22,14 @@ public class LanguageDataAccess {
         DbConnection dc = new DbConnection();
         dc.loadDriver();
         Connection con = dc.getConnection();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
 
             String sqlString = "SELECT * FROM language WHERE id = " + languageId;
-            PreparedStatement ps = con.prepareStatement(sqlString);
-            ResultSet rs = ps.executeQuery();
+            ps = con.prepareStatement(sqlString);
+            rs = ps.executeQuery();
             while(rs.next()){
                 language = new Language();
                 language.setId(rs.getInt("id"));
@@ -41,6 +43,8 @@ public class LanguageDataAccess {
             e.printStackTrace();
         }finally {
             dc.closeConnection(con);
+            rs.close();
+            ps.close();
         }
         return language;
 
@@ -49,15 +53,17 @@ public class LanguageDataAccess {
         DbConnection dc = new DbConnection();
         dc.loadDriver();
         Connection  con = dc.getConnection();
+        PreparedStatement ps = null;
 
         try {
-            PreparedStatement ps = con.prepareStatement("DELETE FROM language where id  = " + id);
+            ps = con.prepareStatement("DELETE FROM language where id  = " + id);
             ps.execute();
 
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             dc.closeConnection(con);
+            ps.close();
         }
 
     }
@@ -65,9 +71,10 @@ public class LanguageDataAccess {
         DbConnection dc = new DbConnection();
         dc.loadDriver();
         Connection  con = dc.getConnection();
+        PreparedStatement ps = null;
 
         try {
-            PreparedStatement ps = con.prepareStatement("UPDATE language SET iso639_1 = '" + language.getIso639_1() + "', iso639_2 = '" + language.getIso639_2()
+            ps = con.prepareStatement("UPDATE language SET iso639_1 = '" + language.getIso639_1() + "', iso639_2 = '" + language.getIso639_2()
             + "', name = '" + language.getName() + "', nativeName = '" + language.getNativeName() + "' WHERE id = " + id );
             ps.execute();
             
@@ -75,6 +82,7 @@ public class LanguageDataAccess {
             e.printStackTrace();
         }finally {
             dc.closeConnection(con);
+            ps.close();
         }
 
     }
@@ -84,7 +92,8 @@ public class LanguageDataAccess {
         Connection  con = dc.getConnection();
         InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateLanguageTable.sql");
         Scanner sc = new Scanner(is);
-        
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         
         try {
             
@@ -94,7 +103,7 @@ public class LanguageDataAccess {
                 sb.append(sc.nextLine());
             }
 
-            PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
+            ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, language.getIso639_1());
             ps.setString(2, language.getIso639_2());
             ps.setString(3, language.getName());
@@ -104,7 +113,7 @@ public class LanguageDataAccess {
             
             String sqlString = "SELECT * FROM language WHERE name LIKE '" + language.getName() + "'";
             PreparedStatement getpk = con.prepareStatement(sqlString);
-            ResultSet rs = getpk.executeQuery();
+            rs = getpk.executeQuery();
             rs.next();
             language.setId(rs.getInt("id"));
             
@@ -116,6 +125,8 @@ public class LanguageDataAccess {
         } finally {
             dc.closeConnection(con);
             sc.close();
+            rs.close();
+            ps.close();
             
         }
         return language.getId();
@@ -126,12 +137,14 @@ public class LanguageDataAccess {
         DbConnection dc  = new DbConnection();
         dc.loadDriver();
         Connection connection = dc.getConnection();
-        Language l;
+        Language l = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
 
-            PreparedStatement ps = connection.prepareStatement("Select * from language");
+            ps = connection.prepareStatement("Select * from language");
             
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             while(rs.next()){
                 languageList = new ArrayList<Language>();
                 l = new Language();
@@ -146,6 +159,8 @@ public class LanguageDataAccess {
             e.printStackTrace();
         } finally {
             dc.closeConnection(connection);
+            ps.close();
+            rs.close();
         }
        
         

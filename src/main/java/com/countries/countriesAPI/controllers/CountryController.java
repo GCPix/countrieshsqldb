@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 
 import com.countries.countriesAPI.dataAccess.CountryDataAccess;
 import com.countries.countriesAPI.models.Country;
-import com.google.gson.Gson;
 
 @Path("country")
 public class CountryController {
