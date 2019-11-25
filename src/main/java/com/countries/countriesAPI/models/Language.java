@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Language {
     @JsonIgnore
-    private int id;
+    private Integer id;
     private String iso639_1;
     private String iso639_2;
     private String name;
@@ -18,7 +18,7 @@ public class Language {
      * @return the id
      */
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

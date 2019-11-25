@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
+import java.net.URI;
 import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
@@ -11,24 +12,42 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import com.countries.countriesAPI.dataAccess.LanguageDataAccess;
 import com.countries.countriesAPI.models.Language;
-import com.google.gson.Gson;
 
 @Path("language")
 public class LanguageController {
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addLanguage(Language language) throws SQLException {
+        
+        LanguageDataAccess lda = new LanguageDataAccess();
+        int id = lda.addLanguage(language);
+
+        URI uri = UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
+        return Response.created(uri).entity(id).build();
+        
+    }
 
     @GET
     @Path("/{languageid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getLanguage(@PathParam("languageid") int languageId) throws SQLException {
+    public Response getLanguage(@PathParam("languageid") int languageId) throws SQLException {
+        
         LanguageDataAccess lda = new LanguageDataAccess();
         Language lan = lda.getLanguage(languageId);
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(lan);
-        return jsonString; 
+
+        if (lan == null){
+
+            return Response.status(404).entity("Language not returned").build();
+        }
+        return Response.ok(lan).build();
     }
+
     @DELETE
     @Path("/{languageid}")
     public void deleteLanguage(@PathParam("languageid") int languageId) throws SQLException {
@@ -45,16 +64,6 @@ public class LanguageController {
         lda.updateLanguage(languageId, language);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public int addLanguage(Language language) throws SQLException {
 
-        LanguageDataAccess lda = new LanguageDataAccess();
-        int id = lda.addLanguage(language);
-
-        return id;
-        
-    }
     
 }

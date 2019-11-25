@@ -15,7 +15,7 @@ import com.db.DbConnection;
 public class CurrencyDataAccess {
 
     public static List<Currency> getCurrencies() throws SQLException {
-        List<Currency> currencyList = new ArrayList<Currency>();
+        List<Currency> currencyList = null;
         DbConnection dc  = new DbConnection();
         dc.loadDriver();
         Connection connection = dc.getConnection();
@@ -25,6 +25,7 @@ public class CurrencyDataAccess {
             
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
+                currencyList = new ArrayList<Currency>();
                 Currency c = new Currency();
                 c.setId(rs.getInt("id"));
                 c.setCode(rs.getString("code"));
@@ -44,13 +45,14 @@ public class CurrencyDataAccess {
         DbConnection dbc = new DbConnection();
         dbc.loadDriver();
         Connection con = dbc.getConnection();
-        Currency c = new Currency();
+        Currency c = null;
 
         try {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM currency WHERE id = " + currencyId);
             ResultSet rs = ps.executeQuery();
             
             while(rs.next()){
+                c = new Currency();
                 c.setId(rs.getInt("id"));
                 c.setCode(rs.getString("code"));
                 c.setName(rs.getString("name"));

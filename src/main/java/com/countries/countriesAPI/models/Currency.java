@@ -1,7 +1,7 @@
 package com.countries.countriesAPI.models;
 
 public class Currency {
-    private int id;
+    private Integer id;
     private String code;
     private String name;
     private String symbol;
@@ -11,7 +11,7 @@ public class Currency {
     /**
      * @return the id
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

@@ -13,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 
 import com.countries.countriesAPI.dataAccess.CurrencyDataAccess;
@@ -35,7 +34,7 @@ public class CurrencyController {
         }else {
             //want a better way to handle different error responses
             String errorString = "The request could not be understood by the server due to malformed syntax.";
-            response =  Response.status(Status.BAD_REQUEST).entity(errorString);
+            response =  Response.status(404).entity(errorString);
             return response.build();
         }
         

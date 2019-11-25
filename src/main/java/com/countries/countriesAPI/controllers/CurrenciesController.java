@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.countries.countriesAPI.dataAccess.CurrencyDataAccess;
 import com.countries.countriesAPI.models.Currency;
-import com.google.gson.Gson;
 
 @Path("currencies")
 public class CurrenciesController {
@@ -21,7 +20,7 @@ public class CurrenciesController {
     public Response getCurrencies() throws SQLException {
         List<Currency> currencies = CurrencyDataAccess.getCurrencies();
         final ResponseBuilder response;
-        response = Response.ok().entity(currencies);
+        response = Response.ok(currencies);
         return response.build();
     }
 }

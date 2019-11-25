@@ -18,7 +18,7 @@ public class LanguageDataAccess {
 
     }
     public Language getLanguage(int languageId) throws SQLException {
-        Language language = new Language();
+        Language language = null;
         DbConnection dc = new DbConnection();
         dc.loadDriver();
         Connection con = dc.getConnection();
@@ -29,6 +29,7 @@ public class LanguageDataAccess {
             PreparedStatement ps = con.prepareStatement(sqlString);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
+                language = new Language();
                 language.setId(rs.getInt("id"));
                 language.setIso639_1(rs.getString("iso639_1"));
                 language.setIso639_2(rs.getString("iso639_2"));
@@ -121,17 +122,19 @@ public class LanguageDataAccess {
     }
 
     public ArrayList<Language> getLanguageList() throws SQLException {
-        ArrayList<Language> languageList = new ArrayList<Language>();
+        ArrayList<Language> languageList = null;
         DbConnection dc  = new DbConnection();
         dc.loadDriver();
         Connection connection = dc.getConnection();
+        Language l;
         try {
 
             PreparedStatement ps = connection.prepareStatement("Select * from language");
             
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Language l = new Language();
+                languageList = new ArrayList<Language>();
+                l = new Language();
                 l.setId(rs.getInt("id"));
                 l.setIso639_1(rs.getString("iso639_1"));
                 l.setIso639_2(rs.getString("iso639_2"));
