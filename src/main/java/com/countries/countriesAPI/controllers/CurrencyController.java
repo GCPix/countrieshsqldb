@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
+import java.net.URI;
 import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
@@ -10,41 +11,61 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 
 import com.countries.countriesAPI.dataAccess.CurrencyDataAccess;
 import com.countries.countriesAPI.models.Currency;
-import com.google.gson.Gson;
 
 @Path("currency")
 public class CurrencyController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCurrency(@PathParam("id") int currencyId) throws SQLException {
+    public Response getCurrency(@PathParam("id") int currencyId) throws SQLException {
+
         CurrencyDataAccess cda = new CurrencyDataAccess();
         Currency c = cda.getCurrency(currencyId);
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(c);
-        return jsonString;
+        final ResponseBuilder response;
+        if (c != null){           
+            response = Response.ok().entity(c);
+            return response.build();
+        }else {
+            //want a better way to handle different error responses
+            String errorString = "The request could not be understood by the server due to malformed syntax.";
+            response =  Response.status(Status.BAD_REQUEST).entity(errorString);
+            return response.build();
+        }
+        
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addCurrency(Currency currency) throws SQLException {
+    // , @Context UriInfo uriInfo this would be needed to use the getAbsolutePathBuilder option
+    public Response addCurrency(Currency currency) throws SQLException {
+        final ResponseBuilder response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         int currencyId = cda.addCurrency(currency);
-        Gson gson = new Gson();
-        String jsonString = gson.toJson(currencyId);
-        return jsonString;
+        // URI createdUri = uriInfo.getAbsolutePathBuilder().path(Integer.toString(currencyId)).build();
+        // response includes address created here as a header Location
+        URI createdUri = UriBuilder.fromResource(CurrencyController.class).path("/{id}").build(Integer.toString(currencyId));
+        response = Response.created(createdUri).entity(currencyId);
+        return response.build();
+       
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateCurrency(@PathParam("id") int currencyId, Currency currency) throws SQLException {
+    public Response updateCurrency(@PathParam("id") int currencyId, Currency currency) throws SQLException {
+        final ResponseBuilder response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         cda.updateCurrency(currencyId, currency);
+        response = Response.ok();
+        return response.build();
 
         }
     
