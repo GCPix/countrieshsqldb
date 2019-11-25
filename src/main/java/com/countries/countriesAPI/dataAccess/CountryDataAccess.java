@@ -18,7 +18,7 @@ public class CountryDataAccess {
         DbConnection dbc = new DbConnection();
         dbc.loadDriver();
         Connection con = dbc.getConnection();
-        Country country = new Country();
+        Country country =null;
         /*
         get basic country data
         */
@@ -28,6 +28,7 @@ public class CountryDataAccess {
         ResultSet rs = psCountry.executeQuery();
         
         while(rs.next()){
+            country = new Country();
             country.setId(rs.getInt("id"));
             country.setName(rs.getString("name"));
             country.setCapital(rs.getString("capital"));

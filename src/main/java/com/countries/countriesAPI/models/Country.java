@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Country {
-    private int id;
+    private Integer id;
     private String  name;
     private String capital;
     private List<Language> languages;
@@ -16,7 +16,6 @@ public class Country {
     private List<Currency>  currencies;
     private long population;
     private String alpha3Code;
-
 
     public Country(){
 
@@ -114,7 +113,7 @@ public class Country {
     /**
      * @return the id
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
     /**
