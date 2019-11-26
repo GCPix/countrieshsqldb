@@ -96,4 +96,46 @@ public class CountryDataAccess {
       	return country;
 	}
     
+     public List<Country> getCountriesSummary(String sortField, String filterField,  String filterValue){
+        Country c = null;
+        List<Country> countriesSummary =  new ArrayList<>();
+        String sqlString = "";
+        DbConnection dbc = new DbConnection();
+        dbc.loadDriver();
+        try (Connection con = dbc.getConnection()) {
+            if (filterValue.length()==0){
+                sqlString = "SELECT * FROM country ORDER BY " + sortField;
+            } else {
+                sqlString = "SELECT * from country " + 
+                "join country_language on country.id = country_language.country_id " + 
+                "join language  on country_language.language_id = language.id " + 
+                "WHERE language.name = " + filterValue;
+            }
+
+            try (PreparedStatement ps = con.prepareStatement(sqlString)) {
+                
+                try (ResultSet rs = ps.executeQuery()) {
+                    while(rs.next()){
+                        c = new Country();
+                        c.setId(rs.getInt("id"));
+                        c.setName(rs.getString("name"));
+                        c.setCapital(rs.getString("capital"));
+                        c.setPopulation(rs.getLong("population"));
+                        countriesSummary.add(c);
+                    }
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        return countriesSummary;
+    }
+    
 }
