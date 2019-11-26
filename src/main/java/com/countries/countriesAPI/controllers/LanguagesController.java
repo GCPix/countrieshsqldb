@@ -23,7 +23,7 @@ public class LanguagesController {
         if ( languageList == null) {
             return Response.noContent().build();
         }
-        return Response.ok().build(); 
+        return Response.ok(languageList).build(); 
     }
 
 }

@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.dataAccess;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,156 +15,175 @@ import com.db.DbConnection;
 
 public class LanguageDataAccess {
 
-    public LanguageDataAccess(){
+    public LanguageDataAccess() {
 
     }
+
     public Language getLanguage(int languageId) throws SQLException {
         Language language = null;
         DbConnection dc = new DbConnection();
         dc.loadDriver();
         Connection con = dc.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
 
         try {
 
             String sqlString = "SELECT * FROM language WHERE id = " + languageId;
-            ps = con.prepareStatement(sqlString);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                language = new Language();
-                language.setId(rs.getInt("id"));
-                language.setIso639_1(rs.getString("iso639_1"));
-                language.setIso639_2(rs.getString("iso639_2"));
-                language.setName(rs.getString("name"));
-                language.setNativeName(rs.getString("nativeName"));
+            try (PreparedStatement ps = con.prepareStatement(sqlString);) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        language = new Language();
+                        language.setId(rs.getInt("id"));
+                        language.setIso639_1(rs.getString("iso639_1"));
+                        language.setIso639_2(rs.getString("iso639_2"));
+                        language.setName(rs.getString("name"));
+                        language.setNativeName(rs.getString("nativeName"));
+                    }
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
             }
-            
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             dc.closeConnection(con);
-            rs.close();
-            ps.close();
         }
         return language;
 
     }
+
     public void deleteLanguage(int id) throws SQLException {
         DbConnection dc = new DbConnection();
         dc.loadDriver();
-        Connection  con = dc.getConnection();
-        PreparedStatement ps = null;
+        Connection con = dc.getConnection();
 
         try {
-            ps = con.prepareStatement("DELETE FROM language where id  = " + id);
-            ps.execute();
-
+            String sqlString = "DELETE FROM language where id  = " + id;
+            try (PreparedStatement ps = con.prepareStatement(sqlString)) {
+                ps.execute();
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             dc.closeConnection(con);
-            ps.close();
         }
 
     }
+
     public void updateLanguage(int id, Language language) throws SQLException {
         DbConnection dc = new DbConnection();
         dc.loadDriver();
-        Connection  con = dc.getConnection();
-        PreparedStatement ps = null;
+        Connection con = dc.getConnection();
 
         try {
-            ps = con.prepareStatement("UPDATE language SET iso639_1 = '" + language.getIso639_1() + "', iso639_2 = '" + language.getIso639_2()
-            + "', name = '" + language.getName() + "', nativeName = '" + language.getNativeName() + "' WHERE id = " + id );
-            ps.execute();
-            
+            String sqlString = "UPDATE language SET iso639_1 = '" + language.getIso639_1() + "', iso639_2 = '"
+            + language.getIso639_2() + "', name = '" + language.getName() + "', nativeName = '"
+            + language.getNativeName() + "' WHERE id = " + id + ";";
+            try (PreparedStatement ps = con.prepareStatement(sqlString)) {
+                ps.execute();
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
+ 
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             dc.closeConnection(con);
-            ps.close();
         }
-
     }
-    public int addLanguage(Language language) throws SQLException {
+
+    public int addLanguage(Language language) throws SQLException, IOException {
         DbConnection dc = new DbConnection();
         dc.loadDriver();
         Connection  con = dc.getConnection();
         InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateLanguageTable.sql");
         Scanner sc = new Scanner(is);
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+
         
         try {
-            
-
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
                 sb.append(sc.nextLine());
             }
+            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+                ps.setString(1, language.getIso639_1());
+                ps.setString(2, language.getIso639_2());
+                ps.setString(3, language.getName());
+                ps.setString(4, language.getNativeName());
+                ps.setString(5, language.getName());
+                ps.execute();
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
+            }
 
-            ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, language.getIso639_1());
-            ps.setString(2, language.getIso639_2());
-            ps.setString(3, language.getName());
-            ps.setString(4, language.getNativeName());
-            ps.setString(5, language.getName());
-            ps.execute();
-            
             String sqlString = "SELECT * FROM language WHERE name LIKE '" + language.getName() + "'";
-            PreparedStatement getpk = con.prepareStatement(sqlString);
-            rs = getpk.executeQuery();
-            rs.next();
-            language.setId(rs.getInt("id"));
-            
-
-
-
+            try (PreparedStatement getpk = con.prepareStatement(sqlString)) {
+                try (ResultSet rs = getpk.executeQuery()) {
+                    rs.next();
+                    language.setId(rs.getInt("id"));
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+            } catch (Exception e) {
+                //TODO: handle exception
+            }
+ 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             dc.closeConnection(con);
             sc.close();
-            rs.close();
-            ps.close();
+            is.close();
+
             
         }
         return language.getId();
     }
-
+    
     public ArrayList<Language> getLanguageList() throws SQLException {
         ArrayList<Language> languageList = null;
         DbConnection dc  = new DbConnection();
         dc.loadDriver();
         Connection connection = dc.getConnection();
         Language l = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
 
-            ps = connection.prepareStatement("Select * from language");
-            
-            rs = ps.executeQuery();
-            while(rs.next()){
-                languageList = new ArrayList<Language>();
-                l = new Language();
-                l.setId(rs.getInt("id"));
-                l.setIso639_1(rs.getString("iso639_1"));
-                l.setIso639_2(rs.getString("iso639_2"));
-                l.setName(rs.getString("name"));
-                l.setNativeName(rs.getString("nativeName"));
-                languageList.add(l);
+        try {
+            String sqlString = "Select * from language";
+            try (PreparedStatement ps = connection.prepareStatement(sqlString)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    languageList = new ArrayList<Language>();
+                    while(rs.next()){
+
+                        l = new Language();
+                        l.setId(rs.getInt("id"));
+                        l.setIso639_1(rs.getString("iso639_1"));
+                        l.setIso639_2(rs.getString("iso639_2"));
+                        l.setName(rs.getString("name"));
+                        l.setNativeName(rs.getString("nativeName"));
+                        languageList.add(l);
+                    }
+                } catch (Exception e) {
+                    //TODO: handle exception
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                //TODO: handle exception
+                e.printStackTrace();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             dc.closeConnection(connection);
-            ps.close();
-            rs.close();
         }
-       
-        
         return languageList;
     }
 }

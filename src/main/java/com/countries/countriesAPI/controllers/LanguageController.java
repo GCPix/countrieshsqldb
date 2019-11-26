@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
+import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 
@@ -23,7 +24,7 @@ public class LanguageController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addLanguage(Language language) throws SQLException {
+    public Response addLanguage(Language language) throws SQLException, IOException {
         
         LanguageDataAccess lda = new LanguageDataAccess();
         int id = lda.addLanguage(language);

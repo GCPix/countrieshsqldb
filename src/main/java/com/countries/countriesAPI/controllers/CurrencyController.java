@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
+import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
 
@@ -28,23 +29,24 @@ public class CurrencyController {
         CurrencyDataAccess cda = new CurrencyDataAccess();
         Currency c = cda.getCurrency(currencyId);
         final ResponseBuilder response;
-        if (c != null){           
+        if (c != null) {
             response = Response.ok().entity(c);
             return response.build();
-        }else {
-            //want a better way to handle different error responses
+        } else {
+            // want a better way to handle different error responses
             String errorString = "The request could not be understood by the server due to malformed syntax.";
-            response =  Response.status(404).entity(errorString);
+            response = Response.status(404).entity(errorString);
             return response.build();
         }
-        
+
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    // , @Context UriInfo uriInfo this would be needed to use the getAbsolutePathBuilder option
-    public Response addCurrency(Currency currency) throws SQLException {
+    // , @Context UriInfo uriInfo this would be needed to use the
+    // getAbsolutePathBuilder option
+    public Response addCurrency(Currency currency) throws SQLException, IOException {
         final ResponseBuilder response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         int currencyId = cda.addCurrency(currency);

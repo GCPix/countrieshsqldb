@@ -1,7 +1,5 @@
 package com.countries.countriesAPI.controllers;
 
-import java.sql.SQLException;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -17,7 +15,7 @@ public class CountryController {
     @Path("/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCountry(@PathParam("id") int countryId) throws SQLException {
+    public Response getCountry(@PathParam("id") int countryId) throws Exception {
 
         CountryDataAccess cda = new CountryDataAccess();
         Country c = null;
