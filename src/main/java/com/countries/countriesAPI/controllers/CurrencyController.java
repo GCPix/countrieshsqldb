@@ -24,7 +24,7 @@ public class CurrencyController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCurrency(@PathParam("id") int currencyId) throws SQLException {
+    public Response getCurrency(@PathParam("id") int currencyId) throws SQLException, IOException, ClassNotFoundException {
 
         CurrencyDataAccess cda = new CurrencyDataAccess();
         Currency c = cda.getCurrency(currencyId);
@@ -46,7 +46,7 @@ public class CurrencyController {
     @Produces(MediaType.APPLICATION_JSON)
     // , @Context UriInfo uriInfo this would be needed to use the
     // getAbsolutePathBuilder option
-    public Response addCurrency(Currency currency) throws SQLException, IOException {
+    public Response addCurrency(Currency currency) throws SQLException, IOException, ClassNotFoundException {
         final ResponseBuilder response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         int currencyId = cda.addCurrency(currency);
@@ -61,7 +61,7 @@ public class CurrencyController {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateCurrency(@PathParam("id") int currencyId, Currency currency) throws SQLException {
+    public Response updateCurrency(@PathParam("id") int currencyId, Currency currency) throws SQLException, IOException {
         final ResponseBuilder response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         cda.updateCurrency(currencyId, currency);

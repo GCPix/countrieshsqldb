@@ -1,38 +1,32 @@
 package com.db;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import org.hsqldb.cmdline.SqlFile;
-import org.hsqldb.cmdline.SqlToolError;
+import java.util.Scanner;
 
 public class DbConnection {
 
-    public Connection connection;
-    static final String connectionString = "jdbc:hsqldb:file:db-data/countries";
-    static String dbDriver = "org.hsqldb.jdbc.JDBCDriver";
-
+    private Connection connection;
+    private final String connectionString = "jdbc:hsqldb:file:db-data/countries";
+    private String dbDriver = "org.hsqldb.jdbc.JDBCDriver";
+    // private String dbDriver = "";
     // assume the passed in connection is final just because it cannot be changed
     public DbConnection(){
 
     }
     
-    public void loadDriver() {
-        try {
+    public void loadDriver() throws ClassNotFoundException {
+     
             Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     public Connection getConnection() throws SQLException {
         try {
-
+            this.loadDriver();
             connection = DriverManager.getConnection(connectionString, "SA", "");
             
         } catch (Exception e) {
@@ -41,28 +35,29 @@ public class DbConnection {
         return connection;
     }
 
-    public void closeConnection(Connection connection) throws SQLException {
+    public void closeConnection(Connection connection) throws SQLException{
         connection.close();
     }
-    private void createTables(Connection connection) throws SQLException, SqlToolError {
-        
-        try{
-            InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql");
-            SqlFile createTables = new SqlFile(new InputStreamReader(is), "init", System.out, "UTF-8", false, new File("."));
-            createTables.setConnection(connection);
-            createTables.execute();
-
-        } catch (IOException e) {
-  
-            e.printStackTrace();
+    
+    private void createTables(Connection connection) throws IOException, SQLException {
+        InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql");
+        Scanner sc = new Scanner(is);
+        StringBuffer sb = new StringBuffer();
+        while(sc.hasNext()){
+            sb.append(sc.nextLine());
+        }
+        try (PreparedStatement ps = connection.prepareStatement(sb.toString())) {
+            ps.execute();
+        } finally {
+            is.close();
+            sc.close();
+            // connection.close();
         }
     }
-    public void createDatabase() throws SQLException, SqlToolError {
-        Connection connection = null;
-        this.loadDriver();
-        connection = this.getConnection();
-        this.createTables(connection);
-        this.closeConnection(connection);
+    public void createDatabase(Connection connection) throws SQLException, IOException, ClassNotFoundException {
+            
+            this.createTables(connection);
+     
     }
 
 }

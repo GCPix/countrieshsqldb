@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import com.countries.countriesAPI.dataAccess.LanguageDataAccess;
 import com.countries.countriesAPI.models.Language;
@@ -24,45 +25,60 @@ public class LanguageController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addLanguage(Language language) throws SQLException, IOException {
-        
+    public Response addLanguage(Language language) throws SQLException, IOException, ClassNotFoundException {
+
         LanguageDataAccess lda = new LanguageDataAccess();
-        int id = lda.addLanguage(language);
+        int id = 0;
+        id = lda.addLanguage(language);
 
         URI uri = UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
         return Response.created(uri).entity(id).build();
-        
     }
 
     @GET
     @Path("/{languageid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLanguage(@PathParam("languageid") int languageId) throws SQLException {
-        
+    public Response getLanguage(@PathParam("languageid") int languageId) throws SQLException, IOException, ClassNotFoundException {
+
         LanguageDataAccess lda = new LanguageDataAccess();
-        Language lan = lda.getLanguage(languageId);
+        Language lan = null;
+        Response response = null;
+        
+        lan = lda.getLanguage(languageId);
+        
+        if (lan == null) {
 
-        if (lan == null){
-
-            return Response.status(404).entity("Language not returned").build();
+            response = Response.status(404).entity("Language not returned").build();
         }
-        return Response.ok(lan).build();
+        
+        response = Response.ok(lan).build();
+        return response;
     }
 
     @DELETE
     @Path("/{languageid}")
-    public void deleteLanguage(@PathParam("languageid") int languageId) throws SQLException {
+    public void deleteLanguage(@PathParam("languageid") int languageId) throws SQLException, ClassNotFoundException {
         LanguageDataAccess lda = new LanguageDataAccess();
         lda.deleteLanguage(languageId);
-        
     }
 
     @PUT
     @Path("/{languageid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateLanguage(@PathParam("languageid") int languageId, Language language) throws SQLException {
+    public Response updateLanguage(@PathParam("languageid") int languageId, Language language) throws SQLException, ClassNotFoundException {
         LanguageDataAccess lda = new LanguageDataAccess();
-        lda.updateLanguage(languageId, language);
+        Response response = null;
+        //not sure if I need bit below front end would need to ensure the types are valid
+        if (languageId >= 0 && language != null) {
+  
+            lda.updateLanguage(languageId, language);
+            response = Response.ok().build();
+             
+        } else {
+            response = Response.status(Status.BAD_REQUEST).entity("please check your details for your update, you appear to have a formatting issue").build();
+            
+        }
+        return response;
     }
 
 

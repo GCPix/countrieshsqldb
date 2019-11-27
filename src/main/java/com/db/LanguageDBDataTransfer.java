@@ -14,19 +14,19 @@ import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Language;
 
 public class LanguageDBDataTransfer {
-    private Connection connection;
+    // private Connection connection;
 
     public LanguageDBDataTransfer(){
 
     }
  
-    DbConnection dbc = new DbConnection();
+    // DbConnection dbc = new DbConnection();
     
-    public void populateLanguageTable(List<Country> countryList) throws SQLException {
+    public void populateLanguageTable(List<Country> countryList, Connection connection) throws SQLException {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateLanguageTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -54,15 +54,15 @@ public class LanguageDBDataTransfer {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
             sc.close();
         }
     }
 
-    public ArrayList<Language> getLanguageList() throws SQLException {
+    public ArrayList<Language> getLanguageList(Connection connection) throws SQLException {
         ArrayList<Language> languageList = new ArrayList<>();
         try{
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM language");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -76,17 +76,18 @@ public class LanguageDBDataTransfer {
             }
         
         }finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
+           
         }
         return languageList;
     }
 // need to tidy this up to get rid of currency and replace with language
-    public void populateCountryLanguageTable(List<Country> countryList, List<Language> LanguageList)
+    public void populateCountryLanguageTable(List<Country> countryList, List<Language> LanguageList, Connection connection)
             throws SQLException {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryLanguageTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -110,7 +111,7 @@ public class LanguageDBDataTransfer {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
             sc.close();
         }     
     }

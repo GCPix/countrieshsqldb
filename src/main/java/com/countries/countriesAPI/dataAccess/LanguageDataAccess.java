@@ -19,10 +19,10 @@ public class LanguageDataAccess {
 
     }
 
-    public Language getLanguage(int languageId) throws SQLException {
+    public Language getLanguage(int languageId) throws SQLException, IOException, ClassNotFoundException {
         Language language = null;
         DbConnection dc = new DbConnection();
-        dc.loadDriver();
+
         Connection con = dc.getConnection();
 
         try {
@@ -38,16 +38,8 @@ public class LanguageDataAccess {
                         language.setName(rs.getString("name"));
                         language.setNativeName(rs.getString("nativeName"));
                     }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                } 
+            } 
         } finally {
             dc.closeConnection(con);
         }
@@ -55,53 +47,43 @@ public class LanguageDataAccess {
 
     }
 
-    public void deleteLanguage(int id) throws SQLException {
+    public void deleteLanguage(int id) throws SQLException, ClassNotFoundException {
         DbConnection dc = new DbConnection();
-        dc.loadDriver();
+
         Connection con = dc.getConnection();
 
         try {
             String sqlString = "DELETE FROM language where id  = " + id;
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
                 ps.execute();
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            } 
         } finally {
             dc.closeConnection(con);
         }
 
     }
 
-    public void updateLanguage(int id, Language language) throws SQLException {
+    public void updateLanguage(int id, Language language) throws SQLException, ClassNotFoundException {
         DbConnection dc = new DbConnection();
-        dc.loadDriver();
         Connection con = dc.getConnection();
 
         try {
             String sqlString = "UPDATE language SET iso639_1 = '" + language.getIso639_1() + "', iso639_2 = '"
             + language.getIso639_2() + "', name = '" + language.getName() + "', nativeName = '"
             + language.getNativeName() + "' WHERE id = " + id + ";";
+
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
-                ps.execute();
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
+                if (ps.executeUpdate() != 1)
+                    throw new IllegalArgumentException(id + " is not in the database");
+            } 
  
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dc.closeConnection(con);
         }
     }
 
-    public int addLanguage(Language language) throws SQLException, IOException {
+    public int addLanguage(Language language) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dc = new DbConnection();
-        dc.loadDriver();
         Connection  con = dc.getConnection();
         InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateLanguageTable.sql");
         Scanner sc = new Scanner(is);
@@ -119,39 +101,27 @@ public class LanguageDataAccess {
                 ps.setString(4, language.getNativeName());
                 ps.setString(5, language.getName());
                 ps.execute();
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
+            } 
 
             String sqlString = "SELECT * FROM language WHERE name LIKE '" + language.getName() + "'";
             try (PreparedStatement getpk = con.prepareStatement(sqlString)) {
                 try (ResultSet rs = getpk.executeQuery()) {
                     rs.next();
                     language.setId(rs.getInt("id"));
-                } catch (Exception e) {
-                    //TODO: handle exception
                 }
-            } catch (Exception e) {
-                //TODO: handle exception
-            }
+            } 
  
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+        }  finally {
             dc.closeConnection(con);
             sc.close();
             is.close();
-
-            
         }
         return language.getId();
     }
     
-    public ArrayList<Language> getLanguageList() throws SQLException {
+    public ArrayList<Language> getLanguageList() throws SQLException, ClassNotFoundException {
         ArrayList<Language> languageList = null;
         DbConnection dc  = new DbConnection();
-        dc.loadDriver();
         Connection connection = dc.getConnection();
         Language l = null;
 
@@ -170,17 +140,9 @@ public class LanguageDataAccess {
                         l.setNativeName(rs.getString("nativeName"));
                         languageList.add(l);
                     }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
+                } 
+            } 
 
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dc.closeConnection(connection);
         }

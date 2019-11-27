@@ -1,5 +1,8 @@
 package com.countries.countriesAPI.controllers;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,15 +18,22 @@ public class CountryController {
     @Path("/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCountry(@PathParam("id") int countryId) throws Exception {
+    public Response getCountry(@PathParam("id") int countryId)
+            throws ClassNotFoundException, SQLException, IOException {
 
         CountryDataAccess cda = new CountryDataAccess();
         Country c = null;
+        Response response;
+
         c = cda.getCountry(countryId);
+        
         if (c == null) {
-            return Response.status(404).entity("no country returned for that id").build();
+            response =  Response.status(404).entity("no country returned for that id").build();
         }
-        return Response.ok(c).build();
+
+        response = Response.ok(c).build();
+
+        return response;
 
     }
 }

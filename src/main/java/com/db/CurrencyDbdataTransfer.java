@@ -14,7 +14,7 @@ import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
 
 public class CurrencyDbdataTransfer {
-    private Connection connection;
+    // private Connection connection;
 
     public CurrencyDbdataTransfer(){
 
@@ -22,11 +22,11 @@ public class CurrencyDbdataTransfer {
  
     DbConnection dbc = new DbConnection();
     
-    public void populateCurrencyTable(List<Country> countryList) throws SQLException {
+    public void populateCurrencyTable(List<Country> countryList, Connection connection) throws SQLException {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateCurrencyTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -54,15 +54,15 @@ public class CurrencyDbdataTransfer {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
             sc.close();
         }
     }
 
-    public ArrayList<Currency> getCurrencyList() throws SQLException {
+    public ArrayList<Currency> getCurrencyList(Connection connection) throws SQLException {
         ArrayList<Currency> currencyList = new ArrayList<>();
         try{
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM currency");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -75,17 +75,17 @@ public class CurrencyDbdataTransfer {
             }
         
         }finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
         }
         return currencyList;
     }
 
-    public void populateCountryCurrencyTable(List<Country> countryList, List<Currency> currencyList)
+    public void populateCountryCurrencyTable(List<Country> countryList, List<Currency> currencyList, Connection connection)
             throws SQLException {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryCurrencyTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -109,7 +109,7 @@ public class CurrencyDbdataTransfer {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
             sc.close();
         }     
     }

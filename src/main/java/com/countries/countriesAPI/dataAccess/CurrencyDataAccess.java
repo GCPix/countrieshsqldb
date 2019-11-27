@@ -15,10 +15,10 @@ import com.db.DbConnection;
 
 public class CurrencyDataAccess {
 
-    public static List<Currency> getCurrencies() throws SQLException {
+    public static List<Currency> getCurrencies() throws SQLException, IOException, ClassNotFoundException {
         List<Currency> currencyList = null;
         DbConnection dc = new DbConnection();
-        dc.loadDriver();
+        
         Connection connection = dc.getConnection();
         try {
             try (PreparedStatement ps = connection.prepareStatement("Select * from currency")) {
@@ -32,26 +32,18 @@ public class CurrencyDataAccess {
                         c.setSymbol(rs.getString("symbol"));
                         currencyList.add(c);
                     }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
+                } 
+            } 
  
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dc.closeConnection(connection);
         }
         return currencyList;
     }
 
-    public Currency getCurrency(int currencyId) throws SQLException {
+    public Currency getCurrency(int currencyId) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
-        dbc.loadDriver();
+        
         Connection con = dbc.getConnection();
         Currency c = null;
 
@@ -65,26 +57,18 @@ public class CurrencyDataAccess {
                         c.setName(rs.getString("name"));
                         c.setSymbol(rs.getString("symbol"));
                     }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
+                } 
+            } 
   
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dbc.closeConnection(con);
         }
         return c;
     }
 
-    public int addCurrency(Currency currency) throws SQLException, IOException {
+    public int addCurrency(Currency currency) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
-        dbc.loadDriver();
+        
         Connection con = dbc.getConnection();
         InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCurrencyTable.sql");
         Scanner sc = new Scanner(is);
@@ -109,21 +93,10 @@ public class CurrencyDataAccess {
                         while(rs.next()){
                         id = rs.getInt("id");
                         }
-                    } catch (Exception e) {
-                        //TODO: handle exception
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
+                    } 
+                } 
+            } 
  
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dbc.closeConnection(con);
             sc.close();
@@ -133,7 +106,7 @@ public class CurrencyDataAccess {
 		return id;
 	}
 
-	public void updateCurrency(int currencyId, Currency currency) throws SQLException {
+	public void updateCurrency(int currencyId, Currency currency) throws SQLException, IOException {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
 
@@ -144,15 +117,8 @@ public class CurrencyDataAccess {
                     + "', symbol = '" + currency.getSymbol() + "' WHERE id = " + currencyId; 
             try (PreparedStatement ps = con.prepareStatement(sqlString);) {
                 ps.execute();
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
-            
-            
+            } 
 
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             dbc.closeConnection(con);
         }

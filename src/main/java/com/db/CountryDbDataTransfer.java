@@ -14,18 +14,18 @@ import com.countries.countriesAPI.models.Country;
 
 public class CountryDbDataTransfer {
 
-    private Connection connection;
+    // private Connection connection;
 
     public CountryDbDataTransfer() {
 
     }
 
-    public List<Country> getCountryList() throws SQLException {
-        DbConnection dbc = new DbConnection();
+    public List<Country> getCountryList(Connection connection) throws SQLException {
+        // DbConnection dbc = new DbConnection();
         ArrayList<Country> countryList = new ArrayList<>();
         
         try{
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM country");
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
@@ -38,18 +38,18 @@ public class CountryDbDataTransfer {
             }
         
         }finally {
-            dbc.closeConnection(connection);
+            // dbc.closeConnection(connection);
         }
         return countryList;
     }
 
-    public void populateCountryTable(List<Country> countryList) throws SQLException {
-            DbConnection dbc = new DbConnection();
+    public void populateCountryTable(List<Country> countryList, Connection connection) throws SQLException {
+            // DbConnection dbc = new DbConnection();
             InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryTable.sql");
             
             Scanner sc = new Scanner(is);
         try{
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
 
             StringBuffer sb = new StringBuffer();
             
@@ -78,7 +78,7 @@ public class CountryDbDataTransfer {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }finally {
-                dbc.closeConnection(connection);
+                // dbc.closeConnection(connection);
                 sc.close();
             }
 

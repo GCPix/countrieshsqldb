@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,11 @@ public class CountriesController {
 
     @Path("/summary")
     @GET
-    @Produces (MediaType.APPLICATION_JSON)
-    public Response getCountriesSummary(@DefaultValue("name") @QueryParam("sortField") String sortField, 
-    @DefaultValue("") @QueryParam("filterField") String filterField, 
-    @DefaultValue("") @QueryParam("filterValue") String filterValue ){
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCountriesSummary(@DefaultValue("name") @QueryParam("sortField") String sortField,
+            @DefaultValue("") @QueryParam("filterField") String filterField,
+            @DefaultValue("") @QueryParam("filterValue") String filterValue)
+            throws ClassNotFoundException, SQLException {
 
         List<Country> countrySummary = new ArrayList<Country>();
         CountryDataAccess cda = new CountryDataAccess();

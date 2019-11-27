@@ -1,8 +1,10 @@
 package com.countries.countriesAPI.dataAccess;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +15,8 @@ import com.db.DbConnection;
 
 public class CountryDataAccess {
 
-    public Country getCountry(int countryId) throws Exception {
+    public Country getCountry(int countryId) throws SQLException, ClassNotFoundException, IOException {
         DbConnection dbc = new DbConnection();
-        dbc.loadDriver();
         Connection con = dbc.getConnection();
         Country country =null;
   
@@ -24,7 +25,7 @@ public class CountryDataAccess {
         */
         String sqlStringCountry = "SELECT * FROM country WHERE id = " + countryId;
         try (PreparedStatement psCountry = con.prepareStatement(sqlStringCountry)) {
-            try (ResultSet rs = psCountry.executeQuery();) {
+            try (ResultSet rs = psCountry.executeQuery()) {
                 
                 while(rs.next()){
                     country = new Country();
@@ -33,13 +34,11 @@ public class CountryDataAccess {
                     country.setCapital(rs.getString("capital"));
                     country.setPopulation(rs.getLong("population"));
                 }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
+            } finally {
+
             }
-        } catch (Exception e) {
-            //TODO: handle exception
-            e.printStackTrace();
+        } finally {
+            
         }
 
         /*
@@ -59,20 +58,19 @@ public class CountryDataAccess {
                     c = cda.getCurrency(cl);
                     country.addCurrency(c);
                 }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
+            } finally {
+
             }
-        } catch (Exception e) {
-            //TODO: handle exception
-            e.printStackTrace();
+        } finally {
+            
         }
+
      
         /*
         bring back the language objects based on the ids
         */
         String sqlStringCountryLanguage = "SELECT * FROM country_language WHERE country_id = " + countryId;
-        try (PreparedStatement psLanguageRelationship = con.prepareStatement(sqlStringCountryLanguage);) {
+        try (PreparedStatement psLanguageRelationship = con.prepareStatement(sqlStringCountryLanguage)) {
             try (ResultSet rs2 = psLanguageRelationship.executeQuery();) {
                 List<Integer> languageList = new ArrayList<>();
                 while(rs2.next()){
@@ -85,23 +83,23 @@ public class CountryDataAccess {
                     l = lda.getLanguage(ll);
                     country.addLanguage(l);
                 }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
+            } finally {
+
             }
-        } catch (Exception e) {
-            //TODO: handle exception
-            e.printStackTrace();
+
+        } finally {
+
         }
       	return country;
 	}
     
-     public List<Country> getCountriesSummary(String sortField, String filterField,  String filterValue){
+     public List<Country> getCountriesSummary(String sortField, String filterField,  String filterValue)
+            throws ClassNotFoundException, SQLException {
         Country c = null;
         List<Country> countriesSummary =  new ArrayList<>();
         String sqlString = "";
         DbConnection dbc = new DbConnection();
-        dbc.loadDriver();
+        
         try (Connection con = dbc.getConnection()) {
             if (filterValue.length()==0){
                 sqlString = "SELECT * FROM country ORDER BY " + sortField;
@@ -123,18 +121,9 @@ public class CountryDataAccess {
                         c.setPopulation(rs.getLong("population"));
                         countriesSummary.add(c);
                     }
-                } catch (Exception e) {
-                    //TODO: handle exception
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                //TODO: handle exception
-                e.printStackTrace();
-            }
-        } catch (Exception e) {
-            //TODO: handle exception
-            e.printStackTrace();
-        }
+                } 
+            } 
+        } 
         return countriesSummary;
     }
     

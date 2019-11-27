@@ -16,10 +16,11 @@ import com.countries.countriesAPI.models.Language;
 public class LanguagesController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLanguages() throws SQLException {
+    public Response getLanguages() throws SQLException, ClassNotFoundException {
         LanguageDataAccess l = new LanguageDataAccess();
         List<Language> languageList = null;
-        languageList = l.getLanguageList();
+            languageList = l.getLanguageList();
+            
         if ( languageList == null) {
             return Response.noContent().build();
         }

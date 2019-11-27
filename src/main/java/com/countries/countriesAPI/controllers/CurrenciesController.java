@@ -1,5 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import com.countries.countriesAPI.models.Currency;
 public class CurrenciesController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCurrencies() throws SQLException {
+    public Response getCurrencies() throws SQLException, IOException, ClassNotFoundException {
         List<Currency> currencies = CurrencyDataAccess.getCurrencies();
         final ResponseBuilder response;
         response = Response.ok(currencies);

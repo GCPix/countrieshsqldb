@@ -11,19 +11,19 @@ import java.util.Scanner;
 import com.countries.countriesAPI.models.Country;
 
 public class BorderDbDataTransfer {
-    private Connection connection;
+    // private Connection connection;
 
     public BorderDbDataTransfer() {
 
     }
 
-    public void populateBorderTable(List<Country> countryList) throws SQLException {
-            DbConnection dbc = new DbConnection();
+    public void populateBorderTable(List<Country> countryList, Connection connection) throws SQLException {
+            // DbConnection dbc = new DbConnection();
             InputStream is = getClass().getResourceAsStream("sqlScripts/populateBorderTable.sql");
             Scanner sc = new Scanner(is);
 
         try{
-            connection = dbc.getConnection();
+            // connection = dbc.getConnection();
             
             StringBuffer sb = new StringBuffer();
             
@@ -51,7 +51,7 @@ public class BorderDbDataTransfer {
                 exception.printStackTrace();
     
             }finally {
-                dbc.closeConnection(connection);
+                // dbc.closeConnection(connection);
                 sc.close();
             }
 
