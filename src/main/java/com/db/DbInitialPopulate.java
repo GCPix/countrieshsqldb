@@ -9,13 +9,15 @@ import java.util.List;
 import com.countries.Helpers.HCHandler;
 import com.countries.countriesAPI.models.Country;
 
+import org.hsqldb.cmdline.SqlToolError;
+
 public class DbInitialPopulate {
 
     public DbInitialPopulate() {
 
     }
 
-    public void populateDatabase() throws IOException, ClassNotFoundException, SQLException {
+    public void populateDatabase() throws IOException, ClassNotFoundException, SQLException, SqlToolError {
         DbConnection dbc = new DbConnection();
         HCHandler hch = new HCHandler();
         String jsonString = hch.getAPIData("https://restcountries.eu/rest/v2/all");
@@ -23,7 +25,7 @@ public class DbInitialPopulate {
         countryList = hch.jsonToCountry(jsonString);
         
         try (Connection connection = dbc.getConnection()) {
-            dbc.createDatabase(connection);
+            dbc.createTables(connection);
             CountryDbDataTransfer cddt = new CountryDbDataTransfer();
             cddt.populateCountryTable(countryList, connection);
             BorderDbDataTransfer bddt = new BorderDbDataTransfer();

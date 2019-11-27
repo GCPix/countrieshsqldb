@@ -106,7 +106,7 @@ public class CurrencyDataAccess {
 		return id;
 	}
 
-	public void updateCurrency(int currencyId, Currency currency) throws SQLException, IOException {
+	public void updateCurrency(int currencyId, Currency currency) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
 

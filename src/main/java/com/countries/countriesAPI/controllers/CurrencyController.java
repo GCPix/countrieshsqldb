@@ -61,7 +61,7 @@ public class CurrencyController {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateCurrency(@PathParam("id") int currencyId, Currency currency) throws SQLException, IOException {
+    public Response updateCurrency(@PathParam("id") int currencyId, Currency currency) throws SQLException, IOException, ClassNotFoundException {
         final ResponseBuilder response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         cda.updateCurrency(currencyId, currency);
