@@ -3,41 +3,37 @@ package com.countries.countriesAPI.models;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Country {
-    private Integer id;
-    private String  name;
-    private String capital;
+public class Country extends BasicCountry{
     private List<Language> languages;
     //borders is the 3 letter string from the borders array, if I change the name GSON doesn't work
     //borders is only used to populate the database
     private List<String> borders;
     //borderCountriesList is for all CRUD and API work
-    private List<Country> borderCountriesList;
+    private List<BasicCountry> borderCountriesList;
     private List<Currency>  currencies;
-    private long population;
     private String alpha3Code;
 
     public Country(){
-
+        
     }
     
     /**
      * @return the name
      */
-    public String getName() {
-        return name;
-    }
+    // public String getName() {
+    //     return name;
+    // }
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+    // /**
+    //  * @param name the name to set
+    //  */
+    // public void setName(String name) {
+    //     this.name = name;
+    // }
 
-    /**
-     * @return the borders
-     */
+    // /**
+    //  * @return the borders
+    //  */
     public List<String> getborders() {
         return borders;
     }
@@ -48,33 +44,33 @@ public class Country {
         this.borders = borders;
     }
 
-    /**
-     * @return the capital
-     */
-    public String getCapital() {
-        return capital;
-    }
-    /**
-     * @param capital the capital to set
-     */
-    public void setCapital(String capital) {
-        this.capital = capital;
-    }
-    /**
-     * @return the population
-     */
-    public long getPopulation() {
-        return population;
-    }
-    /**
-     * @param population the population to set
-     */
-    public void setPopulation(long population) {
-        this.population = population;
-    }
-    /**
-     * @return the languages
-     */
+    // /**
+    //  * @return the capital
+    //  */
+    // public String getCapital() {
+    //     return capital;
+    // }
+    // /**
+    //  * @param capital the capital to set
+    //  */
+    // public void setCapital(String capital) {
+    //     this.capital = capital;
+    // }
+    // /**
+    //  * @return the population
+    //  */
+    // public long getPopulation() {
+    //     return population;
+    // }
+    // /**
+    //  * @param population the population to set
+    //  */
+    // public void setPopulation(long population) {
+    //     this.population = population;
+    // }
+    // /**
+    //  * @return the languages
+    //  */
     public List<Language> getLanguages() {
         return languages;
     }
@@ -110,33 +106,39 @@ public class Country {
     public String getAlpha3Code() {
         return alpha3Code;
     }
-    /**
-     * @return the id
-     */
-    public Integer getId() {
-        return id;
-    }
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
+    // /**
+    //  * @return the id
+    //  */
+    // public Integer getId() {
+    //     return id;
+    // }
+    // /**
+    //  * @param id the id to set
+    //  */
+    // public void setId(int id) {
+    //     this.id = id;
+    // }
 
     /**
      * @return the borderCountriesList
      */
-    public List<Country> getBorderCountriesList() {
+    public List<BasicCountry> getBorderCountriesList() {
         return borderCountriesList;
     }
 
     /**
      * @param borderCountriesList the borderCountriesList to set
      */
-    public void setBorderCountriesList(List<Country> borderCountriesList) {
+    public void setBorderCountriesList(List<BasicCountry> borderCountriesList) {
         this.borderCountriesList = borderCountriesList;
     }
 
+    public void addBorderCountry(BasicCountry b){
+        if (this.borderCountriesList == null){
+            this.borderCountriesList = new ArrayList<BasicCountry>();
+        }
+        this.borderCountriesList.add(b);
+    }
 	public void addCurrency(Currency c) {
         if(this.currencies == null){
             this.currencies = new ArrayList<Currency>();

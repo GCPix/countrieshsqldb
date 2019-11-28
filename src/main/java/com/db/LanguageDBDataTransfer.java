@@ -61,24 +61,22 @@ public class LanguageDBDataTransfer {
 
     public ArrayList<Language> getLanguageList(Connection connection) throws SQLException {
         ArrayList<Language> languageList = new ArrayList<>();
-        try{
+        try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM language");){
             // connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM language");
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Language lan = new Language();
-                lan.setId(rs.getInt("id"));
-                lan.setIso639_1(rs.getString("iso639_1"));
-                lan.setIso639_2(rs.getString("iso639_2"));
-                lan.setName(rs.getString("name"));
-                lan.setNativeName(rs.getString("nativeName"));
-                languageList.add(lan);
+           try(ResultSet rs = ps.executeQuery()) {
+                while(rs.next()){
+                    Language lan = new Language();
+                    lan.setId(rs.getInt("id"));
+                    lan.setIso639_1(rs.getString("iso639_1"));
+                    lan.setIso639_2(rs.getString("iso639_2"));
+                    lan.setName(rs.getString("name"));
+                    lan.setNativeName(rs.getString("nativeName"));
+                    languageList.add(lan);
+                }
             }
         
-        }finally {
-            // dbc.closeConnection(connection);
-           
         }
+
         return languageList;
     }
 // need to tidy this up to get rid of currency and replace with language
