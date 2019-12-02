@@ -5,6 +5,8 @@ public class BasicCountry {
     private String name;
     private String capital;
     private long population;
+    private String flag;
+    private String region;
 
     public BasicCountry(){
 
@@ -65,4 +67,34 @@ public class BasicCountry {
     public long getPopulation() {
         return population;
     }
+
+
+    /**
+     * @return String return the flag
+     */
+    public String getFlag() {
+        return flag;
+    }
+
+    /**
+     * @param flag the flag to set
+     */
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    /**
+     * @return String return the Region
+     */
+    public String getRegion() {
+        return region;
+    }
+
+    /**
+     * @param Region the Region to set
+     */
+    public void setRegion(String Region) {
+        this.region = Region;
+    }
+
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.countries.Helpers.HCHandler;
+import com.countries.countriesAPI.dataAccess.RegionalBlockDataAccess;
 import com.countries.countriesAPI.models.Country;
 
 import org.hsqldb.cmdline.SqlToolError;
@@ -36,6 +37,10 @@ public class DbInitialPopulate {
             LanguageDBDataTransfer lddt = new LanguageDBDataTransfer();
             lddt.populateLanguageTable(countryList, connection);
             lddt.populateCountryLanguageTable(countryList, lddt.getLanguageList(connection), connection);
+            RegionalBlockDBDataTransfer rbddt = new RegionalBlockDBDataTransfer();
+            rbddt.populateRegionalBlockTable(countryList, connection);
+            RegionalBlockDataAccess rbda = new RegionalBlockDataAccess();
+            rbddt.populateCountryRBRelationshipTable(countryList, rbda.getRegionalBlocks(connection), connection);
         } 
        
         

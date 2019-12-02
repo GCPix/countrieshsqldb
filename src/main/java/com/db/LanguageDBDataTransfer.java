@@ -79,13 +79,13 @@ public class LanguageDBDataTransfer {
 
         return languageList;
     }
-// need to tidy this up to get rid of currency and replace with language
+
     public void populateCountryLanguageTable(List<Country> countryList, List<Language> LanguageList, Connection connection)
             throws SQLException {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryLanguageTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            // connection = dbc.getConnection();
+            
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -109,7 +109,7 @@ public class LanguageDBDataTransfer {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         } finally {
-            // dbc.closeConnection(connection);
+            
             sc.close();
         }     
     }

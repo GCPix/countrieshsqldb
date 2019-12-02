@@ -65,6 +65,8 @@ public class CountryDbDataTransfer {
                 ps.setString(1, c.getName());
                 ps.setString(2, c.getCapital());
                 ps.setLong(3, c.getPopulation());
+                ps.setString(4, c.getRegion());
+                ps.setString(5, c.getFlag());
                 ps.execute();
                 ResultSet rs = ps.getGeneratedKeys();
                 rs.next();

@@ -1,1 +1,1 @@
-INSERT INTO country (name, capital, population) VALUES (?,?,?);
+INSERT INTO country (name, capital, population, region, flag) VALUES (?,?,?,?,?);

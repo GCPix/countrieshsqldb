@@ -11,6 +11,7 @@ public class Country extends BasicCountry{
     //borderCountriesList is for all CRUD and API work
     private List<BasicCountry> borderCountriesList;
     private List<Currency>  currencies;
+    private List<RegionalBlock>  regionalBlocs;
     private String alpha3Code;
 
     public Country(){
@@ -151,5 +152,42 @@ public class Country extends BasicCountry{
             this.languages = new ArrayList<Language>();
         }
         this.languages.add(l);
-	}
+    }
+    
+    
+
+    /**
+     * @return List<String> return the borders
+     */
+    public List<String> getBorders() {
+        return borders;
+    }
+
+    /**
+     * @param borders the borders to set
+     */
+    public void setBorders(List<String> borders) {
+        this.borders = borders;
+    }
+
+    /**
+     * @return List<RegionalBlock> return the regionalBlocks
+     */
+    public List<RegionalBlock> getRegionalBlocks() {
+        return regionalBlocs;
+    }
+
+    /**
+     * @param regionalBlocks the regionalBlocks to set
+     */
+    public void setRegionalBlocks(List<RegionalBlock> regionalBlocks) {
+        this.regionalBlocs = regionalBlocks;
+    }
+
+    public void addRegionalBlock(RegionalBlock rb){
+        if(this.regionalBlocs == null)
+            this.regionalBlocs = new ArrayList<>();
+        regionalBlocs.add(rb);
+    }
+
 }

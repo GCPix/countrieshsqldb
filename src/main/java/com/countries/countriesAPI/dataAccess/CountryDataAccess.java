@@ -12,6 +12,7 @@ import com.countries.countriesAPI.models.BasicCountry;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
 import com.countries.countriesAPI.models.Language;
+import com.countries.countriesAPI.models.RegionalBlock;
 import com.db.DbConnection;
 
 public class CountryDataAccess {
@@ -34,6 +35,8 @@ public class CountryDataAccess {
                     country.setName(rs.getString("name"));
                     country.setCapital(rs.getString("capital"));
                     country.setPopulation(rs.getLong("population"));
+                    country.setRegion(rs.getString("region"));
+                    country.setFlag(rs.getString("flag"));
                 }
             } 
         } 
@@ -88,8 +91,25 @@ public class CountryDataAccess {
                 }
             }
         } 
+        String sqlStringCountryRegionalBlock = "SELECT * FROM country_regionalblock WHERE country_id = " + countryId;
+        try(PreparedStatement ps = con.prepareStatement(sqlStringCountryRegionalBlock)){
+            try (ResultSet rs = ps.executeQuery()){
+                List<Integer> RegionalBlockCountryList = new ArrayList<>();
+                while(rs.next()){
+                    RegionalBlockCountryList.add(rs.getInt("regionalblock_id"));
+                }
+                for(int rbId: RegionalBlockCountryList){
+                    RegionalBlock rb = new RegionalBlock();
+                    RegionalBlockDataAccess rbddt = new RegionalBlockDataAccess();
+                    rb = rbddt.getRegionalBlock(rbId, con);
+                    country.addRegionalBlock(rb);
+                }
+            }
+        }
           return country;
         }
+
+        
 	}
     
      private BasicCountry getBorderCountry(int b, Connection con) throws SQLException {
