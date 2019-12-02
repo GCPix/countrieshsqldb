@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -69,5 +70,27 @@ public class RegionalBlockDBDataTransfer {
         }
         }
     }
+
+	public List<RegionalBlock> getRegionalBlockList(Connection connection) throws SQLException {
+       
+            ArrayList<RegionalBlock> regionalBlockList = new ArrayList<>();
+
+            try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM regionalblock");){
+                
+               try(ResultSet rs = ps.executeQuery()) {
+                    while(rs.next()){
+                        RegionalBlock rb = new RegionalBlock();
+                        rb.setId(rs.getInt("id"));
+                        rb.setAcronym(rs.getString("acronym"));
+                        rb.setName(rs.getString("name"));
+                        regionalBlockList.add(rb);
+                    }
+                }
+            
+            }
+    
+            return regionalBlockList;
+       
+	}
 
 }

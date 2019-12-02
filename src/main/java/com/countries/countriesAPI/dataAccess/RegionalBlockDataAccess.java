@@ -9,11 +9,14 @@ import java.util.List;
 
 
 import com.countries.countriesAPI.models.RegionalBlock;
+import com.db.DbConnection;
 
 public class RegionalBlockDataAccess {
-    public List<RegionalBlock> getRegionalBlocks(Connection con) throws SQLException {
+    public List<RegionalBlock> getRegionalBlocks() throws SQLException, ClassNotFoundException {
         List<RegionalBlock> regionalBlockList = null;
-        try(PreparedStatement ps = con.prepareStatement("SELECT * FROM regionalblock;")){
+        DbConnection dbc = new DbConnection();
+        
+        try(Connection con = dbc.getConnection(); PreparedStatement ps = con.prepareStatement("SELECT * FROM regionalblock;")){
             try(ResultSet rs = ps.executeQuery()){
                 regionalBlockList = new ArrayList<>();
                 while(rs.next()){

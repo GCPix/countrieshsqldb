@@ -3,6 +3,7 @@ package com.countries.countriesAPI.controllers;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -35,5 +36,16 @@ public class CountryController {
 
         return response;
 
+    }
+
+    @Path("/{id}")
+    @DELETE
+    public Response deleteCountry(@PathParam("id") int countryId) throws ClassNotFoundException, SQLException {
+        CountryDataAccess cda = new CountryDataAccess();
+        Response response;
+
+        cda.deleteCountry(countryId);
+        response = Response.ok("looks like you deleted a country!").build();
+        return response;
     }
 }

@@ -10,9 +10,7 @@ The generation of the executable jar file can be performed by issuing the follow
 
 This will create an executable jar file **countriesAPI-microbundle.jar** within the _target_ maven folder. This can be started by executing the following command
 
-    
-
-
+    java -jar target/countriesAPI-microbundle.jar
 
 
 To launch the test page, open your browser at the following URL
