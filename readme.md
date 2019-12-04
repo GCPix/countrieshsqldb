@@ -21,29 +21,29 @@ All paths have been tested to some extent through Postman, I have added the scri
 
 All paths are http://localhost:8080/'endpoint' from list below:
    'ROOT' REST Endpoints:
-GET     /application.wadl
-GET     /countries/summary
-POST    /country
-DELETE  /country/{id}
-GET     /country/{id}
-PUT     /country/{id}
-GET     /currencies
-POST    /currency
-DELETE  /currency/{id}
-GET     /currency/{id}
-PUT     /currency/{id}
-POST    /language
-DELETE  /language/{languageid}
-GET     /language/{languageid}
-PUT     /language/{languageid}
-GET     /languages
-GET     /openapi/
-GET     /openapi/application.wadl
-POST    /regionalblock
-DELETE  /regionalblock/{id}
-GET     /regionalblock/{id}
-PUT     /regionalblock/{id}
-GET     /regionalblocks
+    GET     /application.wadl
+    GET     /countries/summary
+    POST    /country
+    DELETE  /country/{id}
+    GET     /country/{id}
+    PUT     /country/{id}
+    GET     /currencies
+    POST    /currency
+    DELETE  /currency/{id}
+    GET     /currency/{id}
+    PUT     /currency/{id}
+    POST    /language
+    DELETE  /language/{languageid}
+    GET     /language/{languageid}
+    PUT     /language/{languageid}
+    GET     /languages
+    GET     /openapi/
+    GET     /openapi/application.wadl
+    POST    /regionalblock
+    DELETE  /regionalblock/{id}
+    GET     /regionalblock/{id}
+    PUT     /regionalblock/{id}
+    GET     /regionalblocks
 
 ## Specification examples
 

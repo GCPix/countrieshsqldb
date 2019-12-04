@@ -1,7 +1,12 @@
 package com.countries.countriesAPI.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class BasicCountry {
     private Integer id;
+    @Size(min = 0, max = 150, message = "Country name cannot be more than 150 characters")
+    @NotNull
     private String name;
     private String capital;
     private long population;
@@ -12,6 +17,7 @@ public class BasicCountry {
 
     }
 
+    
     /**
      * @param capital the capital to set
      */
