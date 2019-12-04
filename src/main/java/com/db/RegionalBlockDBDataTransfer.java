@@ -59,6 +59,8 @@ public class RegionalBlockDBDataTransfer {
                         if(clrb.getName().equalsIgnoreCase(rb.getName())){
                             ps.setInt(1, c.getId());
                             ps.setInt(2, rb.getId());
+                            ps.setInt(3, c.getId());
+                            ps.setInt(4, rb.getId());
                             ps.execute();
                         }
                         

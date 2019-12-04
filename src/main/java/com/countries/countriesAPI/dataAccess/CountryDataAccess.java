@@ -110,12 +110,15 @@ public class CountryDataAccess {
 
         return id;
     }
-    public void updateCountry(Country country, List<Integer> deletedCurrencies) throws ClassNotFoundException, SQLException {
+    public void updateCountry(Country country, List<Integer> deletedCurrencies, List<Integer> deletedLanguages, List<Integer> deletedBorders, List<Integer> deletedRegionalBlocks) throws ClassNotFoundException, SQLException {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
         
         // checks for missing relationships and adds them
         populateCountryCurrencyTable(country, con);
+        populateCountryBorderTable(country, con);
+        populateCountryLanguageTable(country, con);
+        populateCountryRegionalBlock(country, con);
         //checks for removed currencies and deletes from relationship table
         int i = -1;
         ArrayList<Integer> dc = new ArrayList<>();
@@ -125,6 +128,37 @@ public class CountryDataAccess {
                 i = ps.executeUpdate();
             }
             // System.out.println(i);
+        }
+
+        //checks for removed languages and deletes from relationship table
+        int j = -1;
+        // ArrayList<Integer> dc = new ArrayList<>();
+        // dc.addAll(deletedCurrencies);
+        for(int x: deletedLanguages){
+            try(PreparedStatement ps = con.prepareStatement("DELETE FROM country_language WHERE country_id = " + country.getId() + " AND language_id = " + x + ";")){
+                j = ps.executeUpdate();
+            }
+            // System.out.println(j);
+        }
+
+        //checks for removed borders and deletes them from the relationship table
+        int k = -1;
+
+        for(int x: deletedBorders){
+            try(PreparedStatement ps = con.prepareStatement("DELETE FROM border WHERE country_id = " + country.getId() + " AND country_border_id = " + x + ";")){
+                k = ps.executeUpdate();
+            }
+            // System.out.println(k);
+        }
+
+        //checks for removed regional blocks and deletes them from the relationship table
+        int l = -1;
+       
+        for(int x: deletedRegionalBlocks){
+            try(PreparedStatement ps = con.prepareStatement("DELETE FROM country_regionalblock WHERE country_id = " + country.getId() + " AND regionalblock_id = " + x + ";")){
+                l = ps.executeUpdate();
+            }
+            // System.out.println(l);
         }
     }
     private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException {
@@ -142,6 +176,8 @@ public class CountryDataAccess {
                         
                             ps.setInt(1, country.getId());
                             ps.setInt(2, rb.getId());
+                            ps.setInt(3, country.getId());
+                            ps.setInt(4, rb.getId());
                             ps.execute();
                         
                     
@@ -335,6 +371,8 @@ public class CountryDataAccess {
                     
                         ps.setInt(1, country.getId());
                         ps.setInt(2, b.getId());
+                        ps.setInt(3, country.getId());
+                        ps.setInt(4, b.getId());
                         ps.execute();
                 }
             }
@@ -363,6 +401,8 @@ public class CountryDataAccess {
                         
                             ps.setInt(1, country.getId());
                             ps.setInt(2, l.getId());
+                            ps.setInt(3, country.getId());
+                            ps.setInt(4, l.getId());
                             ps.execute();
                         
                     

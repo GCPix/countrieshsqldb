@@ -1,0 +1,578 @@
+{
+	"info": {
+		"_postman_id": "87ade72a-ce94-42f9-936e-097afc9266d2",
+		"name": "countries api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get languages",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c0c93d78-4a82-4cc7-aa3a-80a14fbf651e",
+						"exec": [
+							"pm.test(\"Body is correct\", function () {",
+							"    pm.response.to.have.body(\"response_body_string\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/languages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"languages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getLanguage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/language/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"language",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addLanguage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5f6e8a2e-cc76-44af-8284-90ec98ef498f",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Status code name has string\", function () {",
+							"    pm.response.to.have.status(\"Created\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"iso639_1\": \"GMgc\",\n\t\"iso639_2\": \"GMMgc\",\n\t\"name\": \"Gerrygc\",\n\t\"nativeName\": \"Geraldgc\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/language",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"language"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateLanguage",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"iso639_1\": \"GM1\",\n\t\"iso639_2\": \"GMM1\",\n\t\"name\": \"Gerry1\",\n\t\"nativeName\": \"Gerald1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/language/111",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"language",
+						"111"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deletelanguage",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/language/113",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"language",
+						"113"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCurrencies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/currencies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"currencies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCurrency",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/currency/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"currency",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addCurrency",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"code\": \"XDS\",\n    \"name\": \"My Currency\",\n    \"symbol\": \"F\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/currency",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"currency"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateCurrency",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"code\": \"XDT\",\n    \"name\": \"My Currency2\",\n    \"symbol\": \"W\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/currency/174",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"currency",
+						"174"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCurrency",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/currency/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"currency",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCountrySummary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/countries/summary?sortField=capital&filterField=population&filterValue='English'",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"countries",
+						"summary"
+					],
+					"query": [
+						{
+							"key": "sortField",
+							"value": "capital"
+						},
+						{
+							"key": "filterField",
+							"value": "population"
+						},
+						{
+							"key": "filterValue",
+							"value": "'English'"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCountry",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/country/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"country",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addCountry",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"capital\": \"Kabuli\",\r\n    \"flag\": \"https://restcountries.eu/data/afg.svg\",\r\n    \"name\": \"Afghanistanum\",\r\n    \"population\": 276571451,\r\n    \"region\": \"Asia\",\r\n    \"borderCountriesList\": [\r\n        {\r\n            \"capital\": \"Tehran\",\r\n            \"flag\": \"https://restcountries.eu/data/irn.svg\",\r\n            \"id\": 107,\r\n            \"name\": \"Iran (Islamic Republic of)\",\r\n            \"population\": 79369900,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Islamabad\",\r\n            \"flag\": \"https://restcountries.eu/data/pak.svg\",\r\n            \"id\": 169,\r\n            \"name\": \"Pakistan\",\r\n            \"population\": 194125062,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Ashgabat\",\r\n            \"flag\": \"https://restcountries.eu/data/tkm.svg\",\r\n            \"id\": 232,\r\n            \"name\": \"Turkmenistan\",\r\n            \"population\": 4751120,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Tashkent\",\r\n            \"flag\": \"https://restcountries.eu/data/uzb.svg\",\r\n            \"id\": 241,\r\n            \"name\": \"Uzbekistan\",\r\n            \"population\": 31576400,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Dushanbe\",\r\n            \"flag\": \"https://restcountries.eu/data/tjk.svg\",\r\n            \"id\": 222,\r\n            \"name\": \"Tajikistan\",\r\n            \"population\": 8593600,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Beijing\",\r\n            \"flag\": \"https://restcountries.eu/data/chn.svg\",\r\n            \"id\": 48,\r\n            \"name\": \"China\",\r\n            \"population\": 1377422166,\r\n            \"region\": \"Asia\"\r\n        }\r\n    ],\r\n    \"currencies\": [\r\n        {\r\n            \"code\": \"AFN\",\r\n            \"id\": 0,\r\n            \"name\": \"Afghan afghani\",\r\n            \"symbol\": \"؋\"\r\n        }\r\n    ],\r\n    \"languages\": [\r\n        {\r\n            \"id\": 0,\r\n            \"iso639_1\": \"ps\",\r\n            \"iso639_2\": \"pus\",\r\n            \"name\": \"Pashto\",\r\n            \"nativeName\": \"پښتو\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"iso639_1\": \"uz\",\r\n            \"iso639_2\": \"uzb\",\r\n            \"name\": \"Uzbek\",\r\n            \"nativeName\": \"Oʻzbek\"\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"iso639_1\": \"tk\",\r\n            \"iso639_2\": \"tuk\",\r\n            \"name\": \"Turkmen\",\r\n            \"nativeName\": \"Türkmen\"\r\n        }\r\n    ],\r\n    \"regionalBlocks\": [\r\n        {\r\n            \"acronym\": \"SAARC\",\r\n            \"id\": 0,\r\n            \"name\": \"South Asian Association for Regional Cooperation\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/country",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"country"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateCountry",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"capital\": \"Kabul\",\r\n    \"flag\": \"https://restcountries.eu/data/afg.svg\",\r\n    \"id\": 0,\r\n    \"name\": \"Afghanistan\",\r\n    \"population\": 27657145,\r\n    \"region\": \"Asia\",\r\n    \"borderCountriesList\": [\r\n    \t{\r\n\t        \"capital\": \"\",\r\n\t        \"flag\": \"https://restcountries.eu/data/hmd.svg\",\r\n\t        \"id\": 98,\r\n\t        \"name\": \"Heard Island and McDonald Islands\",\r\n\t        \"population\": 0,\r\n\t        \"region\": \"\"\r\n    \t},\r\n        {\r\n            \"capital\": \"Tehran\",\r\n            \"flag\": \"https://restcountries.eu/data/irn.svg\",\r\n            \"id\": 107,\r\n            \"name\": \"Iran (Islamic Republic of)\",\r\n            \"population\": 79369900,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Islamabad\",\r\n            \"flag\": \"https://restcountries.eu/data/pak.svg\",\r\n            \"id\": 169,\r\n            \"name\": \"Pakistan\",\r\n            \"population\": 194125062,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Ashgabat\",\r\n            \"flag\": \"https://restcountries.eu/data/tkm.svg\",\r\n            \"id\": 232,\r\n            \"name\": \"Turkmenistan\",\r\n            \"population\": 4751120,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Tashkent\",\r\n            \"flag\": \"https://restcountries.eu/data/uzb.svg\",\r\n            \"id\": 241,\r\n            \"name\": \"Uzbekistan\",\r\n            \"population\": 31576400,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Dushanbe\",\r\n            \"flag\": \"https://restcountries.eu/data/tjk.svg\",\r\n            \"id\": 222,\r\n            \"name\": \"Tajikistan\",\r\n            \"population\": 8593600,\r\n            \"region\": \"Asia\"\r\n        },\r\n        {\r\n            \"capital\": \"Beijing\",\r\n            \"flag\": \"https://restcountries.eu/data/chn.svg\",\r\n            \"id\": 48,\r\n            \"name\": \"China\",\r\n            \"population\": 1377422166,\r\n            \"region\": \"Asia\"\r\n        }\r\n    ],\r\n    \"currencies\": [\r\n    \t{\r\n\t        \"code\": \"EUR\",\r\n\t        \"id\": 1,\r\n\t        \"name\": \"Euro\",\r\n\t        \"symbol\": \"€\"\r\n    \t}\r\n        \r\n    ],\r\n    \"languages\": [\r\n    \t{\r\n\t\t    \"id\": 6,\r\n\t\t    \"iso639_1\": \"en\",\r\n\t\t    \"iso639_2\": \"eng\",\r\n\t\t    \"name\": \"English\",\r\n\t\t    \"nativeName\": \"English\"\r\n\t\t},\r\n        {\r\n            \"id\": 0,\r\n            \"iso639_1\": \"ps\",\r\n            \"iso639_2\": \"pus\",\r\n            \"name\": \"Pashto\",\r\n            \"nativeName\": \"پښتو\"\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"iso639_1\": \"tk\",\r\n            \"iso639_2\": \"tuk\",\r\n            \"name\": \"Turkmen\",\r\n            \"nativeName\": \"Türkmen\"\r\n        }\r\n    ],\r\n    \"regionalBlocks\": [\r\n    \t{\r\n\t        \"acronym\": \"CARICOM\",\r\n\t        \"id\": 5,\r\n\t        \"name\": \"Caribbean Community\"\r\n    \t}\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/country/0?deletedCurrencies=0&deletedLanguages=1&deletedBorders=169&deletedRegionalBlocks=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"country",
+						"0"
+					],
+					"query": [
+						{
+							"key": "deletedCurrencies",
+							"value": "0"
+						},
+						{
+							"key": "deletedLanguages",
+							"value": "1"
+						},
+						{
+							"key": "deletedBorders",
+							"value": "169"
+						},
+						{
+							"key": "deletedRegionalBlocks",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCountry",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/country/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"country",
+						"0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getRegionalBlocks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/regionalblocks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"regionalblocks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getRegionalBlock",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/regionalblock/13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"regionalblock",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addRegionalBlock",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"acronym\": \"GCB\",\n\t\"name\": \"The Block of Gillian\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/regionalblock",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"regionalblock"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateRegionalBlock",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"acronym\": \"SAARCI\",\n    \"name\": \"South Asian Association for Regional Cooperation Inhouse\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/regionalblock/13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"regionalblock",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteRegionalBlock",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/regionalblock/0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"regionalblock",
+						"0"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

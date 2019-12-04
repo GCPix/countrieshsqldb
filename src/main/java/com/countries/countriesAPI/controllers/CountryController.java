@@ -39,11 +39,17 @@ public class CountryController {
     }
     @Path("{id}")
     @PUT
-    public Response updateCountry(@PathParam("id") int countryId, Country country, @QueryParam("deletedCurrencies") List<Integer> deletedCurrencies)
+    public Response updateCountry(@PathParam("id") int countryId, Country country, 
+    @QueryParam("deletedCurrencies") List<Integer> deletedCurrencies,
+    @QueryParam("deletedLanguages") List<Integer> deletedLanguages,
+    @QueryParam("deletedBorders") List<Integer> deletedBorders,
+    @QueryParam("deletedRegionalBlocks") List<Integer> deletedRegionalBlocks
+    )
             throws ClassNotFoundException, SQLException {
         Response response;
         CountryDataAccess cda = new CountryDataAccess();
-        cda.updateCountry(country, deletedCurrencies);
+        cda.updateCountry(country, deletedCurrencies, deletedRegionalBlocks, deletedRegionalBlocks,
+                deletedRegionalBlocks);
         response = Response.ok().build();
         return response;
     }

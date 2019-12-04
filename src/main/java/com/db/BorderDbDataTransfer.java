@@ -43,6 +43,8 @@ public class BorderDbDataTransfer {
                     }
                         ps.setInt(1, c.getId());
                         ps.setInt(2, cid);
+                        ps.setInt(3, c.getId());
+                        ps.setInt(4, cid);
                         ps.execute();   
                 }      
             }

@@ -17,6 +17,9 @@ This will create an executable jar file **countriesAPI-microbundle.jar** within 
 
     http://localhost:8080/openAPI will show the openAPI documentation in full (or it will if I can finish it).  List of paths available are below:
 
+All paths have been tested to some extent through Postman, I have added the script for this to the project if you want to import it and update it for your own tests.
+
+All paths are http://localhost:8080/'endpoint' from list below:
    'ROOT' REST Endpoints:
 GET     /application.wadl
 GET     /countries/summary

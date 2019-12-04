@@ -100,6 +100,8 @@ public class LanguageDBDataTransfer {
                         if(lan.getName()!= null && l.getName() != null && l.getName().equalsIgnoreCase(lan.getName())){
                             ps.setInt(1, c.getId());
                             ps.setInt(2, l.getId());
+                            ps.setInt(3, c.getId());
+                            ps.setInt(4, l.getId());
                             ps.execute();
                         }
                     }
