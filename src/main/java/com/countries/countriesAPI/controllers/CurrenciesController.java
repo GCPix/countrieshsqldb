@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import com.countries.countriesAPI.dataAccess.CurrencyDataAccess;
 import com.countries.countriesAPI.models.Currency;
@@ -19,9 +19,16 @@ public class CurrenciesController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCurrencies() throws SQLException, IOException, ClassNotFoundException {
-        List<Currency> currencies = CurrencyDataAccess.getCurrencies();
-        final ResponseBuilder response;
-        response = Response.ok(currencies);
-        return response.build();
+        CurrencyDataAccess cda = new CurrencyDataAccess();
+        List<Currency> currencies = cda.getCurrencies();
+        final Response response;
+        
+        if(currencies != null){
+            response = Response.ok(currencies).build();
+        } else {
+            response = Response.status(Status.NOT_FOUND).entity("No data was returned for your request").build();
+        }
+        
+        return response;
     }
 }

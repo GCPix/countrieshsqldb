@@ -1,12 +1,15 @@
 package com.countries.countriesAPI.dataAccess;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.countries.countriesAPI.models.BasicCountry;
 import com.countries.countriesAPI.models.Country;
@@ -74,13 +77,81 @@ public class CountryDataAccess {
             return countriesSummary;
         }
 
-    public void deleteCountry(int countryId) throws SQLException, ClassNotFoundException {
+    public int deleteCountry(int countryId) throws SQLException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
+        int noRowsReturned;
         try(Connection con = dbc.getConnection(); PreparedStatement ps = con.prepareStatement("DELETE FROM country WHERE id = " + countryId)){
-            ps.execute();
+            noRowsReturned = ps.executeUpdate();
+        }
+        return noRowsReturned;
+    }
+    
+    public int addCountry(Country country) throws ClassNotFoundException, SQLException, IOException {
+        int id;
+        DbConnection dbc = new DbConnection();
+        Connection con = dbc.getConnection();
+        // populate country in db
+        id = populateCountryTable(country, con);
+        country.setId(id);
+
+        //populate country_currency in db
+        
+        populateCountryCurrencyTable(country, con);
+
+        //populate country_border in db
+        populateCountryBorderTable(country, con);
+
+        //populate country_language in db
+ 
+        populateCountryLanguageTable(country, con);
+
+        //populate country_regionalblock in db
+        populateCountryRegionalBlock(country, con);
+
+        return id;
+    }
+    public void updateCountry(Country country, List<Integer> deletedCurrencies) throws ClassNotFoundException, SQLException {
+        DbConnection dbc = new DbConnection();
+        Connection con = dbc.getConnection();
+        
+        // checks for missing relationships and adds them
+        populateCountryCurrencyTable(country, con);
+        //checks for removed currencies and deletes from relationship table
+        int i = -1;
+        ArrayList<Integer> dc = new ArrayList<>();
+        dc.addAll(deletedCurrencies);
+        for(int x: dc){
+            try(PreparedStatement ps = con.prepareStatement("DELETE FROM country_currency WHERE country_id = " + country.getId() + " AND currency_id = " + x + ";")){
+                i = ps.executeUpdate();
+            }
+            // System.out.println(i);
         }
     }
-    private Country getAllRegionalBlocsForCountry(Country country, Connection con) throws SQLException {
+    private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException {
+        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryRBTable.sql");
+        try(Scanner sc = new Scanner(is);){
+            StringBuffer sb = new StringBuffer();
+            while(sc.hasNext()){
+
+                sb.append(sc.nextLine());
+            
+            }
+            try(PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);){
+                for(RegionalBlock rb: country.getRegionalBlocks()){
+                    
+                        
+                            ps.setInt(1, country.getId());
+                            ps.setInt(2, rb.getId());
+                            ps.execute();
+                        
+                    
+                }
+            }
+        }
+    }
+
+    private Country getAllRegionalBlocsForCountry(Country country, Connection con)
+            throws SQLException, ClassNotFoundException {
         String sqlStringCountryRegionalBlock = "SELECT * FROM country_regionalblock WHERE country_id = " + country.getId();
         try(PreparedStatement ps = con.prepareStatement(sqlStringCountryRegionalBlock)){
             try (ResultSet rs = ps.executeQuery()){
@@ -121,7 +192,6 @@ public class CountryDataAccess {
         return country;
     }
     
-
     private Country getAllBorderCountriesForCountry(Country country, Connection con) throws SQLException {
         String sqlStringBorderCountries = "SELECT * FROM border WHERE country_id = " + country.getId();
 
@@ -177,6 +247,7 @@ public class CountryDataAccess {
 
         return country;
     }
+    
     private List<Integer> getCurrencyIdList(int countryId, Connection con) throws SQLException {
         String sqlStringCountryCurrency = "SELECT * FROM country_currency WHERE country_id = " + countryId;
         List<Integer> currencyList;
@@ -193,4 +264,110 @@ public class CountryDataAccess {
         return currencyList;
     }
     
+    private int populateCountryTable(Country country, Connection con) throws SQLException, IOException {
+        int id;
+        StringBuffer sb = new StringBuffer();
+        try(InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryTable.sql");
+        Scanner sc = new Scanner(is);){
+            
+            while(sc.hasNext()){
+                sb.append(sc.nextLine());
+            }
+        }
+        try(PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS)){
+            ps.setString(1, country.getName());
+            ps.setString(2, country.getCapital());
+            ps.setLong(3, country.getPopulation());
+            ps.setString(4, country.getRegion());
+            ps.setString(5, country.getFlag());
+            ps.execute();
+            try(ResultSet rs = ps.getGeneratedKeys()){
+                rs.next();
+                id = rs.getInt("id");
+            }
+        }
+        return id;
+	}
+
+    private void populateCountryCurrencyTable(Country country, Connection con)
+            throws SQLException {
+        String sqlScript = "../../../db/sqlScripts/populateCountryCurrencyTable.sql";
+        InputStream is = getClass().getResourceAsStream(sqlScript);
+        try(Scanner sc = new Scanner(is);){
+            StringBuffer sb = new StringBuffer();
+            while(sc.hasNext()){
+
+                sb.append(sc.nextLine());
+            
+            }
+            try(PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);){
+                for(Currency cocu: country.getCurrencies()){
+                    
+                        
+                            ps.setInt(1, country.getId());
+                            ps.setInt(2, cocu.getId());
+                            ps.setInt(3, country.getId());
+                            ps.setInt(4, cocu.getId());
+                            ps.execute();
+                        
+                    
+                }
+            }
+        }
+        
+        
+    }
+
+    private void populateCountryBorderTable(Country country, Connection con) throws SQLException {
+        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateBorderTable.sql");
+       
+
+        try(Scanner sc = new Scanner(is)){
+            
+            StringBuffer sb = new StringBuffer();
+            
+            while(sc.hasNext()){
+                sb.append(sc.nextLine());
+            }
+
+            try(PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);){
+                for(BasicCountry b: country.getBorderCountriesList()){
+                    
+                        ps.setInt(1, country.getId());
+                        ps.setInt(2, b.getId());
+                        ps.execute();
+                }
+            }
+            
+            
+                   
+    
+
+        
+
+        }
+    }
+
+    private void populateCountryLanguageTable(Country country, Connection con) throws SQLException {
+        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryLanguageTable.sql");
+        try(Scanner sc = new Scanner(is);){
+            StringBuffer sb = new StringBuffer();
+            while(sc.hasNext()){
+
+                sb.append(sc.nextLine());
+            
+            }
+            try(PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);){
+                for(Language l: country.getLanguages()){
+                    
+                        
+                            ps.setInt(1, country.getId());
+                            ps.setInt(2, l.getId());
+                            ps.execute();
+                        
+                    
+                }
+            }
+        }
+    }
 }

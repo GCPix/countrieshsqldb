@@ -13,9 +13,34 @@ This will create an executable jar file **countriesAPI-microbundle.jar** within 
     java -jar target/countriesAPI-microbundle.jar
 
 
-To launch the test page, open your browser at the following URL
 
-    http://localhost:8080/index.html
+
+    http://localhost:8080/openAPI will show the openAPI documentation in full (or it will if I can finish it).  List of paths available are below:
+
+   'ROOT' REST Endpoints:
+GET     /application.wadl
+GET     /countries/summary
+POST    /country
+DELETE  /country/{id}
+GET     /country/{id}
+PUT     /country/{id}
+GET     /currencies
+POST    /currency
+DELETE  /currency/{id}
+GET     /currency/{id}
+PUT     /currency/{id}
+POST    /language
+DELETE  /language/{languageid}
+GET     /language/{languageid}
+PUT     /language/{languageid}
+GET     /languages
+GET     /openapi/
+GET     /openapi/application.wadl
+POST    /regionalblock
+DELETE  /regionalblock/{id}
+GET     /regionalblock/{id}
+PUT     /regionalblock/{id}
+GET     /regionalblocks
 
 ## Specification examples
 

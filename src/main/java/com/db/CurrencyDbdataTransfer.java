@@ -100,6 +100,8 @@ public class CurrencyDbdataTransfer {
                         if(cocu.getName()!= null && cu.getName() != null && cu.getName().equalsIgnoreCase(cocu.getName())){
                             ps.setInt(1, c.getId());
                             ps.setInt(2, cu.getId());
+                            ps.setInt(3, c.getId());
+                            ps.setInt(4, cu.getId());
                             ps.execute();
                         }
                     }

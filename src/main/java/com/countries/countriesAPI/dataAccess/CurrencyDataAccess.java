@@ -15,7 +15,7 @@ import com.db.DbConnection;
 
 public class CurrencyDataAccess {
 
-    public static List<Currency> getCurrencies() throws SQLException, IOException, ClassNotFoundException {
+    public List<Currency> getCurrencies() throws SQLException, IOException, ClassNotFoundException {
         List<Currency> currencyList = null;
         DbConnection dc = new DbConnection();
         
@@ -106,23 +106,31 @@ public class CurrencyDataAccess {
 		return id;
 	}
 
-	public void updateCurrency(int currencyId, Currency currency) throws SQLException, IOException, ClassNotFoundException {
+	public int updateCurrency(int currencyId, Currency currency) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
-        Connection con = dbc.getConnection();
+        int noRowsReturned;
 
-        
-        try {
+        try (Connection con = dbc.getConnection();){
         
             String sqlString = "UPDATE currency SET code = '" + currency.getCode() + "', name = '" + currency.getName()
                     + "', symbol = '" + currency.getSymbol() + "' WHERE id = " + currencyId; 
+            
             try (PreparedStatement ps = con.prepareStatement(sqlString);) {
-                ps.execute();
+                noRowsReturned = ps.executeUpdate();
             } 
+        } 
+        return noRowsReturned;
+    }
+    public int deleteCurrency(int id) throws SQLException, ClassNotFoundException {
+        DbConnection dbc = new DbConnection();
+        Connection con = dbc.getConnection();
+        int noRowsReturned;
 
-        } finally {
-            dbc.closeConnection(con);
+        try(PreparedStatement ps = con.prepareStatement("DELETE FROM currency WHERE id = " + id + ";")) {
+            noRowsReturned = ps.executeUpdate();
+            
         }
-        
-	}
+        return noRowsReturned;
+    }
     
 }

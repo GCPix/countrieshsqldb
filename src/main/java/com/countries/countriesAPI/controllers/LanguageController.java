@@ -1,7 +1,6 @@
 package com.countries.countriesAPI.controllers;
 
 import java.io.IOException;
-import java.net.URI;
 import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
@@ -14,7 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import com.countries.countriesAPI.dataAccess.LanguageDataAccess;
@@ -26,13 +24,20 @@ public class LanguageController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addLanguage(Language language) throws SQLException, IOException, ClassNotFoundException {
-
+        Response response;
         LanguageDataAccess lda = new LanguageDataAccess();
-        int id = 0;
+        int id = -1;
         id = lda.addLanguage(language);
 
-        URI uri = UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
-        return Response.created(uri).entity(id).build();
+        // below used to create a return value that would include the path to the new addition sticking to poc example so changing to id
+        // URI uri = UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
+        // return Response.created(uri).entity(id).build();
+        if (id >= 0){
+            response = Response.status(Status.CREATED).entity(id).build();
+        } else {
+            response = Response.status(Status.BAD_REQUEST).build();
+        }
+        return response;
     }
 
     @GET
@@ -57,9 +62,19 @@ public class LanguageController {
 
     @DELETE
     @Path("/{languageid}")
-    public void deleteLanguage(@PathParam("languageid") int languageId) throws SQLException, ClassNotFoundException {
+    public Response deleteLanguage(@PathParam("languageid") int languageId) throws SQLException, ClassNotFoundException {
         LanguageDataAccess lda = new LanguageDataAccess();
-        lda.deleteLanguage(languageId);
+        Response response;
+        int noRowsReturned;
+        
+        noRowsReturned = lda.deleteLanguage(languageId);
+
+        if (noRowsReturned != 0) {
+            response = Response.noContent().build();
+        } else {
+            response = Response.status(Status.NOT_FOUND).entity("it would appear the id is wrong").build();
+        }
+        return response;
     }
 
     @PUT
@@ -72,7 +87,7 @@ public class LanguageController {
         if (languageId >= 0 && language != null) {
   
             lda.updateLanguage(languageId, language);
-            response = Response.ok().build();
+            response = Response.noContent().build();
              
         } else {
             response = Response.status(Status.BAD_REQUEST).entity("please check your details for your update, you appear to have a formatting issue").build();

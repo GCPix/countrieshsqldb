@@ -47,7 +47,8 @@ public class LanguageDataAccess {
 
     }
 
-    public void deleteLanguage(int id) throws SQLException, ClassNotFoundException {
+    public int deleteLanguage(int id) throws SQLException, ClassNotFoundException {
+        int noRowsReturned;
         DbConnection dc = new DbConnection();
 
         Connection con = dc.getConnection();
@@ -55,31 +56,33 @@ public class LanguageDataAccess {
         try {
             String sqlString = "DELETE FROM language where id  = " + id;
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
-                ps.execute();
+                noRowsReturned = ps.executeUpdate();
             } 
         } finally {
             dc.closeConnection(con);
         }
-
+        return noRowsReturned;
     }
 
-    public void updateLanguage(int id, Language language) throws SQLException, ClassNotFoundException {
+    public int updateLanguage(int id, Language language) throws SQLException, ClassNotFoundException {
+        int noRowsReturned;
         DbConnection dc = new DbConnection();
-        Connection con = dc.getConnection();
+        
 
-        try {
+        try (Connection con = dc.getConnection();){
             String sqlString = "UPDATE language SET iso639_1 = '" + language.getIso639_1() + "', iso639_2 = '"
             + language.getIso639_2() + "', name = '" + language.getName() + "', nativeName = '"
             + language.getNativeName() + "' WHERE id = " + id + ";";
 
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
-                if (ps.executeUpdate() != 1)
-                    throw new IllegalArgumentException(id + " is not in the database");
+                // if (ps.executeUpdate() == 0)
+                //     throw new IllegalArgumentException(id + " is not in the database");
+                // } 
+                noRowsReturned = ps.executeUpdate();
             } 
- 
-        } finally {
-            dc.closeConnection(con);
+        
         }
+        return noRowsReturned;
     }
 
     public int addLanguage(Language language) throws SQLException, IOException, ClassNotFoundException {

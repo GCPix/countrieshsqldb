@@ -18,13 +18,17 @@ public class LanguagesController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLanguages() throws SQLException, ClassNotFoundException {
         LanguageDataAccess l = new LanguageDataAccess();
+        Response response;
         List<Language> languageList = null;
             languageList = l.getLanguageList();
             
         if ( languageList == null) {
-            return Response.noContent().build();
+            response = Response.noContent().build();
+        } else {
+            response = Response.ok(languageList).build(); 
         }
-        return Response.ok(languageList).build(); 
+
+        return response;
     }
 
 }

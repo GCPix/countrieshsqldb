@@ -21,36 +21,32 @@ public class CountryDbDataTransfer {
     }
 
     public List<Country> getCountryList(Connection connection) throws SQLException {
-        // DbConnection dbc = new DbConnection();
+ 
         ArrayList<Country> countryList = new ArrayList<>();
         
-        try{
-            // connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM country");
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Country country = new Country();
-                country.setId(rs.getInt("id"));
-                country.setName(rs.getString("name"));
-                country.setCapital(rs.getString("capital"));
-                country.setPopulation((long)rs.getInt("population"));
-                countryList.add(country);
+        try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM country");){
+            
+            try(ResultSet rs = ps.executeQuery();){
+                while(rs.next()){
+                    Country country = new Country();
+                    country.setId(rs.getInt("id"));
+                    country.setName(rs.getString("name"));
+                    country.setCapital(rs.getString("capital"));
+                    country.setPopulation((long)rs.getInt("population"));
+                    countryList.add(country);
+                }
             }
-        
-        }finally {
-            // dbc.closeConnection(connection);
+            
         }
         return countryList;
     }
 
     public void populateCountryTable(List<Country> countryList, Connection connection) throws SQLException {
-            // DbConnection dbc = new DbConnection();
+           
             InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryTable.sql");
             
             Scanner sc = new Scanner(is);
         try{
-            // connection = dbc.getConnection();
-
             StringBuffer sb = new StringBuffer();
             
             while(sc.hasNext()){
@@ -85,7 +81,5 @@ public class CountryDbDataTransfer {
             }
 
     }
-
-    
-    
+  
 }
