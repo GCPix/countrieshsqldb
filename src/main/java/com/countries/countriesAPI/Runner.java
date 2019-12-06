@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import com.db.DbInitialPopulate;
-import com.db.HsqldbStoredProcedures;
-
 import org.hsqldb.cmdline.SqlToolError;
 
 public class Runner {
