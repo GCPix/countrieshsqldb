@@ -11,7 +11,10 @@ public class Pagination {
     private String previousPagePath;
     private String nextPagePath;
 
-    Pagination(){};
+    public Pagination(int pageSize, String sortField){
+        this.pageSize = pageSize;
+        this.sortBy = sortField;
+    };
 
     
 

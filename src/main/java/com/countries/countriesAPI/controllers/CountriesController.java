@@ -1,8 +1,7 @@
 package com.countries.countriesAPI.controllers;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -12,8 +11,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.countries.Helpers.Filter;
+import com.countries.Helpers.ResponsePaged;
 import com.countries.countriesAPI.dataAccess.CountryDataAccess;
-import com.countries.countriesAPI.models.BasicCountry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Path("countries")
 public class CountriesController {
@@ -22,15 +25,17 @@ public class CountriesController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCountriesSummary(@DefaultValue("name") @QueryParam("sortField") String sortField,
-            @DefaultValue("") @QueryParam("filterField") String filterField,
-            @DefaultValue("") @QueryParam("filterValue") String filterValue)
-            throws ClassNotFoundException, SQLException {
+            @DefaultValue("30") @QueryParam("pageSize") int pageSize,
+            @DefaultValue("0") @QueryParam("startRecord") int startRecord,
+            @DefaultValue("{}") @QueryParam("filter") String filterString) throws ClassNotFoundException, SQLException,
+            JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
 
-        List<BasicCountry> countrySummary = new ArrayList<BasicCountry>();
+        Filter filter = new ObjectMapper().readValue(filterString, Filter.class);
+        ResponsePaged countrySummary;
         CountryDataAccess cda = new CountryDataAccess();
-        countrySummary = cda.getCountriesSummary(sortField, filterField, filterValue);
+        countrySummary = cda.getCountriesSummary(sortField, pageSize,startRecord, filter);
 
-        if(countrySummary.size()>0) {
+        if(countrySummary!= null) {
             return Response.ok(countrySummary).build();
         } else {
             return Response.status(404).entity("no data returned").build();
