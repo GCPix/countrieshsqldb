@@ -1,6 +1,7 @@
 package com.countries.countriesAPI.controllers;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 import javax.ws.rs.DefaultValue;
@@ -28,7 +29,7 @@ public class CountriesController {
             @DefaultValue("30") @QueryParam("pageSize") int pageSize,
             @DefaultValue("0") @QueryParam("startRecord") int startRecord,
             @DefaultValue("{}") @QueryParam("filter") String filterString) throws ClassNotFoundException, SQLException,
-            JsonMappingException, JsonProcessingException, UnsupportedEncodingException {
+            JsonMappingException, JsonProcessingException, UnsupportedEncodingException, MalformedURLException {
 
         Filter filter = new ObjectMapper().readValue(filterString, Filter.class);
         ResponsePaged countrySummary;

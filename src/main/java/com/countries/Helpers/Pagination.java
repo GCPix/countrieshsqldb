@@ -1,12 +1,14 @@
 package com.countries.Helpers;
 
+import java.net.URL;
+
 public class Pagination {
     private int pageNumber;
     private int pageSize;
     private int totalElements;
     private int totalPages;
     private String sortBy;
-    private String firstPagePath;
+    private URL firstPagePath;
     private String lastPagePath;
     private String previousPagePath;
     private String nextPagePath;
@@ -92,14 +94,14 @@ public class Pagination {
     /**
      * @return String return the firstPagePath
      */
-    public String getFirstPagePath() {
+    public URL getFirstPagePath() {
         return firstPagePath;
     }
 
     /**
      * @param firstPagePath the firstPagePath to set
      */
-    public void setFirstPagePath(String firstPagePath) {
+    public void setFirstPagePath(URL firstPagePath) {
         this.firstPagePath = firstPagePath;
     }
 

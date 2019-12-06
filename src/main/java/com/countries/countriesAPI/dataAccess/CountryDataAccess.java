@@ -3,7 +3,8 @@ package com.countries.countriesAPI.dataAccess;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,8 +25,6 @@ import com.countries.countriesAPI.models.RegionalBlock;
 import com.db.DbConnection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class CountryDataAccess {
 
@@ -50,7 +49,8 @@ public class CountryDataAccess {
     }
 
     public ResponsePaged getCountriesSummary(String sortField, int pageSize, int startRecord, Filter filter)
-            throws ClassNotFoundException, SQLException, UnsupportedEncodingException, JsonProcessingException {
+            throws ClassNotFoundException, SQLException, UnsupportedEncodingException, JsonProcessingException,
+            MalformedURLException {
         BasicCountry c = null;
         List<BasicCountry> countriesSummary = new ArrayList<>();
         String sqlString = "";
@@ -477,21 +477,30 @@ public class CountryDataAccess {
     }
 
     private void setFirstPagePath(Pagination page, int startRecord, Filter filter)
-            throws UnsupportedEncodingException, JsonProcessingException {
-        String firstPagePath = "";
+            throws UnsupportedEncodingException, JsonProcessingException, MalformedURLException {
+        // String firstPagePath = "";
         int newStartRecord = startRecord + page.getPageSize();
-
+        URL basePath = new URL("http://localhost:8080/countries/summary/");
         // Gson gson = new Gson();
         // String jsonFilterString = gson.toJson(filter);
-        
+        // URLEncoder.encode(jsonFilterString,"UTF-8")
         ObjectMapper mapper = new ObjectMapper();
         String jsonFilterString = mapper.writeValueAsString(filter);
         // I don't the workaround for filter but it works for now.  It looks silly and not sure if it will handle full object
         // If I can't find an alternative it will have to be built by hand rather than using Gson
-        if (startRecord != 0) firstPagePath = "/countries/summary/?sortField=" + page.getSortBy() 
-        + "&pageSize =" + page.getPageSize() + "&startRecord=" + newStartRecord + "&filter=" 
-        + URLEncoder.encode(jsonFilterString,"UTF-8");
+        URL firstPageURL;
+        if (startRecord != 0) {
+            String sort = "?sortField=" + page.getSortBy();
+            String pageSizeString = "&pageSize =" + page.getPageSize();
+            String startRecordString = "&startRecord=" + newStartRecord;
+            String filterString = "&filter=" + filter.toJsonString();
+            String mainPath = sort + pageSizeString + startRecordString + filterString;
+            firstPageURL = new URL(basePath, mainPath);
+            page.setFirstPagePath(firstPageURL);
+        }
+
+         
         
-        page.setFirstPagePath(firstPagePath);
+        
     }
 }

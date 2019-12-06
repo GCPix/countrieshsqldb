@@ -90,4 +90,10 @@ public class Filter {
         this.countryFilterValue = countryFilterValue;
     }
 
+    public String toJsonString(){
+        String jsonFilterString;
+        jsonFilterString = "{'countryFilterField':'" + this.countryFilterField + "','countryFilterValue':'" + this.countryFilterValue + "'}";
+        return jsonFilterString;
+    }
+
 }
