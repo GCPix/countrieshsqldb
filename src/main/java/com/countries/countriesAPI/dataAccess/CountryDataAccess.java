@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.countries.Helpers.Filter;
-import com.countries.Helpers.Pagination;
-import com.countries.Helpers.ResponsePaged;
+import com.countries.countriesAPI.models.Filter;
+import com.countries.countriesAPI.models.Pagination;
+import com.countries.countriesAPI.models.ResponsePaged;
 import com.countries.countriesAPI.models.BasicCountry;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
@@ -32,6 +32,7 @@ public class CountryDataAccess {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
         Country country = new Country();
+        CountryRegionalBlockAccess crbdao = new CountryRegionalBlockAccess();
 
         String sqlStringCountry = "SELECT * FROM country WHERE id = " + countryId;
 
@@ -43,7 +44,7 @@ public class CountryDataAccess {
 
         country = this.getAllLanguagesForCountry(country, con);
 
-        country = this.getAllRegionalBlocsForCountry(country, con);
+        country = crbdao.getAllRegionalBlocsForCountry(country, con);
 
         return country;
     }
@@ -166,7 +167,6 @@ public class CountryDataAccess {
                     + country.getId() + " AND currency_id = " + x + ";")) {
                 i = ps.executeUpdate();
             }
-            // System.out.println(i);
         }
 
         // checks for removed languages and deletes from relationship table
@@ -178,7 +178,6 @@ public class CountryDataAccess {
                     + country.getId() + " AND language_id = " + x + ";")) {
                 j = ps.executeUpdate();
             }
-            // System.out.println(j);
         }
 
         // checks for removed borders and deletes them from the relationship table
@@ -228,26 +227,26 @@ public class CountryDataAccess {
         }
     }
 
-    private Country getAllRegionalBlocsForCountry(Country country, Connection con)
-            throws SQLException, ClassNotFoundException {
-        String sqlStringCountryRegionalBlock = "SELECT * FROM country_regionalblock WHERE country_id = "
-                + country.getId();
-        try (PreparedStatement ps = con.prepareStatement(sqlStringCountryRegionalBlock)) {
-            try (ResultSet rs = ps.executeQuery()) {
-                List<Integer> RegionalBlockCountryList = new ArrayList<>();
-                while (rs.next()) {
-                    RegionalBlockCountryList.add(rs.getInt("regionalblock_id"));
-                }
-                for (int rbId : RegionalBlockCountryList) {
-                    RegionalBlock rb = new RegionalBlock();
-                    RegionalBlockDataAccess rbddt = new RegionalBlockDataAccess();
-                    rb = rbddt.getRegionalBlock(rbId, con);
-                    country.addRegionalBlock(rb);
-                }
-            }
-        }
-        return country;
-    }
+//    private Country getAllRegionalBlocsForCountry(Country country, Connection con)
+//            throws SQLException, ClassNotFoundException {
+//        String sqlStringCountryRegionalBlock = "SELECT * FROM country_regionalblock WHERE country_id = "
+//                + country.getId();
+//        try (PreparedStatement ps = con.prepareStatement(sqlStringCountryRegionalBlock)) {
+//            try (ResultSet rs = ps.executeQuery()) {
+//                List<Integer> RegionalBlockCountryList = new ArrayList<>();
+//                while (rs.next()) {
+//                    RegionalBlockCountryList.add(rs.getInt("regionalblock_id"));
+//                }
+//                for (int rbId : RegionalBlockCountryList) {
+//                    RegionalBlock rb = new RegionalBlock();
+//                    RegionalBlockDataAccess rbddt = new RegionalBlockDataAccess();
+//                    rb = rbddt.getRegionalBlock(rbId, con);
+//                    country.addRegionalBlock(rb);
+//                }
+//            }
+//        }
+//        return country;
+//    }
 
     private Country getAllLanguagesForCountry(Country country, Connection con)
             throws SQLException, ClassNotFoundException, IOException {

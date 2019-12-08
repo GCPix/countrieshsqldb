@@ -1,4 +1,4 @@
-package com.countries.Helpers;
+package com.countries.countriesAPI.models;
 
 import java.util.List;
 

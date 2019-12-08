@@ -12,8 +12,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.countries.Helpers.Filter;
-import com.countries.Helpers.ResponsePaged;
+import com.countries.countriesAPI.models.Filter;
+import com.countries.countriesAPI.models.ResponsePaged;
 import com.countries.countriesAPI.dataAccess.CountryDataAccess;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;

@@ -75,9 +75,7 @@ public class LanguageDataAccess {
             + language.getNativeName() + "' WHERE id = " + id + ";";
 
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
-                // if (ps.executeUpdate() == 0)
-                //     throw new IllegalArgumentException(id + " is not in the database");
-                // } 
+
                 noRowsReturned = ps.executeUpdate();
             } 
         

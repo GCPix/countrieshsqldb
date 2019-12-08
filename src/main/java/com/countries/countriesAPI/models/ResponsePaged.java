@@ -1,4 +1,4 @@
-package com.countries.Helpers;
+package com.countries.countriesAPI.models;
 
 public class ResponsePaged {
     private Pagination paged;
