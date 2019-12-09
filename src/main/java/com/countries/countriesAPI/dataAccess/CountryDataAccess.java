@@ -15,17 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.countries.countriesAPI.models.Filter;
-import com.countries.countriesAPI.models.Pagination;
-import com.countries.countriesAPI.models.ResponsePaged;
 import com.countries.countriesAPI.models.BasicCountry;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
+import com.countries.countriesAPI.models.Filter;
 import com.countries.countriesAPI.models.Language;
+import com.countries.countriesAPI.models.Pagination;
 import com.countries.countriesAPI.models.RegionalBlock;
+import com.countries.countriesAPI.models.ResponsePaged;
 import com.db.DbConnection;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 public class CountryDataAccess {
@@ -61,7 +60,6 @@ public class CountryDataAccess {
 
         // set initial values for pagination
         Pagination page = new Pagination(pageSize, sortField);
-        System.out.print("Sort field" + sortField);
 
         try (Connection con = dbc.getConnection()) {
             page.setTotalElements(getCountriesCount(con));
@@ -74,25 +72,65 @@ public class CountryDataAccess {
             String sqlBasicCountryQuery = "";
             String sqlStringStart = "SELECT * FROM country c";
             String sqlStringOrderPaged = " ORDER BY " + sortField + " LIMIT " + startRecord + "," + pageSize + ";";
-            String sqlLanguageJoin = " JOIN country_language cl ON c.id=cl.COUNTRY_ID";
-            String sqlCurrencyJoin = " JOIN country_currency cc ON c.id=cc.COUNTRY_ID";
-            String sqlRegionalBlockJoin = " JOIN country_regionalblock crb ON c.id=crb.COUNTRY_ID";
-
-            // if (filterValue.length()==0){
-            // sqlString = "SELECT * FROM country ORDER BY " + sortField;
-            // } else {
-            // sqlString = "SELECT * from country " +
-            // "join country_language on country.id = country_language.country_id " +
-            // "join language on country_language.language_id = language.id " +
-            // "WHERE language.name = " + filterValue + " ORDER BY " + sortField;
-            // }
+            String sqlLanguageJoin;
+            String sqlCurrencyJoin;
+            String sqlRegionalBlockJoin;
+            String joinedConditions = null;
+            String sqlLanguageJoinCondition;
+            String sqlCurrencyJoinCondition;
+            String sqlRegionalBlockJoinCondition;
 
             // gets the field and value relating to Country and checks the db for it
             if (filter.getCountryFilterField() != null) {
                 sqlBasicCountryQuery = " WHERE lower(c." + filter.getCountryFilterField() + ") LIKE '%"
                         + filter.getCountryFilterValue().toLowerCase() + "%'";
             }
-            sqlString = sqlStringStart + sqlBasicCountryQuery + sqlStringOrderPaged;
+            sqlString = sqlStringStart;
+            if (filter.getLanguageFilterList() != null) {
+                sqlLanguageJoin = " JOIN country_language cl ON c.id=cl.COUNTRY_ID";
+                sqlStringStart = sqlStringStart + sqlLanguageJoin;
+                String sqlCurrencyStart = " AND cl.LANGUAGE_ID IN (";
+
+                //not sure that this is the way I should do it but at the moment only way I can think to create query
+                //set first value
+                sqlLanguageJoinCondition = sqlCurrencyStart + filter.getLanguageFilterList().get(0).toString();
+                //set remaining language ids 
+                if (filter.getLanguageFilterList().size()>1){
+                    for (int x =1; x<=filter.getLanguageFilterList().size()-1; x++){
+                        sqlLanguageJoinCondition = sqlLanguageJoinCondition + "," + filter.getLanguageFilterList().get(x).toString();
+                    }
+                }
+                //close off the in block
+                sqlLanguageJoinCondition = sqlLanguageJoinCondition + ")";
+
+                if (joinedConditions == null){
+                    joinedConditions = sqlLanguageJoinCondition;
+                } else {
+                    joinedConditions = joinedConditions + sqlLanguageJoinCondition;
+                }
+                joinedConditions = joinedConditions + sqlLanguageJoinCondition;
+            }
+            
+            if (filter.getCurrencyFilterList() != null) {
+                sqlCurrencyJoin = " JOIN country_currency cc ON c.id=cc.COUNTRY_ID";
+                sqlStringStart = sqlStringStart + sqlCurrencyJoin;
+            }
+
+            if (filter.getRegionalBlockFilterList() != null) {
+                sqlRegionalBlockJoin = " JOIN country_regionalblock crb ON c.id=crb.COUNTRY_ID";
+                sqlStringStart = sqlStringStart + sqlRegionalBlockJoin;
+            }
+            sqlString = sqlStringStart;
+
+            if (sqlBasicCountryQuery.length() > 0){
+                sqlString = sqlString  + sqlBasicCountryQuery;
+            } 
+            if (joinedConditions != null && joinedConditions.length() > 0){
+                sqlString = sqlString+ joinedConditions;
+            }
+
+            sqlString = sqlString + sqlStringOrderPaged;
+
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
 
                 try (ResultSet rs = ps.executeQuery()) {
@@ -109,7 +147,8 @@ public class CountryDataAccess {
                 }
             }
         }
-        this.setFirstPagePath(page, startRecord, filter);
+        this.setFirstPagePath(page, startRecord);
+
         ResponsePaged rp = new ResponsePaged(page, countriesSummary);
         return rp;
     }
@@ -477,27 +516,36 @@ private Country getAllLanguagesForCountry(Country country, Connection con)
         page.setPageNumber(pageNumber);
     }
 
-    private void setFirstPagePath(Pagination page, int startRecord, Filter filter)
+    private void setFirstPagePath(Pagination page, int startRecord)
             throws UnsupportedEncodingException, JsonProcessingException, MalformedURLException {
         
-        int newStartRecord = startRecord + page.getPageSize();
-        URL basePath = new URL("http://localhost:8080/countries/summary/");
-        Gson gson = new Gson();
-       
         
-        Filter filterToJson = new Filter(filter.getCountryFilterField(), filter.getCountryFilterValue());
-        String jsonFilterString = gson.toJson(filter);
-        
-        // not sure how to do this better at the moment but I need the encoder for the jsonstring.
+        URL basePath = new URL("http://localhost:8080/countries/summary/");       
         URL firstPageURL;
-        if (startRecord != 0) {
+        String previousPage;
+        String nextPage;
+        String lastPage;
+
+        if (page.getPageNumber() !=1) {
             String sort = "?sortField=" + page.getSortBy();
             String pageSizeString = "&pageSize=" + page.getPageSize();
-            String startRecordString = "&startRecord=" + newStartRecord;
-            String mainPath = sort + pageSizeString + startRecordString +"&filter=" + URLEncoder.encode(jsonFilterString,"UTF-8");
-            firstPageURL = new URL(basePath, mainPath);
+            String pageNumberFirst = "&pageNumber=1";
+            String pageNumberPrevious = "&pageNumber=" + Integer.toString(page.getPageNumber()-1);
+            String pageNumberNext = "&pageNumber=" + Integer.toString(page.getPageNumber()+1);
+            String pageNumberLast = "&pageNumber=" + Integer.toString(page.getTotalPages());
+            String mainFirstPath = sort + pageSizeString + pageNumberFirst;
+            firstPageURL = new URL(basePath, mainFirstPath);
+            previousPage = basePath + sort + pageSizeString + pageNumberPrevious;
+            nextPage = basePath + sort + pageSizeString + pageNumberNext;
+            lastPage = basePath + sort + pageSizeString + pageNumberLast;
+
             page.setFirstPagePath(firstPageURL);
+            page.setPreviousPagePath(previousPage);
+            page.setNextPagePath(nextPage);
+            page.setLastPagePath(lastPage);
         }
+        
+
 
          
         

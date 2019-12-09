@@ -4,8 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -23,15 +25,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CountriesController {
 
     @Path("/summary")
-    @GET
+    // @GET
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCountriesSummary(@DefaultValue("name") @QueryParam("sortField") String sortField,
             @DefaultValue("30") @QueryParam("pageSize") int pageSize,
-            @DefaultValue("0") @QueryParam("startRecord") int startRecord,
-            @DefaultValue("{}") @QueryParam("filter") String filterString) throws ClassNotFoundException, SQLException,
+            @DefaultValue("0") @QueryParam("startRecord") int startRecord,  Filter filter) throws ClassNotFoundException, SQLException,
             JsonMappingException, JsonProcessingException, UnsupportedEncodingException, MalformedURLException {
-
-        Filter filter = new ObjectMapper().readValue(filterString, Filter.class);
+   
         ResponsePaged countrySummary;
         CountryDataAccess cda = new CountryDataAccess();
         countrySummary = cda.getCountriesSummary(sortField, pageSize, startRecord, filter);
