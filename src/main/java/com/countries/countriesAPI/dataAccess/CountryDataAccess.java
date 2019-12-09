@@ -121,7 +121,6 @@ public class CountryDataAccess {
                 sqlString = sqlString+ joinedConditions;
             }
 
-//            sqlString = sqlString + sqlStringOrderPaged;
             sqlQuery = sqlStringStart + sqlString + sqlStringOrderPaged;
 
             try (PreparedStatement ps = con.prepareStatement(sqlQuery)) {
@@ -145,8 +144,7 @@ public class CountryDataAccess {
             setNumberOfPages(page, con);
             setPageNumber(startRecord, page);
         }
-        this.setPagePaths(page, startRecord);
-    System.out.println(page.getLastPagePath());
+        this.setPagePaths(page);
         ResponsePaged rp = new ResponsePaged(page, countriesSummary);
         return rp;
     }
@@ -515,7 +513,7 @@ private Country getAllLanguagesForCountry(Country country, Connection con)
         page.setPageNumber(pageNumber);
     }
 
-    private void setPagePaths(Pagination page, int startRecord)
+    private void setPagePaths(Pagination page)
             throws UnsupportedEncodingException, JsonProcessingException, MalformedURLException {
         
         

@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7b6d00e8-b59d-47d2-b4dc-91531bf23e87" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/controllers/CountriesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/controllers/CountriesController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/dataAccess/CountryDataAccess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/dataAccess/CountryDataAccess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/models/ResponsePaged.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/models/ResponsePaged.java" afterDir="false" />
-    </list>
+    <list default="true" id="7b6d00e8-b59d-47d2-b4dc-91531bf23e87" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,8 +23,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/dataAccess/CountryDataAccess.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1008">
-              <caret line="124" column="58" lean-forward="true" selection-start-line="124" selection-start-column="58" selection-end-line="124" selection-end-column="58" />
+            <state relative-caret-position="336">
+              <caret line="289" column="16" selection-start-line="289" selection-start-column="16" selection-end-line="289" selection-end-column="16" />
               <folding>
                 <element signature="method#getCountry#0;class#CountryDataAccess#0" />
               </folding>
@@ -241,7 +236,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1575923386624" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1575923499905" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
@@ -428,8 +423,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/countries/countriesAPI/dataAccess/CountryDataAccess.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1008">
-          <caret line="124" column="58" lean-forward="true" selection-start-line="124" selection-start-column="58" selection-end-line="124" selection-end-column="58" />
+        <state relative-caret-position="336">
+          <caret line="289" column="16" selection-start-line="289" selection-start-column="16" selection-end-line="289" selection-end-column="16" />
           <folding>
             <element signature="method#getCountry#0;class#CountryDataAccess#0" />
           </folding>
