@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +26,7 @@ import com.countries.countriesAPI.models.RegionalBlock;
 import com.db.DbConnection;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 public class CountryDataAccess {
 
@@ -248,7 +250,7 @@ public class CountryDataAccess {
 //        return country;
 //    }
 
-    private Country getAllLanguagesForCountry(Country country, Connection con)
+private Country getAllLanguagesForCountry(Country country, Connection con)
             throws SQLException, ClassNotFoundException, IOException {
         String sqlStringCountryLanguage = "SELECT * FROM country_language WHERE country_id = " + country.getId();
         try (PreparedStatement psLanguageRelationship = con.prepareStatement(sqlStringCountryLanguage);
@@ -477,23 +479,22 @@ public class CountryDataAccess {
 
     private void setFirstPagePath(Pagination page, int startRecord, Filter filter)
             throws UnsupportedEncodingException, JsonProcessingException, MalformedURLException {
-        // String firstPagePath = "";
+        
         int newStartRecord = startRecord + page.getPageSize();
         URL basePath = new URL("http://localhost:8080/countries/summary/");
-        // Gson gson = new Gson();
-        // String jsonFilterString = gson.toJson(filter);
-        // URLEncoder.encode(jsonFilterString,"UTF-8")
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonFilterString = mapper.writeValueAsString(filter);
-        // I don't the workaround for filter but it works for now.  It looks silly and not sure if it will handle full object
-        // If I can't find an alternative it will have to be built by hand rather than using Gson
+        Gson gson = new Gson();
+       
+        
+        Filter filterToJson = new Filter(filter.getCountryFilterField(), filter.getCountryFilterValue());
+        String jsonFilterString = gson.toJson(filter);
+        
+        // not sure how to do this better at the moment but I need the encoder for the jsonstring.
         URL firstPageURL;
         if (startRecord != 0) {
             String sort = "?sortField=" + page.getSortBy();
-            String pageSizeString = "&pageSize =" + page.getPageSize();
+            String pageSizeString = "&pageSize=" + page.getPageSize();
             String startRecordString = "&startRecord=" + newStartRecord;
-            String filterString = "&filter=" + filter.toJsonString();
-            String mainPath = sort + pageSizeString + startRecordString + filterString;
+            String mainPath = sort + pageSizeString + startRecordString +"&filter=" + URLEncoder.encode(jsonFilterString,"UTF-8");
             firstPageURL = new URL(basePath, mainPath);
             page.setFirstPagePath(firstPageURL);
         }

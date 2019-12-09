@@ -34,13 +34,12 @@ public class CountriesController {
         Filter filter = new ObjectMapper().readValue(filterString, Filter.class);
         ResponsePaged countrySummary;
         CountryDataAccess cda = new CountryDataAccess();
-        countrySummary = cda.getCountriesSummary(sortField, pageSize,startRecord, filter);
+        countrySummary = cda.getCountriesSummary(sortField, pageSize, startRecord, filter);
 
         if(countrySummary!= null) {
             return Response.ok(countrySummary).build();
         } else {
             return Response.status(404).entity("no data returned").build();
         }
-    }
- 
+    } 
 }

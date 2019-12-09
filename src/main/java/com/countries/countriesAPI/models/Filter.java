@@ -5,6 +5,10 @@ import java.util.List;
 import com.countries.countriesAPI.models.Currency;
 import com.countries.countriesAPI.models.Language;
 import com.countries.countriesAPI.models.RegionalBlock;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Filter {
     private String countryFilterField;
@@ -13,54 +17,61 @@ public class Filter {
     private List<Currency> currencyFilterList;
     private List<RegionalBlock> regionalBlockFilterList;
 
-    public Filter(){
-  
-    }
-
     
-
-    /**
-     * @return List<Language> return the languageFilterList
-     */
-    public List<Language> getLanguageFilterList() {
-        return languageFilterList;
+    @JsonCreator
+    public Filter(@JsonProperty("countryFilterField") String countryFilterField, @JsonProperty("countryFilterValue") String countryFilterValue ){
+        this.countryFilterField = countryFilterField;
+        this.countryFilterValue = countryFilterValue;
+        // this.languageFilterList = languageFilterList;
+        // this.currencyFilterList = currencyFilterList;
+        // this.regionalBlockFilterList = regionalBlockFilterList;
     }
+//,  @JsonProperty("languageFilterList") List<Language> languageFilterList, @JsonProperty("currencyFilterList") List<Currency> currencyFilterList, 
+// @JsonProperty("regionalBlockFilterList") List<RegionalBlock> regionalBlockFilterList
+    public Filter(){
 
-    /**
-     * @param languageFilterList the languageFilterList to set
-     */
-    public void setLanguageFilterList(List<Language> languageFilterList) {
-        this.languageFilterList = languageFilterList;
     }
+    // /**
+    //  * @return List<Language> return the languageFilterList
+    //  */
+    // public List<Language> getLanguageFilterList() {
+    //     return languageFilterList;
+    // }
 
-    /**
-     * @return List<Currency> return the currencyFilterList
-     */
-    public List<Currency> getCurrencyFilterList() {
-        return currencyFilterList;
-    }
+    // /**
+    //  * @param languageFilterList the languageFilterList to set
+    //  */
+    // public void setLanguageFilterList(List<Language> languageFilterList) {
+    //     this.languageFilterList = languageFilterList;
+    // }
 
-    /**
-     * @param currencyFilterList the currencyFilterList to set
-     */
-    public void setCurrencyFilterList(List<Currency> currencyFilterList) {
-        this.currencyFilterList = currencyFilterList;
-    }
+    // /**
+    //  * @return List<Currency> return the currencyFilterList
+    //  */
+    // public List<Currency> getCurrencyFilterList() {
+    //     return currencyFilterList;
+    // }
 
-    /**
-     * @return List<RegionalBlock> return the regionalBlockFilterList
-     */
-    public List<RegionalBlock> getRegionalBlockFilterList() {
-        return regionalBlockFilterList;
-    }
+    // /**
+    //  * @param currencyFilterList the currencyFilterList to set
+    //  */
+    // public void setCurrencyFilterList(List<Currency> currencyFilterList) {
+    //     this.currencyFilterList = currencyFilterList;
+    // }
 
-    /**
-     * @param regionalBlockFilterList the regionalBlockFilterList to set
-     */
-    public void setRegionalBlockFilterList(List<RegionalBlock> regionalBlockFilterList) {
-        this.regionalBlockFilterList = regionalBlockFilterList;
-    }
+    // /**
+    //  * @return List<RegionalBlock> return the regionalBlockFilterList
+    //  */
+    // public List<RegionalBlock> getRegionalBlockFilterList() {
+    //     return regionalBlockFilterList;
+    // }
 
+    // /**
+    //  * @param regionalBlockFilterList the regionalBlockFilterList to set
+    //  */
+    // public void setRegionalBlockFilterList(List<RegionalBlock> regionalBlockFilterList) {
+    //     this.regionalBlockFilterList = regionalBlockFilterList;
+    // }
 
     /**
      * @return String return the countryFilterField
@@ -90,10 +101,20 @@ public class Filter {
         this.countryFilterValue = countryFilterValue;
     }
 
-    public String toJsonString(){
-        String jsonFilterString;
-        jsonFilterString = "{'countryFilterField':'" + this.countryFilterField + "','countryFilterValue':'" + this.countryFilterValue + "'}";
-        return jsonFilterString;
-    }
+    // public String toJsonString() throws JsonProcessingException {
+    //     String jsonFilterString;
+        
+    //     String s = "{\"countryFilterField\":\"" + this.countryFilterField + "\",\"countryFilterValue\":\"" + this.countryFilterValue + "\"}";
+    //     jsonFilterString = new ObjectMapper().writeValueAsString(s);
+    //     return jsonFilterString;
+    // }
+
+    @Override
+        public String toString() {
+            return "{" +
+                    "countryFilterField=" + countryFilterField + 
+                    ", countryFilterValue=" + countryFilterValue + 
+                    '}';
+        }
 
 }
