@@ -9,6 +9,10 @@ public class ResponsePaged {
         this.object = object;
     }
 
+    public ResponsePaged() {
+
+    }
+
     /**
      * @return the object
      */

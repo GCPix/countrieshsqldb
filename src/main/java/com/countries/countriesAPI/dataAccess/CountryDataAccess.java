@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,7 +24,6 @@ import com.countries.countriesAPI.models.RegionalBlock;
 import com.countries.countriesAPI.models.ResponsePaged;
 import com.db.DbConnection;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.gson.Gson;
 
 public class CountryDataAccess {
 
@@ -61,14 +59,10 @@ public class CountryDataAccess {
         // set initial values for pagination
         Pagination page = new Pagination(pageSize, sortField);
 
-        try (Connection con = dbc.getConnection()) {
-            page.setTotalElements(getCountriesCount(con));
-            setNumberOfPages(page, con);
-            setPageNumber(startRecord, page);
-        }
 
         // get summary list
         try (Connection con = dbc.getConnection()) {
+            String sqlQuery;
             String sqlBasicCountryQuery = "";
             String sqlStringStart = "SELECT * FROM country c";
             String sqlStringOrderPaged = " ORDER BY " + sortField + " LIMIT " + startRecord + "," + pageSize + ";";
@@ -85,10 +79,9 @@ public class CountryDataAccess {
                 sqlBasicCountryQuery = " WHERE lower(c." + filter.getCountryFilterField() + ") LIKE '%"
                         + filter.getCountryFilterValue().toLowerCase() + "%'";
             }
-            sqlString = sqlStringStart;
             if (filter.getLanguageFilterList() != null) {
                 sqlLanguageJoin = " JOIN country_language cl ON c.id=cl.COUNTRY_ID";
-                sqlStringStart = sqlStringStart + sqlLanguageJoin;
+                sqlString = sqlString + sqlLanguageJoin;
                 String sqlCurrencyStart = " AND cl.LANGUAGE_ID IN (";
 
                 //not sure that this is the way I should do it but at the moment only way I can think to create query
@@ -113,14 +106,13 @@ public class CountryDataAccess {
             
             if (filter.getCurrencyFilterList() != null) {
                 sqlCurrencyJoin = " JOIN country_currency cc ON c.id=cc.COUNTRY_ID";
-                sqlStringStart = sqlStringStart + sqlCurrencyJoin;
+                sqlString = sqlString + sqlCurrencyJoin;
             }
 
             if (filter.getRegionalBlockFilterList() != null) {
                 sqlRegionalBlockJoin = " JOIN country_regionalblock crb ON c.id=crb.COUNTRY_ID";
-                sqlStringStart = sqlStringStart + sqlRegionalBlockJoin;
+                sqlString = sqlString + sqlRegionalBlockJoin;
             }
-            sqlString = sqlStringStart;
 
             if (sqlBasicCountryQuery.length() > 0){
                 sqlString = sqlString  + sqlBasicCountryQuery;
@@ -129,9 +121,10 @@ public class CountryDataAccess {
                 sqlString = sqlString+ joinedConditions;
             }
 
-            sqlString = sqlString + sqlStringOrderPaged;
+//            sqlString = sqlString + sqlStringOrderPaged;
+            sqlQuery = sqlStringStart + sqlString + sqlStringOrderPaged;
 
-            try (PreparedStatement ps = con.prepareStatement(sqlString)) {
+            try (PreparedStatement ps = con.prepareStatement(sqlQuery)) {
 
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -147,8 +140,13 @@ public class CountryDataAccess {
                 }
             }
         }
-        this.setFirstPagePath(page, startRecord);
-
+        try (Connection con = dbc.getConnection()) {
+            page.setTotalElements(getCountriesCount(con, sqlString));
+            setNumberOfPages(page, con);
+            setPageNumber(startRecord, page);
+        }
+        this.setPagePaths(page, startRecord);
+    System.out.println(page.getLastPagePath());
         ResponsePaged rp = new ResponsePaged(page, countriesSummary);
         return rp;
     }
@@ -481,8 +479,9 @@ private Country getAllLanguagesForCountry(Country country, Connection con)
         }
     }
 
-    private int getCountriesCount(Connection con) throws SQLException {
-        String sql = "SELECT COUNT(*) AS total FROM country;";
+    private int getCountriesCount(Connection con, String sqlString) throws SQLException {
+        String sql = "SELECT COUNT(*) AS total FROM country c";
+        sql = sql + sqlString;
         int count;
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery();) {
@@ -516,7 +515,7 @@ private Country getAllLanguagesForCountry(Country country, Connection con)
         page.setPageNumber(pageNumber);
     }
 
-    private void setFirstPagePath(Pagination page, int startRecord)
+    private void setPagePaths(Pagination page, int startRecord)
             throws UnsupportedEncodingException, JsonProcessingException, MalformedURLException {
         
         
@@ -525,25 +524,35 @@ private Country getAllLanguagesForCountry(Country country, Connection con)
         String previousPage;
         String nextPage;
         String lastPage;
+        String sort = "?sortField=" + page.getSortBy();
+        String pageSizeString = "&pageSize=" + page.getPageSize();
 
         if (page.getPageNumber() !=1) {
-            String sort = "?sortField=" + page.getSortBy();
-            String pageSizeString = "&pageSize=" + page.getPageSize();
+
             String pageNumberFirst = "&pageNumber=1";
             String pageNumberPrevious = "&pageNumber=" + Integer.toString(page.getPageNumber()-1);
-            String pageNumberNext = "&pageNumber=" + Integer.toString(page.getPageNumber()+1);
-            String pageNumberLast = "&pageNumber=" + Integer.toString(page.getTotalPages());
+
             String mainFirstPath = sort + pageSizeString + pageNumberFirst;
             firstPageURL = new URL(basePath, mainFirstPath);
             previousPage = basePath + sort + pageSizeString + pageNumberPrevious;
-            nextPage = basePath + sort + pageSizeString + pageNumberNext;
-            lastPage = basePath + sort + pageSizeString + pageNumberLast;
+
+            System.out.println(firstPageURL);
 
             page.setFirstPagePath(firstPageURL);
             page.setPreviousPagePath(previousPage);
+
+        }
+
+        if (page.getTotalPages() != page.getPageNumber()){
+            String pageNumberNext = "&pageNumber=" + Integer.toString(page.getPageNumber()+1);
+            String pageNumberLast = "&pageNumber=" + Integer.toString(page.getTotalPages());
+            nextPage = basePath + sort + pageSizeString + pageNumberNext;
+            lastPage = basePath + sort + pageSizeString + pageNumberLast;
+
             page.setNextPagePath(nextPage);
             page.setLastPagePath(lastPage);
         }
+
         
 
 

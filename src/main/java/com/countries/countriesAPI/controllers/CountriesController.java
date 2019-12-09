@@ -31,17 +31,28 @@ public class CountriesController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCountriesSummary(@DefaultValue("name") @QueryParam("sortField") String sortField,
             @DefaultValue("30") @QueryParam("pageSize") int pageSize,
-            @DefaultValue("0") @QueryParam("startRecord") int startRecord,  Filter filter) throws ClassNotFoundException, SQLException,
-            JsonMappingException, JsonProcessingException, UnsupportedEncodingException, MalformedURLException {
+            @DefaultValue("0") @QueryParam("startRecord") int startRecord,  Filter filter){
    
-        ResponsePaged countrySummary;
+        ResponsePaged countrySummary = new ResponsePaged();
         CountryDataAccess cda = new CountryDataAccess();
-        countrySummary = cda.getCountriesSummary(sortField, pageSize, startRecord, filter);
+        try {
+            countrySummary = cda.getCountriesSummary(sortField, pageSize, startRecord, filter);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         if(countrySummary!= null) {
             return Response.ok(countrySummary).build();
         } else {
             return Response.status(404).entity("no data returned").build();
         }
-    } 
+    }
 }
