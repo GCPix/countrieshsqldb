@@ -2,8 +2,6 @@ package com.countries.countriesAPI.models;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 public class Filter {
     private String countryFilterField;
     private String countryFilterValue;
@@ -11,17 +9,7 @@ public class Filter {
     private List<Integer> currencyFilterList;
     private List<Integer> regionalBlockFilterList;
 
-    
-    @JsonCreator
-    // public Filter(@JsonProperty("countryFilterField") String countryFilterField, @JsonProperty("countryFilterValue") String countryFilterValue ){
-    //     this.countryFilterField = countryFilterField;
-    //     this.countryFilterValue = countryFilterValue;
-    //     this.languageFilterList = languageFilterList;
-    //     this.currencyFilterList = currencyFilterList;
-    //     this.regionalBlockFilterList = regionalBlockFilterList;
-    // }
-//,  @JsonProperty("languageFilterList") List<Language> languageFilterList, @JsonProperty("currencyFilterList") List<Currency> currencyFilterList, 
-// @JsonProperty("regionalBlockFilterList") List<RegionalBlock> regionalBlockFilterList
+
     public Filter(){
 
     }

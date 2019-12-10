@@ -22,7 +22,7 @@ All paths have been tested to some extent through Postman, I have added the scri
 All paths are http://localhost:8080/'endpoint' from list below:
    'ROOT' REST Endpoints:
     GET     /application.wadl
-    GET     /countries/summary
+    POST    /countries/summary
     POST    /country
     DELETE  /country/{id}
     GET     /country/{id}
