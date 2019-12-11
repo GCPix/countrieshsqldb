@@ -23,16 +23,24 @@ public class LanguageController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addLanguage(Language language) throws SQLException, IOException, ClassNotFoundException {
+    public Response addLanguage(Language language) {
         Response response;
         LanguageDataAccess lda = new LanguageDataAccess();
         int id = -1;
-        id = lda.addLanguage(language);
+        try {
+            id = lda.addLanguage(language);
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+            
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
 
-        // below used to create a return value that would include the path to the new addition sticking to poc example so changing to id
-        // URI uri = UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
+        // below used to create a return value that would include the path to the new
+        // addition sticking to poc example so changing to id
+        // URI uri =
+        // UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
         // return Response.created(uri).entity(id).build();
-        if (id >= 0){
+        if (id >= 0) {
             response = Response.status(Status.CREATED).entity(id).build();
         } else {
             response = Response.status(Status.BAD_REQUEST).build();
@@ -43,31 +51,45 @@ public class LanguageController {
     @GET
     @Path("/{languageid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLanguage(@PathParam("languageid") int languageId) throws SQLException, IOException, ClassNotFoundException {
+    public Response getLanguage(@PathParam("languageid") int languageId) {
 
         LanguageDataAccess lda = new LanguageDataAccess();
         Language lan = null;
         Response response = null;
-        
-        lan = lda.getLanguage(languageId);
-        
+
+        try {
+            lan = lda.getLanguage(languageId);
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+           
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
+
         if (lan == null) {
 
             response = Response.status(404).entity("Language not returned").build();
+        } else {
+            response = Response.ok(lan).build();
         }
+
         
-        response = Response.ok(lan).build();
         return response;
     }
 
     @DELETE
     @Path("/{languageid}")
-    public Response deleteLanguage(@PathParam("languageid") int languageId) throws SQLException, ClassNotFoundException {
+    public Response deleteLanguage(@PathParam("languageid") int languageId) {
         LanguageDataAccess lda = new LanguageDataAccess();
         Response response;
-        int noRowsReturned;
-        
-        noRowsReturned = lda.deleteLanguage(languageId);
+        int noRowsReturned = 0;
+
+        try {
+            noRowsReturned = lda.deleteLanguage(languageId);
+        } catch (ClassNotFoundException | SQLException e) {
+           
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
 
         if (noRowsReturned != 0) {
             response = Response.noContent().build();
@@ -80,18 +102,21 @@ public class LanguageController {
     @PUT
     @Path("/{languageid}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateLanguage(@PathParam("languageid") int languageId, Language language) throws SQLException, ClassNotFoundException {
+    public Response updateLanguage(@PathParam("languageid") int languageId, Language language) {
         LanguageDataAccess lda = new LanguageDataAccess();
-        Response response = null;
-        //not sure if I need bit below front end would need to ensure the types are valid
+        Response response;
+
         if (languageId >= 0 && language != null) {
-  
-            lda.updateLanguage(languageId, language);
+
+            try {
+                lda.updateLanguage(languageId, language);
+            } catch (ClassNotFoundException | SQLException e) {  
+                e.printStackTrace();
+                response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+            }
             response = Response.noContent().build();
-             
         } else {
             response = Response.status(Status.BAD_REQUEST).entity("please check your details for your update, you appear to have a formatting issue").build();
-            
         }
         return response;
     }

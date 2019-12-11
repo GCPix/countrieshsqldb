@@ -18,10 +18,17 @@ import com.countries.countriesAPI.models.Currency;
 public class CurrenciesController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCurrencies() throws SQLException, IOException, ClassNotFoundException {
+    public Response getCurrencies() {
         CurrencyDataAccess cda = new CurrencyDataAccess();
-        List<Currency> currencies = cda.getCurrencies();
-        final Response response;
+        List<Currency> currencies = null;
+        Response response;
+        try {
+            currencies = cda.getCurrencies();
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+           
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
         
         if(currencies != null){
             response = Response.ok(currencies).build();

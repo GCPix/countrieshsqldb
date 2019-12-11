@@ -16,8 +16,6 @@ public class DbConnection {
     private final String connectionString = "jdbc:hsqldb:file:db-data/countries";
     private String dbDriver = "org.hsqldb.jdbc.JDBCDriver";
 
-    // private String dbDriver = "";
-    // assume the passed in connection is final just because it cannot be changed
     public DbConnection() {
 
     }
@@ -39,9 +37,7 @@ public class DbConnection {
 
     void createTables(Connection connection) throws IOException, SQLException, SqlToolError {
         Scanner sc = null;
-        // SqlFile createTables = new SqlFile(new InputStreamReader(is), "init", System.out, "UTF-8", false, new File("."));
-        //     createTables.setConnection(connection);
-        //     createTables.execute();
+      
         try (InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql")) {
             // should this be throwing something like File not found or class not found exception?
             if (is != null) {
@@ -53,7 +49,7 @@ public class DbConnection {
                 String[] singleQueryList = sb.toString().split(";");
                 //need to look at making sure this is always valid and doesn't contain stuff it doesn't need
                 for (String q: singleQueryList) {
-                    // sbStringList.add(new String(q));
+                   
                     try (PreparedStatement ps = connection.prepareStatement(q)) {
                         ps.execute();
                     }

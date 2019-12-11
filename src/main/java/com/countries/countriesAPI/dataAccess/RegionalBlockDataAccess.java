@@ -52,9 +52,7 @@ public class RegionalBlockDataAccess {
     }
     public RegionalBlock getRegionalBlock(int id, Connection con) throws SQLException, ClassNotFoundException {
         RegionalBlock regionalBlock;
-        // DbConnection dbc = new DbConnection();
-        // Connection con = dbc.getConnection();
-
+      
         try(PreparedStatement ps = con.prepareStatement("SELECT * FROM regionalblock WHERE id = " + id + ";")) {
             try(ResultSet rs = ps.executeQuery()){
                 rs.next();
@@ -73,7 +71,7 @@ public class RegionalBlockDataAccess {
 
         try(PreparedStatement ps = con.prepareStatement("DELETE FROM regionalblock WHERE id = " + id + ";")) {
             noRowsReturned = ps.executeUpdate();
-            System.out.println(noRowsReturned);
+            
             
         }
         return noRowsReturned;
@@ -89,7 +87,7 @@ public class RegionalBlockDataAccess {
         + regionalBlock.getName() + "' WHERE id = " + id + ";";
         try(PreparedStatement ps = con.prepareStatement(sqlString)) {
             noRowsReturned = ps.executeUpdate();
-            System.out.println(noRowsReturned);
+      
             
         }
         return noRowsReturned;

@@ -14,7 +14,7 @@ import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
 
 public class CurrencyDbdataTransfer {
-    // private Connection connection;
+    
 
     public CurrencyDbdataTransfer(){
 
@@ -26,7 +26,7 @@ public class CurrencyDbdataTransfer {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateCurrencyTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            // connection = dbc.getConnection();
+   
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -51,19 +51,16 @@ public class CurrencyDbdataTransfer {
                     }
                 }
             
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
         } finally {
-            // dbc.closeConnection(connection);
+         
             sc.close();
         }
     }
 
     public ArrayList<Currency> getCurrencyList(Connection connection) throws SQLException {
         ArrayList<Currency> currencyList = new ArrayList<>();
-        try{
-            // connection = dbc.getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM currency");
+        
+        try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM currency");){ 
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Currency cur = new Currency();
@@ -73,9 +70,6 @@ public class CurrencyDbdataTransfer {
                 cur.setSymbol(rs.getString("symbol"));
                 currencyList.add(cur);
             }
-        
-        }finally {
-            // dbc.closeConnection(connection);
         }
         return currencyList;
     }
@@ -85,7 +79,7 @@ public class CurrencyDbdataTransfer {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateCountryCurrencyTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            // connection = dbc.getConnection();
+         
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -108,10 +102,8 @@ public class CurrencyDbdataTransfer {
                 }
             }
             
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
         } finally {
-            // dbc.closeConnection(connection);
+    
             sc.close();
         }     
     }

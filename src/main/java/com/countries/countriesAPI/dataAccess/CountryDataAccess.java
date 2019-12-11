@@ -150,8 +150,7 @@ public class CountryDataAccess {
 
         // checks for removed languages and deletes from relationship table
         int j = -1;
-        // ArrayList<Integer> dc = new ArrayList<>();
-        // dc.addAll(deletedCurrencies);
+      
         for (int x : deletedLanguages) {
             try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_language WHERE country_id = "
                     + country.getId() + " AND language_id = " + x + ";")) {
@@ -167,7 +166,7 @@ public class CountryDataAccess {
                     + " AND country_border_id = " + x + ";")) {
                 k = ps.executeUpdate();
             }
-            // System.out.println(k);
+            
         }
 
         // checks for removed regional blocks and deletes them from the relationship
@@ -179,7 +178,7 @@ public class CountryDataAccess {
                     + country.getId() + " AND regionalblock_id = " + x + ";")) {
                 l = ps.executeUpdate();
             }
-            // System.out.println(l);
+            
         }
     }
 
@@ -505,7 +504,7 @@ public class CountryDataAccess {
     
     private String createRegionalBlockList(Filter filter){
         String sqlRegionalBlockJoinCondition = null;
-        // String joinedConditions;
+
 
         if (filter.getRegionalBlockFilterList() != null) {
            
@@ -528,7 +527,6 @@ public class CountryDataAccess {
     
     private String createCurrencyList(Filter filter){
         String sqlCurrencyJoinCondition = null;
-        // String joinedConditions;
 
         if (filter.getCurrencyFilterList() != null) {
            
@@ -551,7 +549,6 @@ public class CountryDataAccess {
     
     private String createLanguageList(Filter filter){
         String sqlLanguageJoinCondition = null;
-        // String joinedConditions;
 
         if (filter.getLanguageFilterList() != null) {
            

@@ -14,19 +14,19 @@ import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Language;
 
 public class LanguageDBDataTransfer {
-    // private Connection connection;
+   
 
     public LanguageDBDataTransfer(){
 
     }
  
-    // DbConnection dbc = new DbConnection();
+   
     
     public void populateLanguageTable(List<Country> countryList, Connection connection) throws SQLException {
         InputStream is = getClass().getResourceAsStream("sqlScripts/populateLanguageTable.sql");
         Scanner sc = new Scanner(is);
         try {
-            // connection = dbc.getConnection();
+           
             StringBuffer sb = new StringBuffer();
             while(sc.hasNext()){
 
@@ -51,10 +51,8 @@ public class LanguageDBDataTransfer {
                     }
                 }
             
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
         } finally {
-            // dbc.closeConnection(connection);
+           
             sc.close();
         }
     }
@@ -62,7 +60,7 @@ public class LanguageDBDataTransfer {
     public ArrayList<Language> getLanguageList(Connection connection) throws SQLException {
         ArrayList<Language> languageList = new ArrayList<>();
         try(PreparedStatement ps = connection.prepareStatement("SELECT * FROM language");){
-            // connection = dbc.getConnection();
+        
            try(ResultSet rs = ps.executeQuery()) {
                 while(rs.next()){
                     Language lan = new Language();
@@ -108,9 +106,7 @@ public class LanguageDBDataTransfer {
                 }
             }
             
-        } catch (SQLException sqle) {
-            sqle.printStackTrace();
-        } finally {
+        }finally {
             
             sc.close();
         }     

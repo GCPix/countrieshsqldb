@@ -18,23 +18,11 @@ public class Country extends BasicCountry{
         
     }
     
+    
+
     /**
-     * @return the name
+     * @return the borders
      */
-    // public String getName() {
-    //     return name;
-    // }
-
-    // /**
-    //  * @param name the name to set
-    //  */
-    // public void setName(String name) {
-    //     this.name = name;
-    // }
-
-    // /**
-    //  * @return the borders
-    //  */
     public List<String> getborders() {
         return borders;
     }
@@ -45,39 +33,16 @@ public class Country extends BasicCountry{
         this.borders = borders;
     }
 
-    // /**
-    //  * @return the capital
-    //  */
-    // public String getCapital() {
-    //     return capital;
-    // }
-    // /**
-    //  * @param capital the capital to set
-    //  */
-    // public void setCapital(String capital) {
-    //     this.capital = capital;
-    // }
-    // /**
-    //  * @return the population
-    //  */
-    // public long getPopulation() {
-    //     return population;
-    // }
-    // /**
-    //  * @param population the population to set
-    //  */
-    // public void setPopulation(long population) {
-    //     this.population = population;
-    // }
-    // /**
-    //  * @return the languages
-    //  */
+    
+    /**
+     * @return the languages
+     */
     public List<Language> getLanguages() {
         return languages;
     }
-    // /**
-    //  * @param languages the languages to set
-    //  */
+    /**
+     * @param languages the languages to set
+     */
     public void setLanguages(List<Language> languages) {
         this.languages = languages;
     }
@@ -107,19 +72,7 @@ public class Country extends BasicCountry{
     public String getAlpha3Code() {
         return alpha3Code;
     }
-    // /**
-    //  * @return the id
-    //  */
-    // public Integer getId() {
-    //     return id;
-    // }
-    // /**
-    //  * @param id the id to set
-    //  */
-    // public void setId(int id) {
-    //     this.id = id;
-    // }
-
+    
     /**
      * @return the borderCountriesList
      */

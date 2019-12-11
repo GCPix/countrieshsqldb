@@ -14,8 +14,6 @@ import com.countries.countriesAPI.models.Country;
 
 public class CountryDbDataTransfer {
 
-    // private Connection connection;
-
     public CountryDbDataTransfer() {
 
     }
@@ -73,10 +71,8 @@ public class CountryDbDataTransfer {
             
             
     
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }finally {
-                // dbc.closeConnection(connection);
+            } finally {
+               
                 sc.close();
             }
 

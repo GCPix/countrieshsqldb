@@ -19,50 +19,79 @@ import com.countries.countriesAPI.models.RegionalBlock;
 @Path("regionalblock")
 public class RegionalBlockController {
     @POST
-    public Response addRegionalBlock(RegionalBlock regionalBlock) throws ClassNotFoundException, SQLException {
+    public Response addRegionalBlock(RegionalBlock regionalBlock) {
         Response response;
         RegionalBlockDataAccess rbda = new RegionalBlockDataAccess();
-        int id = rbda.addRegionalBlock(regionalBlock);
-        if (id != 0) {
+        int id = -1;
+        try {
+            id = rbda.addRegionalBlock(regionalBlock);
+        } catch (ClassNotFoundException | SQLException e) {
+            
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
+        if (id >= 0) {
             response = Response.ok(id).build();
-        }else {
-            response = Response.status(Status.BAD_REQUEST).entity("sorry but something went wrong.  Did you enter the correct data?").build();
+        } else {
+            response = Response.status(Status.BAD_REQUEST)
+                    .entity("sorry but something went wrong.  Did you enter the correct data?").build();
         }
         return response;
     }
-    
+
     @Path("{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getRegionalBlock(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
+    public Response getRegionalBlock(@PathParam("id") int id) {
         Response response;
         RegionalBlockDataAccess rbda = new RegionalBlockDataAccess();
-        RegionalBlock rb = rbda.getRegionalBlock(id);
+        RegionalBlock rb = null;
+        try {
+            rb = rbda.getRegionalBlock(id);
+        } catch (ClassNotFoundException | SQLException e) {
+            
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
         response = Response.ok(rb).build();
         return response;
     }
 
     @Path("{id}")
     @DELETE
-    public Response deleteRegionalBlock(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
+    public Response deleteRegionalBlock(@PathParam("id") int id) {
         Response response;
-        RegionalBlockDataAccess rbda  = new RegionalBlockDataAccess();
-        int noRowsReturned = rbda.deleteRegionalBlock(id);
-        if(noRowsReturned==0) {
+        RegionalBlockDataAccess rbda = new RegionalBlockDataAccess();
+        int noRowsReturned = 0;
+        try {
+            noRowsReturned = rbda.deleteRegionalBlock(id);
+        } catch (ClassNotFoundException | SQLException e) {
+           
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
+        if (noRowsReturned == 0) {
             response = Response.status(Status.BAD_REQUEST).entity("Couldn't find that id").build();
         } else {
             response = Response.ok().build();
         }
-        
+
         return response;
     }
+
     @Path("{id}")
     @PUT
-    public Response updateRegionalBlock(@PathParam("id") int id, RegionalBlock regionalBlock)
-            throws ClassNotFoundException, SQLException {
+    public Response updateRegionalBlock(@PathParam("id") int id, RegionalBlock regionalBlock) {
         Response response;
-        RegionalBlockDataAccess rbda  = new RegionalBlockDataAccess();
-        int noRowsReturned = rbda.updateRegionalBlock(id, regionalBlock);
+        RegionalBlockDataAccess rbda = new RegionalBlockDataAccess();
+        int noRowsReturned = 0;
+        try {
+            noRowsReturned = rbda.updateRegionalBlock(id, regionalBlock);
+        } catch (ClassNotFoundException | SQLException e) {
+           
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
         if(noRowsReturned==0) {
             response = Response.status(Status.BAD_REQUEST).entity("Couldn't find that id").build();
         } else {

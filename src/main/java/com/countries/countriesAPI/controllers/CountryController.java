@@ -24,49 +24,71 @@ import com.countries.countriesAPI.models.Country;
 public class CountryController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addCountry(Country country) throws ClassNotFoundException, SQLException, IOException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCountry(Country country) {
         CountryDataAccess cda = new CountryDataAccess();
         Response response;
         int id = -1;
 
-        id = cda.addCountry(country);
-        if(id >=0){
+        try {
+            id = cda.addCountry(country);
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Something went wrong, contact someone who can sort it").build();
+        }
+        if (id >= 0) {
             response = Response.status(Status.CREATED).entity(id).build();
         } else {
             response = Response.status(Status.BAD_REQUEST).build();
         }
         return response;
     }
+
     @Path("{id}")
     @PUT
-    public Response updateCountry(@PathParam("id") int countryId, Country country, 
-    @QueryParam("deletedCurrencies") List<Integer> deletedCurrencies,
-    @QueryParam("deletedLanguages") List<Integer> deletedLanguages,
-    @QueryParam("deletedBorders") List<Integer> deletedBorders,
-    @QueryParam("deletedRegionalBlocks") List<Integer> deletedRegionalBlocks
-    )
-            throws ClassNotFoundException, SQLException {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateCountry(@PathParam("id") int countryId, Country country,
+            @QueryParam("deletedCurrencies") List<Integer> deletedCurrencies,
+            @QueryParam("deletedLanguages") List<Integer> deletedLanguages,
+            @QueryParam("deletedBorders") List<Integer> deletedBorders,
+            @QueryParam("deletedRegionalBlocks") List<Integer> deletedRegionalBlocks) {
         Response response;
         CountryDataAccess cda = new CountryDataAccess();
-        cda.updateCountry(country, deletedCurrencies, deletedRegionalBlocks, deletedRegionalBlocks,
-                deletedRegionalBlocks);
+        try {
+            cda.updateCountry(country, deletedCurrencies, deletedRegionalBlocks, deletedRegionalBlocks,
+                    deletedRegionalBlocks);
+        } catch (ClassNotFoundException | SQLException e) {
+
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Something went wrong, contact someone who can sort it").build();
+        }
         response = Response.ok().build();
         return response;
     }
+
     @Path("/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCountry(@PathParam("id") int countryId)
-            throws ClassNotFoundException, SQLException, IOException {
+    public Response getCountry(@PathParam("id") int countryId) {
 
         CountryDataAccess cda = new CountryDataAccess();
         Country c = null;
         Response response;
 
-        c = cda.getCountry(countryId);
-        
+        try {
+            c = cda.getCountry(countryId);
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Something went wrong, contact someone who can sort it").build();
+        }
+
         if (c == null) {
-            response =  Response.status(404).entity("no country returned for that id").build();
+            response = Response.status(404).entity("no country returned for that id").build();
         } else {
             response = Response.ok(c).build();
         }
@@ -77,17 +99,23 @@ public class CountryController {
 
     @Path("/{id}")
     @DELETE
-    public Response deleteCountry(@PathParam("id") int countryId) throws ClassNotFoundException, SQLException {
+    public Response deleteCountry(@PathParam("id") int countryId) {
         CountryDataAccess cda = new CountryDataAccess();
         Response response;
-        int noRowsReturned;
+        int noRowsReturned = 0;
 
-        noRowsReturned = cda.deleteCountry(countryId);
+        try {
+            noRowsReturned = cda.deleteCountry(countryId);
+        } catch (ClassNotFoundException | SQLException e) {
+            
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+        }
 
         if (noRowsReturned!=0){
             response = Response.status(204).build();
         } else {
-            response = Response.status(404).build();
+            response = Response.status(404).entity("We were unable to delete the record, please check the ID").build();
         }
         
         return response;
