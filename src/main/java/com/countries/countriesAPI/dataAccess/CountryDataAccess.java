@@ -100,7 +100,7 @@ public class CountryDataAccess {
         }
         return noRowsReturned;
     }
-
+    //TODO: not sure how to properly check this for errors
     public int addCountry(Country country) throws ClassNotFoundException, SQLException, IOException {
         int id;
         DbConnection dbc = new DbConnection();
@@ -114,7 +114,8 @@ public class CountryDataAccess {
         populateCountryCurrencyTable(country, con);
 
         // populate country_border in db
-        populateCountryBorderTable(country, con);
+        CountryBorderAccess cba = new CountryBorderAccess();
+        cba.populateCountryBorderTable(country, con);
 
         // populate country_language in db
 
@@ -125,7 +126,7 @@ public class CountryDataAccess {
 
         return id;
     }
-
+    //TODO: not sure how to properly check this for errors
     public void updateCountry(Country country, List<Integer> deletedCurrencies, List<Integer> deletedLanguages,
             List<Integer> deletedBorders, List<Integer> deletedRegionalBlocks)
             throws ClassNotFoundException, SQLException {
@@ -134,9 +135,13 @@ public class CountryDataAccess {
 
         // checks for missing relationships and adds them
         populateCountryCurrencyTable(country, con);
-        populateCountryBorderTable(country, con);
+
+        CountryBorderAccess cba = new CountryBorderAccess();
+        cba.populateCountryBorderTable(country, con);
+
         populateCountryLanguageTable(country, con);
         populateCountryRegionalBlock(country, con);
+
         // checks for removed currencies and deletes from relationship table
         int i = -1;
         ArrayList<Integer> dc = new ArrayList<>();
@@ -181,7 +186,7 @@ public class CountryDataAccess {
             
         }
     }
-
+    //TODO move to countryRegoinalBlockAccess
     private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException {
         InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryRBTable.sql");
         try (Scanner sc = new Scanner(is);) {
@@ -323,7 +328,7 @@ public class CountryDataAccess {
         }
         return id;
     }
-
+    //TODO move to countryCurrencyAccess
     private void populateCountryCurrencyTable(Country country, Connection con) throws SQLException {
         String sqlScript = "../../../db/sqlScripts/populateCountryCurrencyTable.sql";
         InputStream is = getClass().getResourceAsStream(sqlScript);
@@ -348,32 +353,7 @@ public class CountryDataAccess {
         }
 
     }
-
-    private void populateCountryBorderTable(Country country, Connection con) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateBorderTable.sql");
-
-        try (Scanner sc = new Scanner(is)) {
-
-            StringBuffer sb = new StringBuffer();
-
-            while (sc.hasNext()) {
-                sb.append(sc.nextLine());
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
-                for (BasicCountry b : country.getBorderCountriesList()) {
-
-                    ps.setInt(1, country.getId());
-                    ps.setInt(2, b.getId());
-                    ps.setInt(3, country.getId());
-                    ps.setInt(4, b.getId());
-                    ps.execute();
-                }
-            }
-
-        }
-    }
-
+    //TODO move to countryLanguageAccess
     private void populateCountryLanguageTable(Country country, Connection con) throws SQLException {
         InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryLanguageTable.sql");
         try (Scanner sc = new Scanner(is);) {
@@ -427,47 +407,95 @@ public class CountryDataAccess {
             throws UnsupportedEncodingException, JsonProcessingException, MalformedURLException {
         
         
-        URL basePath = new URL("http://localhost:8080/countries/summary/");       
-        URL firstPageURL;
-        String previousPage;
-        String nextPage;
-        String lastPage;
-        String sort = "?sortField=" + page.getSortBy();
-        String pageSizeString = "&pageSize=" + page.getPageSize();
-
-        if (page.getPageNumber() != 1) {
-            
-            String pageNumberFirst = "&pageNumber=1";
-            String pageNumberPrevious = "&pageNumber=" + Integer.toString(page.getPageNumber()-1);
-            String mainFirstPath = sort + pageSizeString + pageNumberFirst;
-
-            firstPageURL = new URL(basePath, mainFirstPath);
-            previousPage = basePath + sort + pageSizeString + pageNumberPrevious;
-
-            page.setFirstPagePath(firstPageURL);
-            page.setPreviousPagePath(previousPage);
-
-        }
-
-        if (page.getTotalPages() != page.getPageNumber()){
-            String pageNumberNext = "&pageNumber=" + Integer.toString(page.getPageNumber()+1);
-            String pageNumberLast = "&pageNumber=" + Integer.toString(page.getTotalPages());
-
-            nextPage = basePath + sort + pageSizeString + pageNumberNext;
-            lastPage = basePath + sort + pageSizeString + pageNumberLast;
-
-            page.setNextPagePath(nextPage);
-            page.setLastPagePath(lastPage);
-        }
-
-        
-
-
-         
-        
+        String basePath = "http://localhost:8080/countries/summary/";
+        page.setPagePaths(basePath);
+              
         
     }
 
+    private String createFilterRegionalBlockList(Filter filter){
+        String sqlRegionalBlockJoinCondition = null;
+
+
+        if (filter.getRegionalBlockFilterList() != null) {
+           
+            String sqlRegionalBlockStart = " AND crb.REGIONALBLOCK_ID IN (";
+
+            //set first value
+            sqlRegionalBlockJoinCondition = sqlRegionalBlockStart + filter.getRegionalBlockFilterList().get(0).toString();
+            //set remaining language ids 
+            if (filter.getRegionalBlockFilterList().size()>1){
+                for (int x =1; x<=filter.getCurrencyFilterList().size()-1; x++){
+                    sqlRegionalBlockJoinCondition = sqlRegionalBlockJoinCondition + "," + filter.getRegionalBlockFilterList().get(x).toString();
+                }
+            }
+            //close off the in block
+            sqlRegionalBlockJoinCondition = sqlRegionalBlockJoinCondition + ")";
+
+        }   
+        return sqlRegionalBlockJoinCondition;
+    }
+    
+    private String createFilterCurrencyList(Filter filter){
+        String sqlCurrencyJoinCondition = null;
+
+        if (filter.getCurrencyFilterList() != null) {
+           
+            String sqlCurrencyStart = " AND cc.CURRENCY_ID IN (";
+
+            //set first value
+            sqlCurrencyJoinCondition = sqlCurrencyStart + filter.getCurrencyFilterList().get(0).toString();
+            //set remaining language ids 
+            if (filter.getCurrencyFilterList().size()>1){
+                for (int x =1; x<=filter.getCurrencyFilterList().size()-1; x++){
+                    sqlCurrencyJoinCondition = sqlCurrencyJoinCondition + "," + filter.getCurrencyFilterList().get(x).toString();
+                }
+            }
+            //close off the in block
+            sqlCurrencyJoinCondition = sqlCurrencyJoinCondition + ")";
+
+        }   
+        return sqlCurrencyJoinCondition;
+    }
+    
+    private String createFilterLanguageList(Filter filter){
+        String sqlLanguageJoinCondition = null;
+
+        if (filter.getLanguageFilterList() != null) {
+           
+            String sqlLanguageStart = " AND cl.LANGUAGE_ID IN (";
+
+            //set first value
+            sqlLanguageJoinCondition = sqlLanguageStart + filter.getLanguageFilterList().get(0).toString();
+            //set remaining language ids 
+            if (filter.getLanguageFilterList().size()>1){
+                for (int x =1; x<=filter.getLanguageFilterList().size()-1; x++){
+                    sqlLanguageJoinCondition = sqlLanguageJoinCondition + "," + filter.getLanguageFilterList().get(x).toString();
+                }
+            }
+            //close off the in block
+            sqlLanguageJoinCondition = sqlLanguageJoinCondition + ")";
+
+        }   
+        return sqlLanguageJoinCondition;
+    }
+    
+    private String createCountrySummaryQuery(Filter filter, Pagination page, int startRecord) {
+
+        startRecord = setStartRecord(page.getPageNumber(), page.getPageSize());
+
+        String sqlStringConditions;
+        String sqlQuery;
+        
+        String sqlStringStartGetCountry = "SELECT * FROM country c";
+        String sqlStringOrderPaged = " ORDER BY " + page.getSortBy() + " LIMIT " + startRecord + "," + page.getPageSize() + ";";
+ 
+        sqlStringConditions = getConditionalBlock(filter);
+        sqlQuery = sqlStringStartGetCountry + sqlStringConditions + sqlStringOrderPaged;
+        
+        return sqlQuery;
+    }
+    
     private String createCountrySummaryJoinBlock(Filter filter){
         String sqlLanguageJoin;
         String sqlCurrencyJoin;
@@ -502,77 +530,8 @@ public class CountryDataAccess {
         return joinedConditions;
     }
     
-    private String createRegionalBlockList(Filter filter){
-        String sqlRegionalBlockJoinCondition = null;
-
-
-        if (filter.getRegionalBlockFilterList() != null) {
-           
-            String sqlRegionalBlockStart = " AND crb.REGIONALBLOCK_ID IN (";
-
-            //set first value
-            sqlRegionalBlockJoinCondition = sqlRegionalBlockStart + filter.getRegionalBlockFilterList().get(0).toString();
-            //set remaining language ids 
-            if (filter.getRegionalBlockFilterList().size()>1){
-                for (int x =1; x<=filter.getCurrencyFilterList().size()-1; x++){
-                    sqlRegionalBlockJoinCondition = sqlRegionalBlockJoinCondition + "," + filter.getRegionalBlockFilterList().get(x).toString();
-                }
-            }
-            //close off the in block
-            sqlRegionalBlockJoinCondition = sqlRegionalBlockJoinCondition + ")";
-
-        }   
-        return sqlRegionalBlockJoinCondition;
-    }
-    
-    private String createCurrencyList(Filter filter){
-        String sqlCurrencyJoinCondition = null;
-
-        if (filter.getCurrencyFilterList() != null) {
-           
-            String sqlCurrencyStart = " AND cc.CURRENCY_ID IN (";
-
-            //set first value
-            sqlCurrencyJoinCondition = sqlCurrencyStart + filter.getCurrencyFilterList().get(0).toString();
-            //set remaining language ids 
-            if (filter.getCurrencyFilterList().size()>1){
-                for (int x =1; x<=filter.getCurrencyFilterList().size()-1; x++){
-                    sqlCurrencyJoinCondition = sqlCurrencyJoinCondition + "," + filter.getCurrencyFilterList().get(x).toString();
-                }
-            }
-            //close off the in block
-            sqlCurrencyJoinCondition = sqlCurrencyJoinCondition + ")";
-
-        }   
-        return sqlCurrencyJoinCondition;
-    }
-    
-    private String createLanguageList(Filter filter){
-        String sqlLanguageJoinCondition = null;
-
-        if (filter.getLanguageFilterList() != null) {
-           
-            String sqlLanguageStart = " AND cl.LANGUAGE_ID IN (";
-
-            //set first value
-            sqlLanguageJoinCondition = sqlLanguageStart + filter.getLanguageFilterList().get(0).toString();
-            //set remaining language ids 
-            if (filter.getLanguageFilterList().size()>1){
-                for (int x =1; x<=filter.getLanguageFilterList().size()-1; x++){
-                    sqlLanguageJoinCondition = sqlLanguageJoinCondition + "," + filter.getLanguageFilterList().get(x).toString();
-                }
-            }
-            //close off the in block
-            sqlLanguageJoinCondition = sqlLanguageJoinCondition + ")";
-
-        }   
-        return sqlLanguageJoinCondition;
-    }
-    
     private String getConditionalBlock(Filter filter){
-        String sqlCurrencyJoin;
         String sqlBasicCountryQuery = "";
-        String sqlRegionalBlockJoin;
         String sqlLanguageJoinCondition;
         String sqlCurrencyJoinCondition;
         String sqlRegionalBlockJoinCondition;
@@ -587,9 +546,9 @@ public class CountryDataAccess {
         }
 
         joinDefinition = createCountrySummaryJoinBlock(filter);
-        sqlLanguageJoinCondition = createLanguageList(filter);
-        sqlCurrencyJoinCondition = createCurrencyList(filter);
-        sqlRegionalBlockJoinCondition = createRegionalBlockList(filter);
+        sqlLanguageJoinCondition = createFilterLanguageList(filter);
+        sqlCurrencyJoinCondition = createFilterCurrencyList(filter);
+        sqlRegionalBlockJoinCondition = createFilterRegionalBlockList(filter);
 
         if (sqlLanguageJoinCondition != null){
             if(joinedConditions == ""){
@@ -633,22 +592,6 @@ public class CountryDataAccess {
             }
         }
         return sqlStringConditions;
-    }
-    
-    private String createCountrySummaryQuery(Filter filter, Pagination page, int startRecord) {
-
-        startRecord = setStartRecord(page.getPageNumber(), page.getPageSize());
-
-        String sqlStringConditions;
-        String sqlQuery;
-        
-        String sqlStringStartGetCountry = "SELECT * FROM country c";
-        String sqlStringOrderPaged = " ORDER BY " + page.getSortBy() + " LIMIT " + startRecord + "," + page.getPageSize() + ";";
- 
-        sqlStringConditions = getConditionalBlock(filter);
-        sqlQuery = sqlStringStartGetCountry + sqlStringConditions + sqlStringOrderPaged;
-        
-        return sqlQuery;
     }
     
     private int setStartRecord(int pageNumber, int pageSize) {

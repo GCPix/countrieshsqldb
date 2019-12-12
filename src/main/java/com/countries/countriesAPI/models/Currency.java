@@ -1,9 +1,14 @@
 package com.countries.countriesAPI.models;
 
+import javax.validation.constraints.NotNull;
+
 public class Currency {
     private Integer id;
+    @NotNull
     private String code;
+    @NotNull
     private String name;
+    @NotNull
     private String symbol;
 
     public Currency(){};

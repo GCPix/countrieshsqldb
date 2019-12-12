@@ -1,14 +1,17 @@
 package com.countries.countriesAPI.models;
 
-import java.net.URL;
+import javax.validation.constraints.NotNull;
 
 public class Pagination {
+    @NotNull
     private int pageNumber;
+    @NotNull
     private int pageSize;
     private int totalElements;
     private int totalPages;
+    @NotNull
     private String sortBy;
-    private URL firstPagePath;
+    private String firstPagePath;
     private String lastPagePath;
     private String previousPagePath;
     private String nextPagePath;
@@ -17,8 +20,41 @@ public class Pagination {
         this.pageSize = pageSize;
         this.sortBy = sortField;
         this.pageNumber = pageNumber;
-    };
+    }
 
+    public void setPagePaths(String basePath){
+        String firstPageURL;
+        String previousPage;
+        String nextPage;
+        String lastPage;
+        String sort = "?sortField=" + getSortBy();
+        String pageSizeString = "&pageSize=" + getPageSize();
+
+        if (getPageNumber() != 1) {
+            
+            String pageNumberFirst = "&pageNumber=1";
+            String pageNumberPrevious = "&pageNumber=" + Integer.toString(getPageNumber()-1);
+            String mainFirstPath = sort + pageSizeString + pageNumberFirst;
+
+            firstPageURL = basePath + mainFirstPath;
+            previousPage = basePath + sort + pageSizeString + pageNumberPrevious;
+
+            setFirstPagePath(firstPageURL);
+            setPreviousPagePath(previousPage);
+    }
+
+    
+    if (getTotalPages() != getPageNumber()){
+        String pageNumberNext = "&pageNumber=" + Integer.toString(getPageNumber()+1);
+        String pageNumberLast = "&pageNumber=" + Integer.toString(getTotalPages());
+
+        nextPage = basePath + sort + pageSizeString + pageNumberNext;
+        lastPage = basePath + sort + pageSizeString + pageNumberLast;
+
+        setNextPagePath(nextPage);
+        setLastPagePath(lastPage);
+    }
+}
     
 
 
@@ -95,14 +131,14 @@ public class Pagination {
     /**
      * @return String return the firstPagePath
      */
-    public URL getFirstPagePath() {
+    public String getFirstPagePath() {
         return firstPagePath;
     }
 
     /**
      * @param firstPagePath the firstPagePath to set
      */
-    public void setFirstPagePath(URL firstPagePath) {
+    public void setFirstPagePath(String firstPagePath) {
         this.firstPagePath = firstPagePath;
     }
 

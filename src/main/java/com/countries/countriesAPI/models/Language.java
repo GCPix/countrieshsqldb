@@ -1,13 +1,19 @@
 package com.countries.countriesAPI.models;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Language {
     @JsonIgnore
     private Integer id;
+    @NotNull
     private String iso639_1;
+    @NotNull
     private String iso639_2;
+    @NotNull
     private String name;
+    @NotNull
     private String nativeName;
 
     public Language() {

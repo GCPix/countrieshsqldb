@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CountriesAPI</title>
+    <link rel="stylesheet" type="text/css" href="../../../../templates/index.css">
+	<style>
+		table.pathTable {
+  border: 0px solid #1C6EA4;
+  background-color: #EEEEEE;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.pathTable td, table.pathTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 4px;
+}
+table.pathTable tbody td {
+  font-size: 13px;
+}
+table.pathTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.pathTable thead {
+  background: #6E42A4;
+  background: -moz-linear-gradient(top, #9271bb 0%, #7c55ad 66%, #6E42A4 100%);
+  background: -webkit-linear-gradient(top, #9271bb 0%, #7c55ad 66%, #6E42A4 100%);
+  background: linear-gradient(to bottom, #9271bb 0%, #7c55ad 66%, #6E42A4 100%);
+  border-bottom: 2px solid #444444;
+}
+table.pathTable thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #5148FF;
+  border-left: 2px solid #D0E4F5;
+}
+table.pathTable thead th:first-child {
+  border-left: none;
+}
+
+table.pathTable tfoot {
+  font-size: 14px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background: #D0E4F5;
+  background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+  border-top: 2px solid #444444;
+}
+table.pathTable tfoot td {
+  font-size: 14px;
+}
+table.pathTable tfoot .links {
+  text-align: right;
+}
+table.pathTable tfoot .links a{
+  display: inline-block;
+  background: #1C6EA4;
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+		.pojo{
+			text-align: left;
+		}
+	</style>
+</head>
+<body>
+
+<h2>CountriesAPI</h2>
+
+<p>This is very basic explanation of the API.</p>
+<h2>Start the Service</h2>
+
+<p>The generation of the executable jar file can be performed by issuing the following command</p>
+
+    <p>mvn clean package</p>
+
+<p>This will create an executable jar file **countriesAPI-microbundle.jar** within the _target_ maven folder. This can be started by executing the following command</p>
+
+    <p>java -jar target/countriesAPI-microbundle.jar</p>
+
+<h2>Database</h2>
+<p>An embedded database has a table for basic country information, currency data, language data and Regional Bloc data.</p>
+
+<p>Each country can have many currencies, languages and Regional Blocs therefore the database has relationship tables to create these.
+	It also has a relationship table for countries bordering other countries.
+</p>
+
+<p> There is an OpenAPI specification which can be found <a href="openapi" target="_blank" >here</a> once the service has been started but at the moment it is
+inconsistent when it comes to showing the components within the project so this page will hopefully fill in any gaps. </p> 
+
+<h2>API path summary</h2>
+<p>All paths have been tested to some extent through Postman, I have added the script for this to the project if you want to import it and update it for your own tests.</p>
+
+<p>All paths are http://localhost:8080/'endpoint' from list below:</p>
+
+<table class = "pathTable">
+	<tr>
+		<th>HTTP Method</th>
+		<th>Path</th>
+		<th>Input Params</th>
+		<th>Output Params</th>
+	</tr>
+	<tr>
+		<td> POST </td>
+		<td> /countries/summary </td>
+		<td> na </td>
+		<td> Response object inc List of Basic Country Objects and pagination details </td>
+	</tr>
+	<tr>
+		<td> POST </td>
+		<td> /country </td>
+		<td> na </td>
+		<td> Response object inc id of country created</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /country/{id} </td>
+		<td> country id in path </td>
+		<td> Response object inc full country object</td>
+	</tr>
+	<tr>
+		<td> PUT </td>
+		<td> /country/{id} </td>
+		<td> country id in path, country object in body </td>
+		<td> Response object</td>
+	</tr>
+	<tr>
+		<td> DELETE </td>
+		<td> /country/{id} </td>
+		<td> country id in path </td>
+		<td> Response object</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /languages </td>
+		<td> na </td>
+		<td> Response object inc list of Language Objects </td>
+	</tr>
+	<tr>
+		<td> POST </td>
+		<td> /language </td>
+		<td> na </td>
+		<td> Response object inc id of language created</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /language/{id} </td>
+		<td> language id in path </td>
+		<td> Response object inc language Object</td>
+	</tr>
+	<tr>
+		<td> PUT </td>
+		<td> /language/{id} </td>
+		<td> language id in path, language object in body </td>
+		<td> Response Object</td>
+	</tr>
+	<tr>
+		<td> DELETE </td>
+		<td> /language/{id} </td>
+		<td> language id in path </td>
+		<td> Response object</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /currencies </td>
+		<td> na </td>
+		<td> Response object inc List of Basic currency Objects </td>
+	</tr>
+	<tr>
+		<td> POST </td>
+		<td> /currency </td>
+		<td> na </td>
+		<td> Response object inc id of currency  created</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /currency/{id} </td>
+		<td> currency id in path </td>
+		<td> Response object inc full currency object</td>
+	</tr>
+	<tr>
+		<td> PUT </td>
+		<td> /currency/{id} </td>
+		<td> currency id in path, currency object in body </td>
+		<td> Response object</td>
+	</tr>
+	<tr>
+		<td> DELETE </td>
+		<td> /currency/{id} </td>
+		<td> currency id in path </td>
+		<td> Response object</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /regionalblocks </td>
+		<td> na </td>
+		<td> Response object inc list of regionalblock Objects </td>
+	</tr>
+	<tr>
+		<td> POST </td>
+		<td> /regionalblock </td>
+		<td> na </td>
+		<td> Response object inc id of regionalblock created</td>
+	</tr>
+	<tr>
+		<td> GET </td>
+		<td> /regionalblock/{id} </td>
+		<td> regionalblock id in path </td>
+		<td> Response object inc regionalblock Object</td>
+	</tr>
+	<tr>
+		<td> PUT </td>
+		<td> /regionalblock/{id} </td>
+		<td> regionalblock id in path, regionalblock object in body </td>
+		<td> Response Object</td>
+	</tr>
+	<tr>
+		<td> DELETE </td>
+		<td> /regionalblock/{id} </td>
+		<td> regionalblock id in path </td>
+		<td> Response object</td>
+	</tr>
+</table>
+<ul>
+    <li>'ROOT' REST Endpoints:</li>
+    <li>GET     /application.wadl  </li>
+    <li>GET     /openapi/application.wadl</li>
+</ul>
+
+<h2>POJO descriptions</h2>
+<table class = "pathTable">
+	<tr>	
+		<th>BasicCountry</th>
+		<th>Language</th>
+		<th>Currency</th>
+		<th>RegionalBlock</th>
+		<th>Pagination</th>
+		<th>Country Extends BasicCountry</th>
+		<th>ResponsePaged</th>
+	</tr>
+	<tr>
+		<td class = "pojo">int id<br>
+			String name <br>
+			String capital <br>
+			String flag <br>
+			String region <br>
+			long population <br>
+		 </td>
+		 <td class = "pojo">int id<br>
+			String name <br>
+			String nativeName <br>
+			String iso639_1 <br>
+			String iso639_2 <br>
+		 </td>
+		  <td class = "pojo">int id<br>
+			String name <br>
+			String code <br>
+			String symbol <br>
+		 </td>
+		 <td class = "pojo">int id<br>
+			String name <br>
+			String acronym <br>
+		 </td>
+		 <td class = "pojo">int id <br>
+			BasicCountry pageSize <br>
+			int totalElements <br>
+			int totalPages <br>
+			String sortBy <br>
+			String firstPagePath <br>
+			String lastPagePath <br>
+			String previousPagePath <br>
+			String nextPagePath
+		 </td>
+			<td class = "pojo">List<Currency> currencies <br>
+			List<BasicCountry> borderCountriesList; <br>
+			List<RegionalBlock> regionalBlocs;<br>
+			List<Language> languages
+		 </td>
+		 <td class = "pojo">Pagination page<br>
+			Object object <br>
+		 </td>
+</table>
+</body>
+</html>

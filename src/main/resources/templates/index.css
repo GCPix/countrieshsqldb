@@ -1,0 +1,28 @@
+		body{
+    		font-family: Arial;
+    		font-size: 20px;
+    	}
+    	table{
+    		width: 50%;
+    		border: 1px solid purple;
+    		
+    	}
+	    th{
+	    	border: 1px solid purple;
+			text-align:center;
+			background-color: purple;
+			border: 1px solid purple;
+			color: white;
+			width: 20%;
+		}
+	
+		tr{
+			border: 1px solid purple;
+			text-align:center;
+			background-color: white;
+			border: 1px solid purple;
+			color: purple;
+		}
+		.pojo{
+			text-align: left;
+		}

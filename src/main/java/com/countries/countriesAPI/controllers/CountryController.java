@@ -41,7 +41,7 @@ public class CountryController {
         if (id >= 0) {
             response = Response.status(Status.CREATED).entity(id).build();
         } else {
-            response = Response.status(Status.BAD_REQUEST).build();
+            response = Response.status(Status.BAD_REQUEST).entity("something went wrong, check the data you have sent through").build();
         }
         return response;
     }
