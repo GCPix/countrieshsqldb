@@ -3,185 +3,182 @@ package com.countries.countriesAPI.models;
 import javax.validation.constraints.NotNull;
 
 public class Pagination {
-    @NotNull
-    private int pageNumber;
-    @NotNull
-    private int pageSize;
-    private int totalElements;
-    private int totalPages;
-    @NotNull
-    private String sortBy;
-    private String firstPagePath;
-    private String lastPagePath;
-    private String previousPagePath;
-    private String nextPagePath;
+	@NotNull
+	private int pageNumber;
+	@NotNull
+	private final int pageSize;
+	private int totalElements;
+	private int totalPages;
+	@NotNull
+	private final String sortBy;
+	private String firstPagePath;
+	private String lastPagePath;
+	private String previousPagePath;
+	private String nextPagePath;
 
-    public Pagination(int pageSize, String sortField, int pageNumber){
-        this.pageSize = pageSize;
-        this.sortBy = sortField;
-        this.pageNumber = pageNumber;
-    }
+	public Pagination(int pageSize, String sortField, int pageNumber) {
+		this.pageSize = pageSize;
+		this.sortBy = sortField;
+		this.pageNumber = pageNumber;
+	}
 
-    public void setPagePaths(String basePath){
-        String firstPageURL;
-        String previousPage;
-        String nextPage;
-        String lastPage;
-        String sort = "?sortField=" + getSortBy();
-        String pageSizeString = "&pageSize=" + getPageSize();
+	public void setPagePaths(String basePath) {
+		String firstPageURL;
+		String previousPage;
+		String nextPage;
+		String lastPage;
+		String sort = "?sortField=" + getSortBy();
+		String pageSizeString = "&pageSize=" + getPageSize();
 
-        if (getPageNumber() != 1) {
-            
-            String pageNumberFirst = "&pageNumber=1";
-            String pageNumberPrevious = "&pageNumber=" + Integer.toString(getPageNumber()-1);
-            String mainFirstPath = sort + pageSizeString + pageNumberFirst;
+		if (getPageNumber() != 1) {
 
-            firstPageURL = basePath + mainFirstPath;
-            previousPage = basePath + sort + pageSizeString + pageNumberPrevious;
+			String pageNumberFirst = "&pageNumber=1";
+			String pageNumberPrevious = "&pageNumber=" + Integer.toString(getPageNumber() - 1);
+			String mainFirstPath = sort + pageSizeString + pageNumberFirst;
 
-            setFirstPagePath(firstPageURL);
-            setPreviousPagePath(previousPage);
-    }
+			firstPageURL = basePath + mainFirstPath;
+			previousPage = basePath + sort + pageSizeString + pageNumberPrevious;
 
-    
-    if (getTotalPages() != getPageNumber()){
-        String pageNumberNext = "&pageNumber=" + Integer.toString(getPageNumber()+1);
-        String pageNumberLast = "&pageNumber=" + Integer.toString(getTotalPages());
+			setFirstPagePath(firstPageURL);
+			setPreviousPagePath(previousPage);
+		}
 
-        nextPage = basePath + sort + pageSizeString + pageNumberNext;
-        lastPage = basePath + sort + pageSizeString + pageNumberLast;
+		if (getTotalPages() != getPageNumber()) {
+			String pageNumberNext = "&pageNumber=" + Integer.toString(getPageNumber() + 1);
+			String pageNumberLast = "&pageNumber=" + Integer.toString(getTotalPages());
 
-        setNextPagePath(nextPage);
-        setLastPagePath(lastPage);
-    }
-}
-    
+			nextPage = basePath + sort + pageSizeString + pageNumberNext;
+			lastPage = basePath + sort + pageSizeString + pageNumberLast;
 
+			setNextPagePath(nextPage);
+			setLastPagePath(lastPage);
+		}
+	}
 
-    /**
-     * @return int return the pageNumber
-     */
-    public int getPageNumber() {
-        return pageNumber;
-    }
+	/**
+	 * @return int return the pageNumber
+	 */
+	public int getPageNumber() {
+		return pageNumber;
+	}
 
-    /**
-     * @param pageNumber the pageNumber to set
-     */
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
+	/**
+	 * @param pageNumber the pageNumber to set
+	 */
+	public void setPageNumber(int pageNumber) {
+		this.pageNumber = pageNumber;
+	}
 
-    /**
-     * @return int return the pageSize
-     */
-    public int getPageSize() {
-        return pageSize;
-    }
+	/**
+	 * @return int return the pageSize
+	 */
+	public int getPageSize() {
+		return pageSize;
+	}
 
-    /**
-     * @param pageSize the pageSize to set
-     */
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+//	/**
+//	 * @param pageSize the pageSize to set
+//	 */
+//	public void setPageSize(int pageSize) {
+//		this.pageSize = pageSize;
+//	}
 
-    /**
-     * @return int return the totalElements
-     */
-    public int getTotalElements() {
-        return totalElements;
-    }
+	/**
+	 * @return int return the totalElements
+	 */
+	public int getTotalElements() {
+		return totalElements;
+	}
 
-    /**
-     * @param totalElements the totalElements to set
-     */
-    public void setTotalElements(int totalElements) {
-        this.totalElements = totalElements;
-    }
+	/**
+	 * @param totalElements the totalElements to set
+	 */
+	public void setTotalElements(int totalElements) {
+		this.totalElements = totalElements;
+	}
 
-    /**
-     * @return int return the totalPages
-     */
-    public int getTotalPages() {
-        return totalPages;
-    }
+	/**
+	 * @return int return the totalPages
+	 */
+	public int getTotalPages() {
+		return totalPages;
+	}
 
-    /**
-     * @param totalPages the totalPages to set
-     */
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
+	/**
+	 * @param totalPages the totalPages to set
+	 */
+	public void setTotalPages(int totalPages) {
+		this.totalPages = totalPages;
+	}
 
-    /**
-     * @return String return the sortBy
-     */
-    public String getSortBy() {
-        return sortBy;
-    }
+	/**
+	 * @return String return the sortBy
+	 */
+	public String getSortBy() {
+		return sortBy;
+	}
 
-    /**
-     * @param sortBy the sortBy to set
-     */
-    public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
-    }
+//	/**
+//	 * @param sortBy the sortBy to set
+//	 */
+//	public void setSortBy(String sortBy) {
+//		this.sortBy = sortBy;
+//	}
 
-    /**
-     * @return String return the firstPagePath
-     */
-    public String getFirstPagePath() {
-        return firstPagePath;
-    }
+	/**
+	 * @return String return the firstPagePath
+	 */
+	public String getFirstPagePath() {
+		return firstPagePath;
+	}
 
-    /**
-     * @param firstPagePath the firstPagePath to set
-     */
-    public void setFirstPagePath(String firstPagePath) {
-        this.firstPagePath = firstPagePath;
-    }
+	/**
+	 * @param firstPagePath the firstPagePath to set
+	 */
+	public void setFirstPagePath(String firstPagePath) {
+		this.firstPagePath = firstPagePath;
+	}
 
-    /**
-     * @return String return the lastPagePath
-     */
-    public String getLastPagePath() {
-        return lastPagePath;
-    }
+	/**
+	 * @return String return the lastPagePath
+	 */
+	public String getLastPagePath() {
+		return lastPagePath;
+	}
 
-    /**
-     * @param lastPagePath the lastPagePath to set
-     */
-    public void setLastPagePath(String lastPagePath) {
-        this.lastPagePath = lastPagePath;
-    }
+	/**
+	 * @param lastPagePath the lastPagePath to set
+	 */
+	public void setLastPagePath(String lastPagePath) {
+		this.lastPagePath = lastPagePath;
+	}
 
-    /**
-     * @return String return the previousPagePath
-     */
-    public String getPreviousPagePath() {
-        return previousPagePath;
-    }
+	/**
+	 * @return String return the previousPagePath
+	 */
+	public String getPreviousPagePath() {
+		return previousPagePath;
+	}
 
-    /**
-     * @param previousPagePath the previousPagePath to set
-     */
-    public void setPreviousPagePath(String previousPagePath) {
-        this.previousPagePath = previousPagePath;
-    }
+	/**
+	 * @param previousPagePath the previousPagePath to set
+	 */
+	public void setPreviousPagePath(String previousPagePath) {
+		this.previousPagePath = previousPagePath;
+	}
 
-    /**
-     * @return String return the nextPagePath
-     */
-    public String getNextPagePath() {
-        return nextPagePath;
-    }
+	/**
+	 * @return String return the nextPagePath
+	 */
+	public String getNextPagePath() {
+		return nextPagePath;
+	}
 
-    /**
-     * @param nextPagePath the nextPagePath to set
-     */
-    public void setNextPagePath(String nextPagePath) {
-        this.nextPagePath = nextPagePath;
-    }
+	/**
+	 * @param nextPagePath the nextPagePath to set
+	 */
+	public void setNextPagePath(String nextPagePath) {
+		this.nextPagePath = nextPagePath;
+	}
 
 }

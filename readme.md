@@ -1,8 +1,3 @@
-# MicroProfile generated Application
-
-## Introduction
-
-MicroProfile Starter has generated this MicroProfile application for you.
 
 The generation of the executable jar file can be performed by issuing the following command
 

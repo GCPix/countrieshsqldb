@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +32,7 @@ public class CountryDataAccess {
         Country country = new Country();
         CountryRegionalBlockAccess crbdao = new CountryRegionalBlockAccess();
 
-        String sqlStringCountry = "SELECT * FROM country WHERE id = " + countryId;
+        String sqlStringCountry = "SELECT * FROM country WHERE id = ?";
 
         country = this.getBasicCountry(sqlStringCountry, con, country);
 
@@ -83,7 +82,7 @@ public class CountryDataAccess {
         }
         try (Connection con = dbc.getConnection()) {
             page.setTotalElements(getCountriesCount(con, getConditionalBlock(filter)));
-            setNumberOfPages(page, con);
+            setNumberOfPages(page);
             
         }
         this.setPagePaths(page);
@@ -258,7 +257,9 @@ public class CountryDataAccess {
     private Country getBasicCountry(String sqlString, Connection con, Country country) throws SQLException {
 
         try (PreparedStatement psCountry = con.prepareStatement(sqlString)) {
-            try (ResultSet rs = psCountry.executeQuery()) {
+        	psCountry.setInt(1, country.getId());
+            
+        	try (ResultSet rs = psCountry.executeQuery()) {
 
                 while (rs.next()) {
 
@@ -289,9 +290,12 @@ public class CountryDataAccess {
     }
 
     private List<Integer> getCurrencyIdList(int countryId, Connection con) throws SQLException {
-        String sqlStringCountryCurrency = "SELECT * FROM country_currency WHERE country_id = " + countryId;
+    	//still us ? as it sql server can reuse the same execution plan for different values
+    	//don't use star it is less perfomant that writing it in full as sql needs to work out what the star is
+        String sqlStringCountryCurrency = "SELECT * FROM country_currency WHERE country_id = ?";
         List<Integer> currencyList;
         try (PreparedStatement psCurrencyRelationship = con.prepareStatement(sqlStringCountryCurrency)) {
+        	psCurrencyRelationship.setInt(1, countryId);
             try (ResultSet rs1 = psCurrencyRelationship.executeQuery()) {
                 currencyList = new ArrayList<>();
                 while (rs1.next()) {
@@ -392,7 +396,7 @@ public class CountryDataAccess {
         return count;
     }
 
-    private void setNumberOfPages(Pagination page, Connection con) throws SQLException {
+    private void setNumberOfPages(Pagination page) throws SQLException {
 
         int totalPages = page.getTotalElements() / page.getPageSize();
         if (page.getTotalElements() % page.getPageSize() !=0){
