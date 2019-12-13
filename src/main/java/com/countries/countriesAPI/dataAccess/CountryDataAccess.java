@@ -29,25 +29,45 @@ public class CountryDataAccess {
     public Country getCountry(int countryId) throws SQLException, ClassNotFoundException, IOException {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
-        Country country = new Country();
-        CountryRegionalBlockAccess crbdao = new CountryRegionalBlockAccess();
+        Country country = new Country();;
 
         String sqlStringCountry = "SELECT * FROM country WHERE id = ?";
 
-        country = this.getBasicCountry(sqlStringCountry, con, country);
+        country = this.getBasicCountry(sqlStringCountry, con, country, countryId);
+        if (country.getId() != null) {
+        	 country = this.getAllCurrenciesForCountry(country, con);
 
-        country = this.getAllCurrenciesForCountry(country, con);
+             country = this.getAllBorderCountriesForCountry(country, con);
 
-        country = this.getAllBorderCountriesForCountry(country, con);
+             country = this.getAllLanguagesForCountry(country, con);
 
-        country = this.getAllLanguagesForCountry(country, con);
-
-        country = crbdao.getAllRegionalBlocsForCountry(country, con);
-
+             country = getAllRegionalBlocsForCountry(country, con);
+        }
         return country;
     }
 
-    public ResponsePaged getCountriesSummary(String sortField, int pageSize, int pageNumber, Filter filter)
+    private Country getAllRegionalBlocsForCountry(Country country, Connection con) throws SQLException, ClassNotFoundException {
+        String sqlStringCountryRegionalBlock = "SELECT * FROM country_regionalblock WHERE country_id = "
+                + country.getId();
+        try (PreparedStatement ps = con.prepareStatement(sqlStringCountryRegionalBlock)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Integer> RegionalBlockCountryList = new ArrayList<>();
+                while (rs.next()) {
+                    RegionalBlockCountryList.add(rs.getInt("regionalblock_id"));
+                }
+                for (int rbId : RegionalBlockCountryList) {
+                    RegionalBlock rb = new RegionalBlock();
+                    RegionalBlockDataAccess rbddt = new RegionalBlockDataAccess();
+                    rb = rbddt.getRegionalBlock(rbId, con);
+                    country.addRegionalBlock(rb);
+                }
+            }
+        }
+        return country;
+    }
+
+
+	public ResponsePaged getCountriesSummary(String sortField, int pageSize, int pageNumber, Filter filter)
             throws ClassNotFoundException, SQLException, UnsupportedEncodingException, JsonProcessingException,
             MalformedURLException {
         BasicCountry c;
@@ -113,8 +133,8 @@ public class CountryDataAccess {
         populateCountryCurrencyTable(country, con);
 
         // populate country_border in db
-        CountryBorderAccess cba = new CountryBorderAccess();
-        cba.populateCountryBorderTable(country, con);
+
+        populateCountryBorderTable(country, con);
 
         // populate country_language in db
 
@@ -125,7 +145,33 @@ public class CountryDataAccess {
 
         return id;
     }
-    //TODO: not sure how to properly check this for errors
+    private void populateCountryBorderTable(Country country, Connection con) throws SQLException {
+    	InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateBorderTable.sql");
+
+        try (Scanner sc = new Scanner(is)) {
+
+            StringBuffer sb = new StringBuffer();
+
+            while (sc.hasNext()) {
+                sb.append(sc.nextLine());
+            }
+
+            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+                for (BasicCountry b : country.getBorderCountriesList()) {
+
+                    ps.setInt(1, country.getId());
+                    ps.setInt(2, b.getId());
+                    ps.setInt(3, country.getId());
+                    ps.setInt(4, b.getId());
+                    ps.execute();
+                }
+            }
+
+        }
+		
+	}
+
+	//TODO: not sure how to properly check this for errors
     public void updateCountry(Country country, List<Integer> deletedCurrencies, List<Integer> deletedLanguages,
             List<Integer> deletedBorders, List<Integer> deletedRegionalBlocks)
             throws ClassNotFoundException, SQLException {
@@ -135,8 +181,8 @@ public class CountryDataAccess {
         // checks for missing relationships and adds them
         populateCountryCurrencyTable(country, con);
 
-        CountryBorderAccess cba = new CountryBorderAccess();
-        cba.populateCountryBorderTable(country, con);
+     
+        populateCountryBorderTable(country, con);
 
         populateCountryLanguageTable(country, con);
         populateCountryRegionalBlock(country, con);
@@ -245,8 +291,8 @@ public class CountryDataAccess {
 
             for (int b : borderList) {
                 Country border = new Country();
-                String borderSqlString = "SELECT * FROM country WHERE id = " + b + ";";
-                this.getBasicCountry(borderSqlString, con, border);
+                String borderSqlString = "SELECT * FROM country WHERE id = ?;";
+                this.getBasicCountry(borderSqlString, con, border, b);
                 country.addBorderCountry(border);
             }
         }
@@ -254,13 +300,14 @@ public class CountryDataAccess {
         return country;
     }
 
-    private Country getBasicCountry(String sqlString, Connection con, Country country) throws SQLException {
+    private Country getBasicCountry(String sqlString, Connection con, Country country, int countryId) throws SQLException {
 
         try (PreparedStatement psCountry = con.prepareStatement(sqlString)) {
-        	psCountry.setInt(1, country.getId());
+        	
+        	psCountry.setInt(1, countryId);
             
         	try (ResultSet rs = psCountry.executeQuery()) {
-
+      
                 while (rs.next()) {
 
                     country.setId(rs.getInt("id"));
@@ -277,6 +324,7 @@ public class CountryDataAccess {
 
     private Country getAllCurrenciesForCountry(Country country, Connection con)
             throws ClassNotFoundException, SQLException, IOException {
+    	
         List<Integer> currencyIdList = this.getCurrencyIdList(country.getId(), con);
 
         for (int cl : currencyIdList) {

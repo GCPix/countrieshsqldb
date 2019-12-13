@@ -87,7 +87,7 @@ public class CountryController {
                     .entity("Something went wrong, contact someone who can sort it").build();
         }
 
-        if (c == null) {
+        if (c.getId() == null) {
             response = Response.status(404).entity("no country returned for that id").build();
         } else {
             response = Response.ok(c).build();
