@@ -1,15 +1,13 @@
 package com.countries.countriesAPI.dataAccess;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Scanner;
-
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Language;
 import com.db.DbConnection;
 
@@ -85,17 +83,11 @@ public class LanguageDataAccess {
 
     public int addLanguage(Language language) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dc = new DbConnection();
-        Connection  con = dc.getConnection();
-        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateLanguageTable.sql");
-        Scanner sc = new Scanner(is);
-
-        
-        try {
-            StringBuffer sb = new StringBuffer();
-            while(sc.hasNext()){
-                sb.append(sc.nextLine());
-            }
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+        String sqlScript = "../../db/sqlScripts/populateLanguageTable.sql";
+        try(Connection  con = dc.getConnection();){
+        	SqlScriptParser ssp = new SqlScriptParser();
+        	String sqlString = ssp.getSqlString(sqlScript);
+            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 ps.setString(1, language.getIso639_1());
                 ps.setString(2, language.getIso639_2());
                 ps.setString(3, language.getName());
@@ -104,19 +96,16 @@ public class LanguageDataAccess {
                 ps.execute();
             } 
 
-            String sqlString = "SELECT * FROM language WHERE name LIKE '" + language.getName() + "'";
-            try (PreparedStatement getpk = con.prepareStatement(sqlString)) {
+            String sqlStringId = "SELECT * FROM language WHERE name LIKE '" + language.getName() + "'";
+            try (PreparedStatement getpk = con.prepareStatement(sqlStringId)) {
                 try (ResultSet rs = getpk.executeQuery()) {
                     rs.next();
                     language.setId(rs.getInt("id"));
                 }
             } 
  
-        }  finally {
-            dc.closeConnection(con);
-            sc.close();
-            is.close();
-        }
+        }  
+       
         return language.getId();
     }
     

@@ -59,7 +59,7 @@ public class CountryController {
         try {
             cda.updateCountry(country, deletedCurrencies, deletedRegionalBlocks, deletedRegionalBlocks,
                     deletedRegionalBlocks);
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException | SQLException | IOException e) {
 
             e.printStackTrace();
             response = Response.status(Status.INTERNAL_SERVER_ERROR)

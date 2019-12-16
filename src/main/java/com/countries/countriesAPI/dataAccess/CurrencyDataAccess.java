@@ -1,15 +1,13 @@
 package com.countries.countriesAPI.dataAccess;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Currency;
 import com.db.DbConnection;
 
@@ -68,41 +66,31 @@ public class CurrencyDataAccess {
 
     public int addCurrency(Currency currency) throws SQLException, IOException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
-        
-        Connection con = dbc.getConnection();
-        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCurrencyTable.sql");
-        Scanner sc = new Scanner(is);
+        String sqlScript = ("../../../db/sqlScripts/populateCurrencyTable.sql");
         int id = -1;
 
-        try {
-            
-            StringBuffer sb = new StringBuffer();
-            while(sc.hasNext()){
-                sb.append(sc.nextLine());
-            }   
-            try (PreparedStatement ps = con.prepareStatement(sb.toString())) {
-                ps.setString(1, currency.getCode());
-                ps.setString(2, currency.getName());
-                ps.setString(3, currency.getSymbol());
-                ps.setString(4, currency.getName());
-                ps.execute();
-                
-                try (PreparedStatement psid = con.prepareStatement("SELECT * FROM currency WHERE name = '" + currency.getName() + "'")) {
-                    try (ResultSet rs = psid.executeQuery()) {
-                        
-                        while(rs.next()){
-                        id = rs.getInt("id");
-                        }
-                    } 
-                } 
-            } 
- 
-        } finally {
-            dbc.closeConnection(con);
-            sc.close();
-            is.close();
+            try(Connection con = dbc.getConnection();){
+            	SqlScriptParser  ssp = new SqlScriptParser();
+            	String sqlString = ssp.getSqlString(sqlScript);
 
-        }
+	            try (PreparedStatement ps = con.prepareStatement(sqlString)) {
+	                ps.setString(1, currency.getCode());
+	                ps.setString(2, currency.getName());
+	                ps.setString(3, currency.getSymbol());
+	                ps.setString(4, currency.getName());
+	                ps.execute();
+	                
+	                try (PreparedStatement psid = con.prepareStatement("SELECT * FROM currency WHERE name = '" + currency.getName() + "'")) {
+	                    try (ResultSet rs = psid.executeQuery()) {
+	                        
+	                        while(rs.next()){
+	                        id = rs.getInt("id");
+	                        }
+	                    } 
+	                } 
+	            } 
+ 
+            } 
 		return id;
 	}
 

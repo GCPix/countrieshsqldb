@@ -1,7 +1,6 @@
 package com.countries.countriesAPI.dataAccess;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.sql.Connection;
@@ -11,8 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.BasicCountry;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
@@ -145,18 +143,12 @@ public class CountryDataAccess {
 
         return id;
     }
-    private void populateCountryBorderTable(Country country, Connection con) throws SQLException {
-    	InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateBorderTable.sql");
-
-        try (Scanner sc = new Scanner(is)) {
-
-            StringBuffer sb = new StringBuffer();
-
-            while (sc.hasNext()) {
-                sb.append(sc.nextLine());
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+    private void populateCountryBorderTable(Country country, Connection con) throws SQLException, IOException {
+    	String sqlScript = "../../db/sqlScripts/populateBorderTable.sql";
+    	SqlScriptParser ssp = new SqlScriptParser();
+        String sqlString = ssp.getSqlString(sqlScript);
+            
+            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 for (BasicCountry b : country.getBorderCountriesList()) {
 
                     ps.setInt(1, country.getId());
@@ -167,14 +159,11 @@ public class CountryDataAccess {
                 }
             }
 
-        }
-		
-	}
-
+   }
 	//TODO: not sure how to properly check this for errors
     public void updateCountry(Country country, List<Integer> deletedCurrencies, List<Integer> deletedLanguages,
             List<Integer> deletedBorders, List<Integer> deletedRegionalBlocks)
-            throws ClassNotFoundException, SQLException {
+            throws ClassNotFoundException, SQLException, IOException {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
 
@@ -231,17 +220,13 @@ public class CountryDataAccess {
             
         }
     }
-    //TODO move to countryRegoinalBlockAccess
-    private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryRBTable.sql");
-        try (Scanner sc = new Scanner(is);) {
-            StringBuffer sb = new StringBuffer();
-            while (sc.hasNext()) {
-
-                sb.append(sc.nextLine());
-
-            }
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+ 
+    private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException, IOException {
+        String sqlScript = "../../db/sqlScripts/populateCountryRBTable.sql";
+        SqlScriptParser ssp = new SqlScriptParser();  
+        String sqlString = ssp.getSqlString(sqlScript);
+        
+            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 for (RegionalBlock rb : country.getRegionalBlocks()) {
 
                     ps.setInt(1, country.getId());
@@ -252,7 +237,7 @@ public class CountryDataAccess {
 
                 }
             }
-        }
+   
     }
 
     private Country getAllLanguagesForCountry(Country country, Connection con)
@@ -358,15 +343,11 @@ public class CountryDataAccess {
 
     private int populateCountryTable(Country country, Connection con) throws SQLException, IOException {
         int id;
-        StringBuffer sb = new StringBuffer();
-        try (InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryTable.sql");
-                Scanner sc = new Scanner(is);) {
-
-            while (sc.hasNext()) {
-                sb.append(sc.nextLine());
-            }
-        }
-        try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS)) {
+        String sqlScript = "../../db/sqlScripts/populateCountryTable.sql";
+        SqlScriptParser ssp = new SqlScriptParser();
+        String sqlString = ssp.getSqlString(sqlScript);
+        
+        try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, country.getName());
             ps.setString(2, country.getCapital());
             ps.setLong(3, country.getPopulation());
@@ -380,18 +361,12 @@ public class CountryDataAccess {
         }
         return id;
     }
-    //TODO move to countryCurrencyAccess
-    private void populateCountryCurrencyTable(Country country, Connection con) throws SQLException {
-        String sqlScript = "../../../db/sqlScripts/populateCountryCurrencyTable.sql";
-        InputStream is = getClass().getResourceAsStream(sqlScript);
-        try (Scanner sc = new Scanner(is);) {
-            StringBuffer sb = new StringBuffer();
-            while (sc.hasNext()) {
 
-                sb.append(sc.nextLine());
-
-            }
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+    private void populateCountryCurrencyTable(Country country, Connection con) throws SQLException, IOException {
+        String sqlScript = "../../db/sqlScripts/populateCountryCurrencyTable.sql";
+       SqlScriptParser ssp = new SqlScriptParser();
+       String sqlString  = ssp.getSqlString(sqlScript);
+            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 for (Currency cocu : country.getCurrencies()) {
 
                     ps.setInt(1, country.getId());
@@ -402,20 +377,14 @@ public class CountryDataAccess {
 
                 }
             }
-        }
-
     }
-    //TODO move to countryLanguageAccess
-    private void populateCountryLanguageTable(Country country, Connection con) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("../../../db/sqlScripts/populateCountryLanguageTable.sql");
-        try (Scanner sc = new Scanner(is);) {
-            StringBuffer sb = new StringBuffer();
-            while (sc.hasNext()) {
-
-                sb.append(sc.nextLine());
-
-            }
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);) {
+ 
+    private void populateCountryLanguageTable(Country country, Connection con) throws SQLException, IOException {
+        String sqlScript = "../../db/sqlScripts/populateCountryLanguageTable.sql";
+        SqlScriptParser ssp = new SqlScriptParser();
+        String sqlString = ssp.getSqlString(sqlScript);
+           
+            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 for (Language l : country.getLanguages()) {
 
                     ps.setInt(1, country.getId());
@@ -426,7 +395,6 @@ public class CountryDataAccess {
 
                 }
             }
-        }
     }
 
     private int getCountriesCount(Connection con, String sqlString) throws SQLException {
