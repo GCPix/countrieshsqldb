@@ -1,5 +1,6 @@
 package com.db;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Currency;
 
@@ -22,18 +24,12 @@ public class CurrencyDbdataTransfer {
  
     DbConnection dbc = new DbConnection();
     
-    public void populateCurrencyTable(List<Country> countryList, Connection connection) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("sqlScripts/populateCurrencyTable.sql");
-        Scanner sc = new Scanner(is);
-        try {
-   
-            StringBuffer sb = new StringBuffer();
-            while(sc.hasNext()){
-
-                sb.append(sc.nextLine());
-            
-            }
-            PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
+    public void populateCurrencyTable(List<Country> countryList, Connection connection) throws SQLException, IOException {
+        String sqlScript = "../../db/sqlScripts/populateCurrencyTable.sql";
+        SqlScriptParser ssp = new SqlScriptParser();
+        String sqlString = ssp.getSqlString(sqlScript);
+        
+            PreparedStatement ps = connection.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);
 
             for(Country c: countryList){
                 for (Currency cu: c.getCurrencies()){
@@ -48,13 +44,8 @@ public class CurrencyDbdataTransfer {
                         cu.setId(rs.getInt("id"));
                     }
                    
-                    }
                 }
-            
-        } finally {
-         
-            sc.close();
-        }
+            }
     }
 
     public ArrayList<Currency> getCurrencyList(Connection connection) throws SQLException {

@@ -1,9 +1,9 @@
 import static org.junit.Assert.assertTrue;
 
-import com.countries.Helpers.HCHandler;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import com.countries.Helpers.HCHandler;
 
 public class HCHandlerTests {
     @Before

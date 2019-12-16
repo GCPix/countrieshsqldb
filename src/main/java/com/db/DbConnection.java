@@ -1,14 +1,13 @@
 package com.db;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Scanner;
-
 import org.hsqldb.cmdline.SqlToolError;
+
+import com.countries.Helpers.SqlScriptParser;
 
 public class DbConnection {
 
@@ -36,17 +35,12 @@ public class DbConnection {
     }
 
     void createTables(Connection connection) throws IOException, SQLException, SqlToolError {
-        Scanner sc = null;
-      
-        try (InputStream is = getClass().getResourceAsStream("sqlScripts/createTables.sql")) {
-            // should this be throwing something like File not found or class not found exception?
-            if (is != null) {
-                sc = new Scanner(is);
-                StringBuffer sb = new StringBuffer();
-                while(sc.hasNext()){
-                    sb.append(sc.nextLine());
-                }
-                String[] singleQueryList = sb.toString().split(";");
+ 
+        SqlScriptParser ssp = new SqlScriptParser();
+        String sqlScript = "../../db/sqlScripts/createTables.sql";
+        String sqlString = ssp.getSqlString(sqlScript);
+            
+        String[] singleQueryList = sqlString.split(";");
                 //need to look at making sure this is always valid and doesn't contain stuff it doesn't need
                 for (String q: singleQueryList) {
                    
@@ -55,13 +49,8 @@ public class DbConnection {
                     }
                 }
             }
-        } finally {
-            sc.close();
-        }
+  
         
        
        
     }
-    
-
-}

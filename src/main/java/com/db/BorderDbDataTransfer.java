@@ -1,13 +1,12 @@
 package com.db;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Scanner;
-
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Country;
 
 public class BorderDbDataTransfer {
@@ -16,20 +15,11 @@ public class BorderDbDataTransfer {
 
     }
 
-    public void populateBorderTable(List<Country> countryList, Connection connection) throws SQLException {
-    
-            InputStream is = getClass().getResourceAsStream("sqlScripts/populateBorderTable.sql");
-            Scanner sc = new Scanner(is);
-
-        try{
-       
-            StringBuffer sb = new StringBuffer();
-            
-            while(sc.hasNext()){
-                sb.append(sc.nextLine());
-            }
-
-            PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
+    public void populateBorderTable(List<Country> countryList, Connection connection) throws SQLException, IOException {
+    		String sqlScript = "../../db/sqlScripts/populateBorderTable.sql";
+    		SqlScriptParser ssp = new SqlScriptParser();
+            String sqlString = ssp.getSqlString(sqlScript);
+            PreparedStatement ps = connection.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);
             
             for(Country c: countryList){
                 for(String b: c.getborders()){
@@ -47,10 +37,5 @@ public class BorderDbDataTransfer {
                 }      
             }
     
-            } finally {
-     
-                sc.close();
-            }
-
-    }
+            } 
 }

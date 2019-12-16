@@ -1,5 +1,6 @@
 package com.db;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.Language;
 
@@ -22,18 +24,11 @@ public class LanguageDBDataTransfer {
  
    
     
-    public void populateLanguageTable(List<Country> countryList, Connection connection) throws SQLException {
-        InputStream is = getClass().getResourceAsStream("sqlScripts/populateLanguageTable.sql");
-        Scanner sc = new Scanner(is);
-        try {
-           
-            StringBuffer sb = new StringBuffer();
-            while(sc.hasNext()){
-
-                sb.append(sc.nextLine());
-            
-            }
-            PreparedStatement ps = connection.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS);
+    public void populateLanguageTable(List<Country> countryList, Connection connection) throws SQLException, IOException {
+        String sqlScript = "../../db/sqlScripts/populateLanguageTable.sql";
+    	SqlScriptParser ssp = new SqlScriptParser();
+        String sqlString = ssp.getSqlString(sqlScript);
+            PreparedStatement ps = connection.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);
 
             for(Country c: countryList){
                 for (Language l: c.getLanguages()){
@@ -51,11 +46,7 @@ public class LanguageDBDataTransfer {
                     }
                 }
             
-        } finally {
-           
-            sc.close();
         }
-    }
 
     public ArrayList<Language> getLanguageList(Connection connection) throws SQLException {
         ArrayList<Language> languageList = new ArrayList<>();

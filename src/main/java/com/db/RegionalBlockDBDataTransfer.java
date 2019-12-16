@@ -11,19 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Country;
 import com.countries.countriesAPI.models.RegionalBlock;
 
+
 public class RegionalBlockDBDataTransfer {
     public void populateRegionalBlockTable(List<Country> countryList, Connection con) throws SQLException, IOException {
-        try(InputStream is = getClass().getResourceAsStream("sqlScripts/populateRegionalBlockTable.sql")){
-            try (Scanner sc = new Scanner(is)){
-                StringBuffer sb = new StringBuffer();
-                while(sc.hasNext()){
-                    sb.append(sc.nextLine());
-                }
-                
-            try (PreparedStatement ps = con.prepareStatement(sb.toString(), Statement.RETURN_GENERATED_KEYS)){
+
+    		SqlScriptParser ssp = new SqlScriptParser();
+            String sqlString = ssp.getSqlString("../../db/sqlScripts/populateRegionalBlockTable.sql");
+            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)){
                 for(Country c: countryList){
                     for(RegionalBlock rb: c.getRegionalBlocks()){
                         ps.setString(1, rb.getAcronym());
@@ -40,8 +38,7 @@ public class RegionalBlockDBDataTransfer {
                 }
             }
             }
-        }
-    }
+ 
 
     public void populateCountryRBRelationshipTable(List<Country> countryList, List<RegionalBlock> regionalBlockList, Connection con) throws IOException, SQLException {
         StringBuffer sb;
