@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.countries.Helpers.ValidatorHelper;
 import com.countries.countriesAPI.dataAccess.LanguageDataAccess;
 import com.countries.countriesAPI.models.Language;
 
@@ -24,28 +25,36 @@ public class LanguageController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addLanguage(Language language) {
-        Response response;
-        LanguageDataAccess lda = new LanguageDataAccess();
-        int id = -1;
-        try {
-            id = lda.addLanguage(language);
-        } catch (ClassNotFoundException | SQLException | IOException e) {
-            
-            e.printStackTrace();
-            response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
-        }
+    	Response response;
+    	ValidatorHelper  validator = new ValidatorHelper();
+    	if (validator.validate(language) == null) {
+    		
+            LanguageDataAccess lda = new LanguageDataAccess();
+            int id = -1;
+            try {
+                id = lda.addLanguage(language);
+            } catch (ClassNotFoundException | SQLException | IOException e) {
+                
+                e.printStackTrace();
+                response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+            }
 
-        // below used to create a return value that would include the path to the new
-        // addition sticking to poc example so changing to id
-        // URI uri =
-        // UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
-        // return Response.created(uri).entity(id).build();
-        if (id >= 0) {
-            response = Response.status(Status.CREATED).entity(id).build();
-        } else {
-            response = Response.status(Status.BAD_REQUEST).build();
-        }
-        return response;
+            // below used to create a return value that would include the path to the new
+            // addition sticking to poc example so changing to id
+            // URI uri =
+            // UriBuilder.fromResource(LanguageController.class).path("language/{id}").build(Integer.toString(id));
+            // return Response.created(uri).entity(id).build();
+            if (id >= 0) {
+                response = Response.status(Status.CREATED).entity(id).build();
+            } else {
+                response = Response.status(Status.BAD_REQUEST).build();
+            }
+            
+    	} else {
+    		String message = validator.validate(language);
+    		response = Response.status(Status.BAD_REQUEST).entity(message).build();
+    	}
+    	return response;
     }
 
     @GET
