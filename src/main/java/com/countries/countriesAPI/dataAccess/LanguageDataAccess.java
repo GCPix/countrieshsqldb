@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import javax.validation.executable.ExecutableValidator;
-
 import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.Language;
 import com.db.DbConnection;
@@ -24,9 +22,9 @@ public class LanguageDataAccess {
         Language language = null;
         DbConnection dc = new DbConnection();
 
-        Connection con = dc.getConnection();
+        
 
-        try {
+        try (Connection con = dc.getConnection();){
 
             String sqlString = "SELECT * FROM language WHERE id = " + languageId;
             try (PreparedStatement ps = con.prepareStatement(sqlString);) {
@@ -41,9 +39,7 @@ public class LanguageDataAccess {
                     }
                 } 
             } 
-        } finally {
-            dc.closeConnection(con);
-        }
+        } 
         return language;
 
     }
@@ -52,16 +48,13 @@ public class LanguageDataAccess {
         int noRowsReturned;
         DbConnection dc = new DbConnection();
 
-        Connection con = dc.getConnection();
 
-        try {
+        try (Connection con = dc.getConnection();){
             String sqlString = "DELETE FROM language where id  = " + id;
             try (PreparedStatement ps = con.prepareStatement(sqlString)) {
                 noRowsReturned = ps.executeUpdate();
             } 
-        } finally {
-            dc.closeConnection(con);
-        }
+        } 
         return noRowsReturned;
     }
 
@@ -116,12 +109,12 @@ public class LanguageDataAccess {
     public ArrayList<Language> getLanguageList() throws SQLException, ClassNotFoundException {
         ArrayList<Language> languageList = null;
         DbConnection dc  = new DbConnection();
-        Connection connection = dc.getConnection();
+       
         Language l = null;
 
-        try {
+        try (Connection con = dc.getConnection();){
             String sqlString = "Select * from language";
-            try (PreparedStatement ps = connection.prepareStatement(sqlString)) {
+            try (PreparedStatement ps = con.prepareStatement(sqlString)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     languageList = new ArrayList<Language>();
                     while(rs.next()){
@@ -137,9 +130,7 @@ public class LanguageDataAccess {
                 } 
             } 
 
-        } finally {
-            dc.closeConnection(connection);
-        }
+        } 
         return languageList;
     }
 }

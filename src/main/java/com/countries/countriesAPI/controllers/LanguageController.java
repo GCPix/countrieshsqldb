@@ -114,18 +114,23 @@ public class LanguageController {
     public Response updateLanguage(@PathParam("languageid") int languageId, Language language) {
         LanguageDataAccess lda = new LanguageDataAccess();
         Response response;
-
-        if (languageId >= 0 && language != null) {
-
-            try {
-                lda.updateLanguage(languageId, language);
-            } catch (ClassNotFoundException | SQLException e) {  
-                e.printStackTrace();
-                response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
-            }
-            response = Response.noContent().build();
+        ValidatorHelper validator = new ValidatorHelper();
+        String validationMessage = validator.validate(language);
+        if (!validationMessage.isEmpty()) {
+	        if (languageId >= 0 && language != null) {
+	
+	            try {
+	                lda.updateLanguage(languageId, language);
+	            } catch (ClassNotFoundException | SQLException e) {  
+	                e.printStackTrace();
+	                response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
+	            }
+	            response = Response.noContent().build();
+	        } else {
+	            response = Response.status(Status.BAD_REQUEST).entity("please check your details for your update, you appear to have a formatting issue").build();
+	        }
         } else {
-            response = Response.status(Status.BAD_REQUEST).entity("please check your details for your update, you appear to have a formatting issue").build();
+        	response = Response.status(Status.BAD_REQUEST).entity(validationMessage).build();
         }
         return response;
     }
