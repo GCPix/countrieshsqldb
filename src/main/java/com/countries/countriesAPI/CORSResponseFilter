@@ -6,19 +6,15 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.container;
 
-@Provider()
+@Provider
 public class CORSResponseFilter
 implements ContainerResponseFilter {
 
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
             throws IOException {
-
-        MultivaluedMap<String, Object> headers = responseContext.getHeaders();
-
-        headers.add("Access-Control-Allow-Origin", "*");
-        //headers.add("Access-Control-Allow-Origin", "http://podcastpedia.org"); //allows CORS requests only coming from podcastpedia.org       
-        headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS");          
-        headers.add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, X-Codingpedia");
+        responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
+        responseContext.getHeaders().putSingle("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+        responseContext.getHeaders().putSingle("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
     }
 
 }
