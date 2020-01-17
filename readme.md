@@ -18,7 +18,6 @@ All paths have been tested to some extent through Postman, I have added the scri
 All paths are http://localhost:8080/'endpoint' from list below:
    'ROOT' REST Endpoints:  
 		GET     /home
-		GET     /readme
 		GET     /application.wadl
 		POST    /countries/summary
 		POST    /country
