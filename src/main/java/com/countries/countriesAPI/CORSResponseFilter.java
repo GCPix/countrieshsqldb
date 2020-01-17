@@ -13,7 +13,7 @@ implements ContainerResponseFilter {
 
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
             throws IOException {
-        Logger.getLogger(CORSResponseFilter.class.getName()).fine('Response intercepted by response filter!');
+        Logger.getLogger(CORSResponseFilter.class.getName()).fine("Response intercepted by response filter!");
         responseContext.getHeaders().putSingle("Access-Control-Allow-Origin", "*");
         responseContext.getHeaders().putSingle("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         responseContext.getHeaders().putSingle("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
