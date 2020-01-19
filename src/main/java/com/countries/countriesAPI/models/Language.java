@@ -9,10 +9,10 @@ public class Language {
     @JsonIgnore
     private Integer id;
     @NotNull
-    @Size(min = 2, max = 2, message = "this will always be a two character string")
+    @Size(min = 2, max = 2, message = "iso639_1 will always be a two character string")
     private String iso639_1;
     @NotNull
-    @Size(min = 3, max = 3, message = "this will always be a three character string")
+    @Size(min = 3, max = 3, message = "iso639_2 this will always be a three character string")
     private String iso639_2;
     @NotNull
     @Size(min = 1, max = 150, message = "this must be between 1 and 150 characterts (inclusive)")
