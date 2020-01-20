@@ -35,7 +35,7 @@ public class CountriesController {
         Response response;
         try {
             // As they can't do anything to sort it I think it should be internal server error, wondering if I should just have one catch?
-   
+        	
             countrySummary = cda.getCountriesSummary(sortField, pageSize, pageNumber, filter);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

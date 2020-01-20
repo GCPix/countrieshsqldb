@@ -2,7 +2,6 @@ package com.countries.countriesAPI;
 
 import java.io.IOException;
 import java.sql.SQLException;
-
 import com.db.DbInitialPopulate;
 import org.hsqldb.cmdline.SqlToolError;
 
