@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ws.rs.NotFoundException;
+
 import com.countries.Helpers.SqlScriptParser;
 import com.countries.countriesAPI.models.BasicCountry;
 import com.countries.countriesAPI.models.Country;
@@ -71,6 +74,8 @@ public class CountryDataAccess {
         BasicCountry c;
         List<BasicCountry> countriesSummary = new ArrayList<>();
         
+        ResponsePaged rp = null;
+        
         DbConnection dbc = new DbConnection();
         int startRecord = 0;
         // set initial values for pagination
@@ -104,7 +109,11 @@ public class CountryDataAccess {
             
         }
         this.setPagePaths(page);
-        ResponsePaged rp = new ResponsePaged(page, countriesSummary);
+        
+        if (page.getTotalPages()>=page.getPageNumber()&& countriesSummary != null){
+        	rp = new ResponsePaged(page, countriesSummary);
+        }
+        
         return rp;
     }
     
@@ -420,7 +429,8 @@ public class CountryDataAccess {
         }
             
         page.setTotalPages(totalPages);
-
+        
+        
     }
 
     private void setPagePaths(Pagination page)

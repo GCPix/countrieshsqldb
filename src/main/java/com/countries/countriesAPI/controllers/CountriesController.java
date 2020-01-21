@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -30,13 +31,14 @@ public class CountriesController {
             @DefaultValue("30") @QueryParam("pageSize") int pageSize,
             @DefaultValue("1") @QueryParam("pageNumber") int pageNumber,  Filter filter){
    
-        ResponsePaged countrySummary = new ResponsePaged();
+        ResponsePaged countrySummary = null;
         CountryDataAccess cda = new CountryDataAccess();
         Response response;
         try {
             // As they can't do anything to sort it I think it should be internal server error, wondering if I should just have one catch?
         	
             countrySummary = cda.getCountriesSummary(sortField, pageSize, pageNumber, filter);
+          
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
