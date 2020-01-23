@@ -26,7 +26,9 @@ public class LanguageController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addLanguage(Language language) {
     	Response response;
+    	//create validator to add any messages where validation fails - see helper package for detail
     	ValidatorHelper  validator = new ValidatorHelper();
+    	//validate(object) to actually check it against validators (found in model) if null do the work
     	if (validator.validate(language) == null) {
     		
             LanguageDataAccess lda = new LanguageDataAccess();
@@ -51,6 +53,7 @@ public class LanguageController {
             }
             
     	} else {
+    		//if the validator had an issue get the messages and return them to the front end
     		String message = validator.validate(language);
     		response = Response.status(Status.BAD_REQUEST).entity(message).build();
     	}
