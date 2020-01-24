@@ -1,0 +1,540 @@
+openapi: 3.0.0
+info:
+  title: Countries OpenAPI
+  version: 1.0.0
+servers:
+- url: http://EC2AMAZ-0LEPQND.ngs.local:8080/
+  description: Default Server.
+paths:
+  /countries/summary:
+    post:
+      description: Returns a single object that will have a list of BasicCountry objects as well as the pagination detail. <br><br> Page size information will be passed through the path query. <br><br> Query data to limit the results set will be passed via the requestBody hence this is a POST.
+      operationId: getCountriesSummary
+      parameters:
+      - name: sortField
+        in: query
+        # style: simple
+        schema:
+          type: string
+          default: name
+      - name: pageSize
+        in: query
+        # style: simple
+        schema:
+          type: integer
+          default: "30"
+      - name: pageNumber
+        in: query
+        # style: simple
+        schema:
+          type: integer
+          default: "1"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filter'
+      responses:
+        '200':
+          description: successful operation
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/paginatedresponse'
+        '404':
+          description: no data to return from query
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: something else went wrong
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+  /country:
+    post:
+      description: adds a new country, returning the id from the database
+      operationId: addCountry
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/country'
+      responses:
+          '201':
+            description: successful response including id
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+          '400':
+            description: error, data sent was invalid, country not added
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+          '500':
+            description: error, something else went wrong, country not added
+            content: 
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+
+  /country/{id}:
+    get:
+      operationId: getCountry
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: results returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/country'
+        '404':
+          description: something went wrong, incorrect country id was sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      description: update the full country object.  Will add any new data. <br><br> Any ids for currencies, languages, borders or regionalblocks that have been deleted should be stored in lists on front end and passed to the method.
+      operationId: updateCountry
+      parameters:
+      - name: deletedCurrencies
+      # about style - https://swagger.io/docs/specification/serialization/
+        in: query
+        # style: simple
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: deletedLanguages
+        in: query
+        # style: simple
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: deletedBorders
+        in: query
+        # style: simple
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: deletedRegionalBlocks
+        in: query
+        # style: simple
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+             $ref: '#/components/schemas/country'
+      responses:
+        '202':
+          description: update of country successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: something went wrong, no additional information given in response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      description: will remove a country from the list updating any relationships with languages, borders, regionalblocks and currencies.
+      operationId: deleteCountry
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+  /currencies:
+    get:
+      operationId: getCurrencies
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+  /currency:
+    post:
+      operationId: addCurrency
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+  /currency/{id}:
+    get:
+      operationId: getCurrency
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+    put:
+      operationId: updateCurrency
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+    delete:
+      operationId: deleteCurrency
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+  /home:
+    get:
+      operationId: home
+      responses:
+        default:
+          content:
+            text/html:
+              schema:
+                type: string
+          description: Default Response.
+  /language:
+    post:
+      operationId: addLanguage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+  /language/{languageid}:
+    get:
+      operationId: getLanguage
+      parameters:
+      - name: languageid
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+    put:
+      operationId: updateLanguage
+      parameters:
+      - name: languageid
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+    delete:
+      operationId: deleteLanguage
+      parameters:
+      - name: languageid
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+  /languages:
+    get:
+      operationId: getLanguages
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+  /readme:
+    get:
+      operationId: getReadMe
+      responses:
+        default:
+          content:
+            text/html:
+              schema:
+                type: string
+          description: Default Response.
+  /regionalblock:
+    post:
+      operationId: addRegionalBlock
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: object
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+  /regionalblock/{id}:
+    get:
+      operationId: getRegionalBlock
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Default Response.
+    put:
+      operationId: updateRegionalBlock
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: object
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+    delete:
+      operationId: deleteRegionalBlock
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        schema:
+          type: integer
+      responses:
+        default:
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Default Response.
+  /regionalblocks:
+    get:
+      operationId: getRegionalBlocks
+      responses:
+        default:
+          description: Default Response.
+components:
+  schemas:
+    # 200response:
+    #   description: successful operation
+    #   content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/paginatedresponse'
+    # 404response:
+    #   description: no data to return from query
+
+    # 500response:
+    #   description: something else went wrong
+    ApiResponse:
+        title: ApiResponse
+        type: object
+        properties:
+          code:
+            type: integer
+          type:
+            type: string
+          message:
+            type: string
+    BasicCountry:
+      title: BasicCountry
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          nullable: false
+          minimum: 1
+          maximum: 150
+        capital:
+          type: string
+          nullable: false
+          minimum: 1
+          maximum: 150
+        population:
+          type: integer
+          nullable: false
+        flag:
+          type: string
+          nullable: false
+          maximum: 200
+        region:
+          type: string
+          nullable: false
+          minimum: 1
+          maximum: 150
+    country:
+        type: object
+        properties:
+          basiccountry:
+            $ref: '#/components/schemas/BasicCountry'
+          currencylist:
+            type: array
+            items:
+              $ref: '#/components/schemas/currency'
+          languagelist:
+            type: array
+            items:
+              $ref: '#/components/schemas/language'
+          regionalblocklist:
+            type: array
+            items:
+              $ref: '#/components/schemas/regionalblock'
+    currency:
+      type: object
+    Filter:
+      type: object
+      properties:
+        countryFilterField:
+          type: string
+        countryFilterValue:
+          type: string
+        languageFilterList:
+          type: array
+          items:
+            type: integer
+        currencyFilterList:
+          type: array
+          items:
+            type: integer
+        regionalBlockFilterList:
+          type: array
+          items:
+            type: integer
+    language:
+      type: object
+    pagination:
+      type: object
+    paginatedresponse:
+      type: object
+      properties:
+        countrylist:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasicCountry'
+        pagination:
+          $ref: '#/components/schemas/pagination'
+
+    regionalblock:
+      type: object
+    

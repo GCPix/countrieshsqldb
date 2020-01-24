@@ -12,7 +12,6 @@ public class BasicCountry {
     @Size(min = 0, max = 150, message = "Capital cannot be more than 150 characters")
     private String capital;
     @NotNull
-    
     private long population;
     @NotNull
     @Size(max = 200)
