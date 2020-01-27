@@ -53,7 +53,12 @@ public class RegionalBlockController {
             e.printStackTrace();
             response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Something went wrong, contact someone who can sort it").build();
         }
-        response = Response.ok(rb).build();
+        if (rb == null) {
+        	response = Response.status(Status.NOT_FOUND).entity("There was no data to return for that id").build();
+        }else {
+        	response = Response.ok(rb).build();
+        }
+        
         return response;
     }
 

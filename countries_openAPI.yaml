@@ -173,22 +173,42 @@ paths:
         schema:
           type: integer
       responses:
-        default:
+        '204':
+          description: country deleted successfully
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: country not deleted, most likely incorrect id sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /currencies:
     get:
       operationId: getCurrencies
       responses:
-        default:
+        '200':
+          description: list of currencies returned successfully
           content:
             application/json:
               schema:
-                type: object
-          description: Default Response.
+                type: array
+                items: 
+                  $ref: '#/components/schemas/currency'
+        '404':
+          description: no currencies found to return
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /currency:
     post:
       operationId: addCurrency
@@ -196,14 +216,26 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/currency'
       responses:
-        default:
+        '201':
+          description: currency added successfully
           content:
             application/json:
               schema:
-                type: object
-          description: Default Response.
+                type: integer
+        '204':
+          description: error related to data structure. returned message may provide further information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: error completing request not related to data structure.
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
   /currency/{id}:
     get:
       operationId: getCurrency
@@ -215,12 +247,24 @@ paths:
         schema:
           type: integer
       responses:
-        default:
+        '200':
+          description: currency object returned
           content:
             application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/currency'
+        '404':
+          description: no currency to return, incorrect id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: error contacting database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     put:
       operationId: updateCurrency
       parameters:
@@ -234,14 +278,26 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/currency'
       responses:
-        default:
+        '204':
+          description: currency updated
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: error updating, response message may include more information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: something went wrong contacting the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     delete:
       operationId: deleteCurrency
       parameters:
@@ -252,12 +308,24 @@ paths:
         schema:
           type: integer
       responses:
-        default:
-          content:
-            '*/*':
-              schema:
-                type: object
-          description: Default Response.
+          '204':
+            description: currency deleted
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+          '404':
+            description: error updating, response message may include more information
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+          '500':
+            description: something went wrong contacting the database
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
   /home:
     get:
       operationId: home
@@ -277,12 +345,25 @@ paths:
             schema:
               type: object
       responses:
-        default:
+       '200':
+          description: list of languages returned successfully
           content:
             application/json:
               schema:
-                type: object
-          description: Default Response.
+                type: array
+                $ref: '#/components/schemas/language'
+       '204':
+          description: no data returned from database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+       '500':
+          description: something went wrong contacting database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /language/{languageid}:
     get:
       operationId: getLanguage
@@ -294,12 +375,25 @@ paths:
         schema:
           type: integer
       responses:
-        default:
-          content:
-            application/json:
-              schema:
-                type: object
-          description: Default Response.
+       '200':
+        description: language returned successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/language'
+       '404':
+        description: no data returned from database, response message may hold further information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiResponse' 
+       '500':
+        description: something went wrong contacting database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiResponse'
+
     put:
       operationId: updateLanguage
       parameters:
@@ -313,14 +407,26 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/language'
       responses:
-        default:
+        '204':
+          description: language details updated
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: error due to data sent, response message may provide more information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: error contactint database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     delete:
       operationId: deleteLanguage
       parameters:
@@ -331,22 +437,48 @@ paths:
         schema:
           type: integer
       responses:
-        default:
+        '204':
+          description: language deleted including any relationships
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: error when id not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: something went wrong contacting the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /languages:
     get:
       operationId: getLanguages
       responses:
-        default:
+        '200':
+          description: list of languages returned
           content:
             application/json:
               schema:
-                type: object
-          description: Default Response.
+                type: array
+                items:
+                  $ref: '#/components/schemas/language'
+        '204':
+          description: no data to return from database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: something went wrong contacting the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /readme:
     get:
       operationId: getReadMe
@@ -364,7 +496,7 @@ paths:
         content:
           '*/*':
             schema:
-              type: object
+              $ref: '#/components/schemas/regionalblock'
       responses:
         default:
           content:
@@ -383,12 +515,24 @@ paths:
         schema:
           type: integer
       responses:
-        default:
-          content:
+       '200':
+        description: regionalblock returned successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/regionalblock'
+       '404':
+          description: no content returned based on id provided
+          content: 
             application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/ApiResponse'
+       '500':
+        description: error contacting the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiResponse'
     put:
       operationId: updateRegionalBlock
       parameters:
@@ -400,16 +544,28 @@ paths:
           type: integer
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/regionalblock'
       responses:
-        default:
-          content:
-            '*/*':
-              schema:
-                type: object
-          description: Default Response.
+          '204':
+            description: regionalblock updated successfully
+            content: 
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+          '400':
+            description: error with data sent, response message may provide more detail
+            content: 
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+          '500':
+            description: error contacting the databsae
+            content: 
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
     delete:
       operationId: deleteRegionalBlock
       parameters:
@@ -420,18 +576,48 @@ paths:
         schema:
           type: integer
       responses:
-        default:
-          content:
-            '*/*':
+        '204':
+          description: regionalblock deleted successfully including any relationships
+          content: 
+            application/json:
               schema:
-                type: object
-          description: Default Response.
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: error with data sent, response message may provide more detail
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: error contacting the databsae
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   /regionalblocks:
     get:
       operationId: getRegionalBlocks
       responses:
-        default:
-          description: Default Response.
+        '200':
+          description: list of regionalblocks returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/regionalblock'
+        '404':
+          description: no content returned
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: error contacting the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
     # 200response:
@@ -502,6 +688,18 @@ components:
               $ref: '#/components/schemas/regionalblock'
     currency:
       type: object
+      properties:
+        id:
+          type: integer
+        code:
+          nullable: false
+          type: string
+        name:
+          nullable: false
+          type: string
+        symbol:
+          nullable: false
+          type: string
     Filter:
       type: object
       properties:
@@ -523,8 +721,54 @@ components:
             type: integer
     language:
       type: object
+      properties:
+        id:
+          type: integer
+        iso639_1:
+          type: string
+          minimum: 2
+          maximum: 2
+          nullable: false
+        iso639_2:
+          type: string
+          minimum: 3
+          maximum: 3
+          nullable: false
+        name:
+          type: string
+          minimum: 1
+          maximum: 150
+          nullable: false
+        nativeName:
+          type: string
+          minimum: 1
+          maximum: 150
+          nullable: false
     pagination:
       type: object
+      properties:
+        pageNumber:
+          nullable: false
+          type: integer
+        pageSize:
+          nullable: false
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        sortBy:
+          nullable: false
+          type: string
+        firstPagePath:
+          type: string
+        lastPagePath:
+          type: string
+        previousPagePath:
+          type: string
+        nextPagePath:
+          type: string
+
     paginatedresponse:
       type: object
       properties:
@@ -537,4 +781,11 @@ components:
 
     regionalblock:
       type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        acronym:
+          type: string
     
