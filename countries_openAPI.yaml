@@ -351,7 +351,8 @@ paths:
             application/json:
               schema:
                 type: array
-                $ref: '#/components/schemas/language'
+                items:
+                  $ref: '#/components/schemas/language'
        '204':
           description: no data returned from database
           content:
