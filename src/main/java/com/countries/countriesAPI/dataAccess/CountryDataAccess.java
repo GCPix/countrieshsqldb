@@ -571,8 +571,15 @@ public class CountryDataAccess {
 
         // gets the field and value relating to Country and checks the db for it
         if (filter.getCountryFilterField() != null) {
-            sqlBasicCountryQuery = " WHERE lower(c." + filter.getCountryFilterField() + ") LIKE '%"
-                    + filter.getCountryFilterValue().toLowerCase() + "%'";
+        	if(!filter.getCountryFilterField().equals("population") ) {
+        		 sqlBasicCountryQuery = " WHERE lower(c." + filter.getCountryFilterField() + ") LIKE '%"
+                         + filter.getCountryFilterValue().toLowerCase() + "%'";
+        	} else {
+        		long populationValue = (long) Long.parseLong(filter.getCountryFilterValue());
+        		sqlBasicCountryQuery = " WHERE c." + filter.getCountryFilterField() + " = "
+                        + populationValue;
+        	}
+           
         }
 
         joinDefinition = createCountrySummaryJoinBlock(filter);

@@ -675,15 +675,19 @@ components:
         properties:
           basiccountry:
             $ref: '#/components/schemas/BasicCountry'
-          currencylist:
+          borderCountriesList:
+            type: array
+            items:
+              $ref: '#/components/schemas/BasicCountry'
+          currencies:
             type: array
             items:
               $ref: '#/components/schemas/currency'
-          languagelist:
+          languages:
             type: array
             items:
               $ref: '#/components/schemas/language'
-          regionalblocklist:
+          regionalblocks:
             type: array
             items:
               $ref: '#/components/schemas/regionalblock'
