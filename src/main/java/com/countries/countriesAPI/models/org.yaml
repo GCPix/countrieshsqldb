@@ -1,0 +1,4574 @@
+openapi: 3.0.0
+info:
+  title: Organisation Structure API Definition OAS3
+  description: 'Organisation Structure Swagger definition.'
+  contact:
+    email: info@seemis.gov.scot
+  version: '0.19.0'
+servers:
+- url: https://1esoltp1nk.execute-api.eu-west-1.amazonaws.com/dev
+  variables: {}
+paths:
+  /organisation/central/region:
+    get:
+      tags:
+      - central-regionmanagement
+      summary: getRegionList
+      description: Gets list of all region summaries
+      operationId: GetRegionList
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegionSummaryResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - central-regionmanagement
+      summary: createRegion
+      description: Creates a new region
+      operationId: CreateRegion
+      requestBody:
+        description: Region object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Region'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/region/{regionId}:
+    get:
+      tags:
+      - central-regionmanagement
+      summary: getRegionById
+      description: Gets the details of a single region
+      operationId: GetRegionById
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        style: simple
+        explode: false
+        schema:
+          type: string
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegionSummaryResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - central-regionmanagement
+      summary: updateRegionById
+      description: Updates region specific detail
+      operationId: UpdateRegionById
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Region object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Region'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/region/{regionId}/logo:
+    post:
+      tags:
+      - central-regionlogo
+      summary: addRegionLogo
+      description: Updates the region's logo
+      operationId: AddRegionLogo
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: photoType
+        in: query
+        description: Type of photo
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: Photo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BinaryImage'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    get:
+      tags:
+      - central-regionlogo
+      summary: getRegionLogo
+      description: Returns a region logo
+      operationId: GetRegionLogo
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - central-regionlogo
+      summary: deleteRegionLogo
+      description: Deletes the logo for a region
+      operationId: DeleteRegionLogo
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/establishment/search:
+    get:
+      tags:
+      - central-regionmanagement
+      summary: searchEstablishmentsAcrossRegions
+      description: Establishment search across all regions
+      operationId: SearchEstablishmentsAcrossRegions
+      parameters:
+      - name: filterbyestablishmentname
+        in: query
+        description: Tags to filter by
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: pagesize
+        in: query
+        description: no of records per page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageref
+        in: query
+        description: number of page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstablishmentSummaryResponse'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/establishment/{establishmentId}/view:
+    get:
+      tags:
+      - region-establishmentsummaries
+      summary: getEstablishmentViewOnlyDetails
+      description: Gets a set of view only details for the establishment
+      operationId: GetEstablishmentViewOnlyDetails
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstablishmentView'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/establishment:
+    post:
+      tags:
+      - region-establishmentmanagement
+      summary: addRegionEstablishment
+      description: Add a new establishment to a region
+      operationId: addRegionEstablishment
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Establishment object that needs to be added to an LA
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Establishment'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/establishment/{establishmentId}/basic:
+    get:
+      tags:
+      - region-establishmentsummaries
+      summary: getEstablishmentBasicDetails
+      description: Gets a a set of basic details for the establishment
+      operationId: GetEstablishmentBasicDetails
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstablishmentBasic'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - region-establishmentmanagement
+      summary: updateEstablishmentBasicDetails
+      description: Updates the basic details of the establishment
+      operationId: UpdateEstablishmentBasicDetails
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: EstablishmentBasic object containing the details to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstablishmentBasic'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/establishment/{establishmentId}/summary:
+    get:
+      tags:
+      - region-establishmentsummaries
+      summary: getEstablishmentSummaryDetails
+      description: Gets a a set of summary details for the establishment
+      operationId: GetEstablishmentSummaryDetails
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstablishmentSummaryDetails'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - region-establishmentmanagement
+      summary: updateEstablishmentSummaryDetails
+      description: Updates the summary details of the establishment
+      operationId: UpdateEstablishmentSummaryDetails
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: EstablishmentSummaryDetails object containing the details to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstablishmentSummaryDetails'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/region/{regionId}/establishment:
+    get:
+      tags:
+      - central-regionmanagement
+      summary: getRegionEstablishmentList
+      description: Lists establishments
+      operationId: GetRegionEstablishmentList
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: pagesize
+        in: query
+        description: no of records per page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageref
+        in: query
+        description: number of page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstablishmentSummaryResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/establishment/search:
+    get:
+      tags:
+      - region-establishmentmanagement
+      summary: searchRegionEstablishments
+      description: Muliple tags can be provided.
+      operationId: SearchRegionEstablishments
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: filterbyestablishmentname
+        in: query
+        description: Tags to filter by
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: pagesize
+        in: query
+        description: no of records per page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageref
+        in: query
+        description: number of page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstablishmentSummaryResponse'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  
+  /organisation/region/{regionId}/establishmentgroups:
+    get:
+      tags:
+        - establishmentgroup
+      summary: Returns a list of establishment groups within the specified region
+      description: Returns a list of establishment groups within the specified region which provide a mechanism for collectively reporting or assigning access control measures across multiple establishmentSummary
+      operationId: getRegionEstablishmentGroupList
+      parameters:
+        - name: regionId
+          in: path
+          description: ID of region
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: pagesize
+          in: query
+          description: no of records per page to return
+          required: false
+          schema:
+            type: integer
+        - name: pageref
+          in: query
+          description: number of page to return
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EstablishmentGroupSummaryResponse'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - establishmentgroup
+      summary: addRegionEstablishmentGroup
+      description: Add a new establishment to an LA
+      operationId: addRegionEstablishmentGroup
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Establishment Group object that needs to be added to an LA
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstablishmentGroup'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  
+  /organisation/region/{regionId}/establishmentgroups/{groupId}:
+    get:
+      tags:
+        - establishmentgroup
+      summary: Returns details of an establishment group within the specified region
+      description: Returns details of an establishment group within the specified region
+      operationId: getRegionEstablishmentGroupDetails
+      parameters:
+        - name: regionId
+          in: path
+          description: ID of region
+          required: true
+          schema:          
+            type: string
+        - name: groupId
+          in: path
+          description: ID of establishment group
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+            description: successful operation
+            headers: {}
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/EstablishmentGroup'
+        400:
+            description: 400 response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+          - establishmentgroup
+      summary: Update establishment group by ID
+      description: Updates a single establishment group
+      operationId: updateRegionEstablishmentGroup
+      parameters:
+        - name: regionId
+          in: path
+          description: ID of region
+          required: true
+          schema:          
+            type: string
+        - name: groupId
+          in: path
+          description: ID of establishment group to return
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Establishment Group object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstablishmentGroupDetails'
+        required: true
+      responses:
+        200:
+            description: successful operation
+            headers: {}
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+        400:
+            description: 400 response
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - establishmentgroup
+      summary: deleteRegionEstablishmentGroup
+      description: Deletes an establishment group by ID
+      operationId: deleteRegionEstablishmentGroup
+      parameters:
+        - name: regionId
+          in: path
+          description: ID of region
+          required: true
+          schema:          
+            type: string
+        - name: groupId
+          in: path
+          description: ID of establishment group to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  
+  /organisation/region/{regionId}/establishment/{establishmentId}:
+    get:
+      tags:
+      - region-establishmentmanagement
+      summary: getEstablishment
+      description: Returns a single establishment based on its ID
+      operationId: GetEstablishment
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Establishment'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - region-establishmentmanagement
+      summary: updateEstablishment
+      description: Returns a single establishment
+      operationId: UpdateEstablishment
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Establishment object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Establishment'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/establishment/{establishmentId}/logo:
+    get:
+      tags:
+      - region-establishmentlogo
+      summary: getEstablishmentLogo
+      description: Returns an establishment logo
+      operationId: GetEstablishmentLogo
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - region-establishmentlogo
+      summary: createEstablishmentLogo
+      description: Creates an establishment logo
+      operationId: CreateEstablishmentLogo
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Photo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BinaryImage'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - region-establishmentlogo
+      summary: deleteEstablishmentLogo
+      description: Deletes an establishment logo
+      operationId: DeleteEstablishmentLogo
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of the region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/accommodation/room:
+    get:
+      tags:
+      - accommodation-gets
+      summary: getRooms
+      description: Get the rooms for an establishment
+      operationId: GetRooms
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomSummaryResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - accommodation
+      summary: addRoom
+      description: Add a new room to a site
+      operationId: AddRoom
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Room object that needs to be added to a site
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/accommodation/room/search:
+    get:
+      tags:
+      - accommodation
+      summary: searchEstablishmentRooms
+      description: Search for rooms within an establishment
+      operationId: SearchEstablishmentRooms
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: roomType
+        in: query
+        description: room type
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: capacityFrom
+        in: query
+        description: capacity from
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: capacityTo
+        in: query
+        description: capacity to
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pagesize
+        in: query
+        description: no of records per page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageref
+        in: query
+        description: number of page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomSummaryResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/accommodation/room/{roomId}:
+    get:
+      tags:
+      - accommodation-gets
+      summary: getRoom
+      description: Returns a single room
+      operationId: GetRoom
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - accommodation
+      summary: updateRoom
+      description: Updates a single room
+      operationId: UpdateRoom
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Room object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - accommodation
+      summary: deleteRoom
+      description: Deletes a room by ID
+      operationId: DeleteRoom
+      parameters:
+      - name: roomId
+        in: path
+        description: room to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/accommodation/building:
+    get:
+      tags:
+      - accommodation-gets
+      summary: getBuildings
+      description: Get list of buildings for an establishment
+      operationId: GetBuildings
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BuildingSummary'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - accommodation
+      summary: addBuilding
+      description: Add a new building to an establishment
+      operationId: AddBuilding
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Building object that needs to be added to a site
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Building'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/accommodation/building/{buildingId}:
+    get:
+      tags:
+      - accommodation-gets
+      summary: getBuilding
+      description: Returns a single building
+      operationId: GetBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of building to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - accommodation
+      summary: updateBuilding
+      description: Updates a single building
+      operationId: UpdateBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: ID of building to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Building object that needs to be added to a site
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Building'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - accommodation
+      summary: deleteBuilding
+      description: Deletes a building by ID
+      operationId: DeleteBuilding
+      parameters:
+      - name: buildingId
+        in: path
+        description: building to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/asset:
+    get:
+      tags:
+      - accommodation-gets
+      summary: getEstablishmentAssets
+      description: Retrieves assets within an establishment
+      operationId: GetEstablishmentAssets
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Asset'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - accommodation
+      summary: createEstablishmentAssets
+      description: Sets the list of assets in an establishment
+      operationId: CreateEstablishmentAssets
+      parameters:
+      - name: establishmentId
+        in: path
+        description: The ID of the site to set the assets for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Building object that needs to be added to a site
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Asset'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags: 
+      - accommodation
+      summary: deleteEstablishmentAssets
+      description: Deletes all assets from an establishment
+      operationId: DeleteEstablishmentAssets
+      parameters:
+      - name: establishmentId
+        in: path
+        description: The ID of the site to set the assets for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/asset/search:
+    get:
+      tags:
+      - accommodation
+      summary: searchEstablishmentAsset
+      description: Search for assets within an establishment
+      operationId: SearchEstablishmentAsset
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: filterbyassettype
+        in: query
+        description: Tags to filter by
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: buildingId
+        in: query
+        description: ID of building
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: roomId
+        in: query
+        description: ID of room
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Asset'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/roomusagetype:
+    get:
+      tags:
+      - central-lookups
+      summary: getRoomUsageTypes
+      description: Retrieves room usage type list
+      operationId: GetRoomUsageTypes
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomUsageType'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/faculty:
+    get:
+      tags:
+      - faculty-gets
+      summary: getFaculties
+      description: Get a list of faculties in an establishment
+      operationId: GetFaculties
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FacultySummary'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - faculty
+      summary: addFaculty
+      description: Add a new faculty to an establishment
+      operationId: AddFaculty
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Faculty object to be added to a site
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Faculty'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/faculty/{facultyId}:
+    get:
+      tags:
+      - faculty-gets
+      summary: getFaculty
+      description: Returns a single faculty
+      operationId: GetFaculty
+      parameters:
+      - name: facultyId
+        in: path
+        description: ID of faculty to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Faculty'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - faculty
+      summary: updateFaculty
+      description: Returns a single faculty
+      operationId: Updateaculty
+      parameters:
+      - name: facultyId
+        in: path
+        description: ID of faculty to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Faculty object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Faculty'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - faculty
+      summary: deleteFaculty
+      description: Deletes a faculty by ID
+      operationId: DeleteFaculty
+      parameters:
+      - name: facultyId
+        in: path
+        description: faculty to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/faculty/{facultyId}/staff:
+    post:
+      tags:
+      - faculty
+      summary: createFacultyStaff
+      description: Links staff to a faculty
+      operationId: CreateFacultyStaff
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: facultyId
+        in: path
+        description: ID of faculty
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Array of staff IDs to be linked to the faculty.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/faculty/{facultyId}/staff/{staffId}:
+    delete:
+      tags:
+      - faculty
+      summary: deleteFacultyStaff
+      description: Deletes a staff faculty link
+      operationId: DeleteFacultyStaff
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: facultyId
+        in: path
+        description: ID of faculty
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: staffId
+        in: path
+        description: ID of staff
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/department:
+    get:
+      tags:
+      - department-gets
+      summary: getDepartments
+      description: Lists departments for an establishment
+      operationId: GetDepartments
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartmentSummary'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - department
+      summary: addDepartment
+      description: Add a new department to an establishment
+      operationId: AddDepartment
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Department object to be added to a site
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/department/{departmentId}:
+    get:
+      tags:
+      - department-gets
+      summary: getDepartment
+      description: Returns a single department
+      operationId: GetDepartment
+      parameters:
+      - name: departmentId
+        in: path
+        description: ID of department to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - department
+      summary: updateDepartment
+      description: Updates a single department
+      operationId: UpdateDepartment
+      parameters:
+      - name: departmentId
+        in: path
+        description: ID of department to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of establishment to restrict data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Department object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - department
+      summary: deleteDepartment
+      description: Deletes a department by ID
+      operationId: DeleteDepartment
+      parameters:
+      - name: departmentId
+        in: path
+        description: department to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/department/{departmentId}/staff:
+    post:
+      tags:
+      - department
+      summary: createDepartmentStaff
+      description: Links staff to a department
+      operationId: CreateDepartmentStaff
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: departmentId
+        in: path
+        description: ID of department
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Array of staff IDs to be linked to the department
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/department/{departmentId}/staff/{staffId}:
+    delete:
+      tags:
+      - department
+      summary: deleteDepartmentStaff
+      description: Deletes staff associations for a department
+      operationId: DeleteDepartmentStaff
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: departmentId
+        in: path
+        description: ID of department
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: staffId
+        in: path
+        description: ID of staff
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/reference/catchmentarea:
+    put:
+      tags:
+      - catchment
+      summary: updateEstablishmentCatchment
+      description: Updates catchment area against a establishment to contain only the specified UPRNs
+      operationId: UpdateEstablishmentCatchment
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of site
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: UPRNs of addresses that form catchment area associated to a site
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UPRN'
+              description: UPRNs of addresses that form catchment area associated to a site
+        required: true
+      responses:
+        202:
+          description: 202 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAsyncResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - catchment
+      summary: deleteEstablishmentCatchment
+      description: Deletes catchment data associated with an establishment
+      operationId: DeleteEstablishmentCatchment
+      parameters:
+      - name: establishmentId
+        in: path
+        description: ID of establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        202:
+          description: 202 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAsyncResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/catchmentarea/{uprn}:
+    get:
+      tags:
+      - catchment-getschools
+      summary: getCatchmentSchoolsForUPRN
+      description: Gets a list of catchment establishments based on a UPRN
+      operationId: GetCatchmentSchoolsForUPRN
+      parameters:
+      - name: uprn
+        in: path
+        description: uprn to filter data by
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatchmentEstablishment'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/region/{regionId}/reference/catchmentarea:
+    put:
+      tags:
+      - catchment
+      summary: updateRegionCatchment
+      description: Updates catchment data against multiple sites
+      operationId: UpdateRegionCatchment
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Catchment area that needs to be associated to multiple sites within a region
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CatchmentAreaForEstablishment'
+              description: Catchment area that needs to be associated to multiple sites within a region
+        required: true
+      responses:
+        200:
+          description: 202 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAsyncResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - catchment
+      summary: deleteRegionCatchment
+      description: Deletes catchment data associated with a region
+      operationId: DeleteRegionCatchment
+      parameters:
+      - name: regionId
+        in: path
+        description: ID of region
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        202:
+          description: 202 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiAsyncResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/reference/catchmentarea/{uprn}:
+    get:
+      tags:
+      - catchment
+      summary: getCatchmentStatus
+      description: Get an indication of whether a uprn is within the catchment area for an establishment
+      operationId: GetCatchmentStatus
+      parameters:
+      - name: establishmentId
+        in: path
+        description: The ID of the establishment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: uprn
+        in: path
+        description: The UPRN to be checked
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatchmentStatus'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/agency/medicalpractice:
+    post:
+      tags:
+      - reference
+      summary: addMedicalPractice
+      description: Creates a medical practice entry
+      operationId: AddMedicalPractice
+      parameters: []
+      requestBody:
+        description: MedicalPractice object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalPractice'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/agency/medicalpractice/{medicalPracticeId}:
+    get:
+      tags:
+      - reference
+      summary: getMedicalPractice
+      description: Gets an individual medical practice
+      operationId: GetMedicalPractice
+      parameters:
+      - name: medicalPracticeId
+        in: path
+        description: ID of MedicalPractice
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalPractice'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - reference
+      summary: updateMedicalPractice
+      description: Updates a medical practice entry
+      operationId: UpdateMedicalPractice
+      parameters:
+      - name: medicalPracticeId
+        in: path
+        description: ID of MedicalPractice
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: MedicalPractice object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalPractice'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - reference
+      summary: deleteMedicalPractice
+      description: Deletes a medical practice entry
+      operationId: DeleteMedicalPractice
+      parameters:
+      - name: medicalPracticeId
+        in: path
+        description: ID of MedicalPractice
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/agency/medicalpractice/search:
+    get:
+      tags:
+      - reference
+      summary: findMedicalPractices
+      description: Search for medical practices
+      operationId: findMedicalPractices
+      parameters:
+      - name: filterbypracticename
+        in: query
+        description: Tags to filter by
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: pagesize
+        in: query
+        description: no of records per page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageref
+        in: query
+        description: number of page to return
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalPracticeSummaryResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/simd:
+    post:
+      tags:
+      - reference
+      summary: addSIMDs
+      description: Adds SIMD entries
+      operationId: AddSIMDs
+      parameters: []
+      requestBody:
+        description: SIMD object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SIMD'
+              description: SIMD object
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - reference
+      summary: updateSIMDs
+      description: Updates SIMD entries
+      operationId: UpdateSIMDs
+      parameters: []
+      requestBody:
+        description: SIMD object
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SIMD'
+              description: SIMD object
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/simd/{postcode}:
+    get:
+      tags:
+      - reference
+      summary: getSIMD
+      description: Gets an individual SIMD
+      operationId: GetSIMD
+      parameters:
+      - name: postcode
+        in: path
+        description: Postcode
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SIMD'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    put:
+      tags:
+      - reference
+      summary: updateSIMD
+      description: Updates a SIMD entry
+      operationId: UpdateSIMD
+      parameters:
+      - name: postcode
+        in: path
+        description: Postcode
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: SIMD object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SIMD'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    delete:
+      tags:
+      - reference
+      summary: deleteSIMD
+      description: Deletes a SIMD entry
+      operationId: DeleteSIMD
+      parameters:
+      - name: postcode
+        in: path
+        description: Postcode
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/public/reference/simd/search:
+    get:
+      tags:
+      - reference
+      summary: searchPublicSIMD
+      description: Muliple tags can be provided with comma separated strings.
+      operationId: SearchPublicSIMD
+      parameters:
+      - name: filterbypostcode
+        in: query
+        description: Tags to filter by
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SIMD'
+                description: successful operation
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/scn:
+    get:
+      tags:
+      - SCN
+      summary: getNextSCN
+      description: Gets next SCN from bank for establishment
+      operationId: GetNextSCN
+      parameters:
+      - name: establishmentId
+        in: path
+        description: The ID of the site to get the next SCN for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SCN'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/scnblock/search:
+    get:
+      tags:
+      - central-scnbankmanagement
+      summary: getSCNBlockForSEEDCode
+      description: Gets the SCN block for the SEED code supplied in the search filter
+      operationId: GetSCNBlockForSEEDCode
+      parameters:
+      - name: filterbyseedcode
+        in: query
+        description: Tags to filter by
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SCNBlock'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/central/scnblock/{blockId}:
+    put:
+      tags:
+      - central-scnbankmanagement
+      summary: updateSCNBlock
+      description: Updates the SCN block for the supplied block id
+      operationId: UpdateSCNBlock
+      parameters:
+      - name: blockId
+        in: path
+        description: id of the SCN block that is to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Region object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SCNBlock'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/openinghours:
+    get:
+      tags:
+      - OpeningHours
+      summary: getOpeningHours
+      description: Gets the opening hours for the establishment. This is the full opening hour which may be longer than the teaching day
+      operationId: GetOpeningHours
+      parameters:
+      - name: establishmentId
+        in: path
+        description: The ID of the site to get the opening hours for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpeningHours'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+    post:
+      tags:
+      - OpeningHours
+      summary: addOpeningHours
+      description: Creates record of opening hours for establishment
+      operationId: AddOpeningHours
+      parameters:
+      - name: establishmentId
+        in: path
+        description: The ID of the site to get the opening hours for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: OpeningHours object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpeningHours'
+        required: true
+      responses:
+        200:
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+  /organisation/establishment/{establishmentId}/openinghours/{openingHoursId}:
+    put:
+      tags:
+      - OpeningHours
+      summary: updateOpeningHours
+      description: Updates the opening hours for an establishment
+      operationId: UpdateOpeningHours
+      parameters:
+      - name: establishmentId
+        in: path
+        description: id of establishment for which the opening hours that are to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: openingHoursId
+        in: path
+        description: id of the opening hours that are to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Region object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpeningHours'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        400:
+          description: 400 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+      deprecated: false
+components:
+  schemas:
+    ApiResponse:
+      title: ApiResponse
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        type:
+          type: string
+        message:
+          type: string
+          example: Operation Successful
+    ApiAsyncResponse:
+      title: ApiAsyncResponse
+      type: object
+      properties:
+        status:
+          type: string
+        batchId:
+          type: string
+          description: Identifier of asynchronous processing request
+          example: 101
+    BinaryImage:
+      title: BinaryImage
+      required:
+      - image
+      type: object
+      properties:
+        image:
+          type: string
+          description: Base64 string containing the image
+          format: binary
+    Pagination:
+      title: Pagination
+      required:
+      - pagesize
+      - pageNumber
+      - totalPages
+      - totalElements
+      type: object
+      properties:
+        pagesize:
+          type: integer
+          description: Total number of elements on a page
+          format: int32
+          example: 10
+        pageNumber:
+          type: integer
+          description: The current page number of the data returned
+          format: int32
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages for the data set
+          format: int32
+          example: 2
+        totalElements:
+          type: integer
+          description: The total number of elements within the entire data set
+          format: int32
+          example: 20
+    Active:
+      title: Active
+      enum:
+      - Active
+      - Inactive
+      type: string
+      description: fieldType
+      example: Active
+      default: Active
+    Address:
+      title: Address
+      required:
+      - uprnRef
+      - addressLine1
+      - city
+      - postcode
+      type: object
+      properties:
+        id:
+          type: string
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        uprnRef:
+          type: string
+          example: 100081043509
+        addressLine1:
+          type: string
+          example: 1 High Street
+        addressLine2:
+          type: string
+          example: City Centre
+        town:
+          type: string
+          example: Rutherglen
+        city:
+          type: string
+          example: Glasgow
+        region:
+          type: string
+          example: Renfrewshire
+        postcode:
+          type: string
+          example: G1 1AB
+        country:
+          type: string
+          example: Scotland
+    Asset:
+      title: Asset
+      required:
+      - name
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        name:
+          type: string
+          example: Main Projector
+        serialNumber:
+          type: string
+          example: 012340101
+        itemType:
+          type: string
+          example: Projector
+    Building:
+      title: Building
+      required:
+      - buildingName
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        buildingName:
+          type: string
+          example: Main Building
+        propertyName:
+          type: string
+          example: The School - Main Building
+        fax:
+          type: string
+          example: 01234 567890
+        telephone:
+          type: string
+          example: 01234 567890
+        address:
+          $ref: '#/components/schemas/Address'
+        buildingType:
+          $ref: '#/components/schemas/BuildingType'
+    BuildingSummary:
+      title: BuildingSummary
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        name:
+          type: string
+          example: Main Building
+        buildingType:
+          $ref: '#/components/schemas/BuildingType'
+    BuildingType:
+      title: BuildingType
+      enum:
+      - Internal
+      - External
+      type: string
+      description: type of building
+      example: Internal
+    CatchmentAreaForEstablishment:
+      title: CatchmentAreaForEstablishment
+      type: object
+      properties:
+        establishmentId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        catchmentArea:
+          type: array
+          items:
+            type: string
+          description: ''
+    CatchmentEstablishment:
+      title: CatchmentEstablishment
+      type: object
+      properties:
+        uprn:
+          type: string
+          example: 123
+        establishmentId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        establishmentName:
+          type: string
+          example: Glasgow High School
+        sector:
+          type: string
+          example: Secondary
+    CatchmentStatus:
+      title: CatchmentStatus
+      type: object
+      properties:
+        uprn:
+          type: string
+          example: 123
+        establishmentId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        inCatchmentArea:
+          type: boolean
+          example: True
+    Contact:
+      title: Contact
+      required:
+      - establishmentId
+      type: object
+      properties:
+        id:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        role:
+          type: string
+          example: facilities staff
+        firstName:
+          type: string
+          example: Joe
+        lastName:
+          type: string
+          example: Bloggs
+        phone:
+          type: string
+          example: 01234 567890
+        email:
+          type: string
+          example: joe.bloggs@theschool.co.uk
+        mobile:
+          type: string
+          example: 07123 456789
+        companyName:
+          type: string
+          example: South Lanarkshire Council
+        keyholder:
+          type: boolean
+          example: True
+        priority:
+          type: integer
+          format: int32
+          example: 1
+        termtime:
+          type: boolean
+          example: false
+        externalUser:
+          $ref: '#/components/schemas/ExternalUser'
+        emergency:
+          type: boolean
+        address:
+          $ref: '#/components/schemas/Address'
+        establishmentId:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        staffId:
+          type: string
+          example: 956285c1-4d78-4946-bab7-959fec1a2e85
+        regionId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+    ContactDetails:
+      title: ContactDetails
+      required:
+      - email
+      - mainTelephone
+      - address
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        website:
+          type: string
+          description: Establishment website address
+          example: www.theschool.co.uk
+        fax:
+          type: string
+          description: Fax number of establishment
+          example: 01234 567890
+        email:
+          type: string
+          description: Main email address of establishment
+          example: enquiries@theschool.co.uk
+        mainTelephone:
+          type: string
+          example: 01234 567890
+          description: Main telehpone number of establishment
+        secondaryTelephone:
+          type: string
+          description: Alternative telehpone number for the establishment
+          example: 01234 567890
+        address:
+          $ref: '#/components/schemas/Address'
+      description: Contact Details associated with an establishment
+    DayOpeningHours:
+      title: DayOpeningHours
+      required:
+      - id
+      - day
+      - openingTime
+      - closingTime
+      - dayOrder
+      type: object
+      properties:
+        id: 
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        day: 
+          type: string
+          description: day of the week, Monday to Friday
+          example: Monday
+        openingTime:
+          type: string
+          description: the time the establishment opens
+          example: 08:00
+        closingTime:
+          type: string
+          description: the time the establishment closes
+          example: 16:45
+        dayOrder:
+          type: integer
+          description: number for ordering in day of week order
+          example: 1
+    Denomination:
+      title: Denomination
+      enum:
+      - Non-Denomination
+      - Inter-Denomination
+      type: string
+      description: Type of denomination, restricted list
+      example: Non-Denomination
+    Department:
+      title: Department
+      required:
+      - departmentName
+      - departmentType
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        departmentName:
+          type: string
+          example: French
+        departmentType:
+          $ref: '#/components/schemas/DepartmentType'
+        facultyId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        subjectids:
+          type: array
+          items:
+            type: string
+            example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        staff:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffSummaryEstablishmentRecord'
+        management:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomSummary'
+    DepartmentSummary:
+      title: DepartmentSummary
+      required:
+      - departmentName
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        departmentName:
+          type: string
+          example: French
+    DepartmentType:
+      title: DepartmentType
+      enum:
+      - Subject
+      - Non-Subject
+      type: string
+      example: Subject
+    Document:
+      title: Document
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        documentName:
+          type: string
+          example: SchoolLogo.jpg
+        documentURLRef:
+          type: string
+        documentBody:
+          type: string
+        contentType:
+          type: string
+          description: entity header is used to indicate the media type of the resource
+          example: image
+    Establishment:
+      title: Establishment
+      required:
+      - establishmentName
+      - region-establishmentmanagementId
+      - establishmentType
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        establishmentName:
+          type: string
+          description: Name of the establishment
+          example: Glasgow High School
+        regionId:
+          type: string
+          description: Unique ID for the associated region, e.g. a UUID
+          example: 956285c1-4d78-4946-bab7-959fec1a2e85
+        regionLogoReference:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        costcentreCode:
+          type: string
+          example: 99ED001
+        authCode:
+          type: string
+          example: 01
+        capacity:
+          type: integer
+          description: Number of people which the school can support
+          format: int32
+          example: 1000
+        thumbnailReference:
+          type: string
+          description: ID of thumbnail reference
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        logoReference:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+          description: ID of school logo
+        seedcode:
+          type: string
+          example: 90110900
+        contactDetails:
+          $ref: '#/components/schemas/ContactDetails'
+        facilities:
+          $ref: '#/components/schemas/Facilities'
+        denomination:
+          $ref: '#/components/schemas/Denomination'
+        sector:
+          $ref: '#/components/schemas/Sector'
+        status:
+          $ref: '#/components/schemas/Status'
+        address:
+          $ref: '#/components/schemas/Address'
+        siteType:
+          type: string
+          example: Secondary
+        emergencyContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+          description: List of emergency contacts for the establishment
+        headTeacher:
+          $ref: '#/components/schemas/HeadTeacher'
+      description: Establishment entity which captures details relating to a school
+    EstablishmentBasic:
+      title: EstablishmentBasic
+      required:
+      - establishmentName
+      - region-establishmentmanagementId
+      - establishmentType
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        establishmentName:
+          type: string
+          description: The name of the establishment
+          example: Glasgow High School
+        address:
+          $ref: '#/components/schemas/Address'
+        telephone:
+          type: string
+          description: The phone number of the establishment
+          example: 01234 567890
+        fax:
+          type: string
+          description: The fax number of the establishment
+          example: 01234 567890
+        email:
+          type: string
+          description: The email address of the establishment
+          example: enquiries@theschool.co.uk
+        website:
+          type: string
+          description: The URL for the website of the establishment
+          example: www.theschool.co.uk
+    EstablishmentGroup:
+      type: object
+      description: Details of an establishment group
+      required:
+        - id
+        - region-establishmentmanagementId
+        - establishmentGroupName
+      properties:
+        id:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        regionId:
+          type: string
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        establishmentGroupName:
+          type: string
+          example: Est. Group 1
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstablishmentSummary'
+    EstablishmentGroupDetails:
+      type: object
+      description: Basic details of an establishment group
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        name:
+          type: string
+          example: Est. Group 1
+    EstablishmentGroupSummary:
+      type: object
+      description: Summary details of an establishment group allowing basic operation and searching
+      required:
+        - id
+        - region-establishmentmanagementId
+        - establishmentGroupName
+        - groupType
+      properties:
+        id:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        regionId:
+          type: string
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        establishmentGroupName:
+          type: string
+          example: Est. Group 1
+    EstablishmentGroupSummaryResponse:
+      type: object
+      required:
+        - results
+        - pagination
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstablishmentGroupSummary'
+          description: Array of EstablishmentGroupSummary items
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    EstablishmentSummaryDetails:
+      title: EstablishmentSummaryDetails
+      required:
+      - establishmentName
+      - region-establishmentmanagementId
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        establishmentName:
+          type: string
+          description: The name of the establishment
+          example: Glasgow High School
+        address:
+          $ref: '#/components/schemas/Address'
+        contactDetails:
+          $ref: '#/components/schemas/ContactDetails'
+        emergencyContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+          description: List of emergency contacts for the establishment
+        headTeacher:
+          $ref: '#/components/schemas/HeadTeacher'
+        facilities:
+          $ref: '#/components/schemas/Facilities'
+        logoReference:
+          type: string
+          description: ID of school logo
+          example: 956285c1-4d78-4946-bab7-959fec1a2e85
+        capacity:
+          type: integer
+          format: int32
+          example: 1000
+    EstablishmentSummaryResponse:
+      title: EstablishmentSummaryResponse
+      required:
+      - results
+      - pagination
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/EstablishmentSummary'
+          description: Array of EstablishmentSummary items
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    EstablishmentSummary:
+      title: EstablishmentSummary
+      required:
+      - establishmentName
+      - region-establishmentmanagementId
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        establishmentName:
+          type: string
+          description: Name of the establishment
+          example: Glasgow High School
+        regionId:
+          type: string
+          description: Unique ID for the associated region, e.g. a UUID
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        sector:
+          $ref: '#/components/schemas/Sector'
+        seedCode:
+          type: string
+          example: 90110900
+        establishmentGroup:
+          type: string
+          example: 956285c1-4d78-4946-bab7-959fec1a2e85
+        costcentreCode:
+          type: string
+          example: 99ED001
+      description: Establishment entity which captures details relating to a school
+    EstablishmentView:
+      title: EstablishmentView
+      required:
+      - establishmentName
+      - region-establishmentmanagementId
+      - establishmentType
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID for the record, e.g. a UUID
+        establishmentName:
+          type: string
+          description: The name of the establishment
+          example: Glasgow High School
+        establishmentStatus:
+          $ref: '#/components/schemas/Status'
+        costcentreCode:
+          type: string
+          example: 99ED001
+        authorityCode:
+          type: string
+          example: 99
+        sector:
+          $ref: '#/components/schemas/Sector'
+        siteType:
+          type: string
+          example: Secondary
+        emergencyContacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+          description: List of emergency contacts for the establishment
+        headTeacher:
+          $ref: '#/components/schemas/HeadTeacher'
+        faculties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Faculty'
+          description: List of faculties in the establishment
+        departments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+          description: List of departments in the establishment
+    ExternalUser:
+      title: ExternalUser
+      enum:
+      - Yes
+      - No
+      type: string
+      description: external user
+      example: Yes
+    Facilities:
+      title: Facilities
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        cctv:
+          type: boolean
+          example: True
+        kitchen:
+          type: boolean
+          example: False
+        cashlessCatering:
+          type: boolean
+          example: True
+    Faculty:
+      title: Faculty
+      required:
+      - facultyName
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        facultyName:
+          type: string
+          example: Modern Languages
+        facultyManagement:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        staff:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffSummaryEstablishmentRecord'
+        rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomSummary'
+    FacultySummary:
+      title: FacultySummary
+      required:
+      - facultyName
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        facultyName:
+          type: string
+          example: Modern Languages
+    HeadTeacher:
+      title: HeadTeacher
+      required:
+      - establishmentId
+      type: object
+      properties:
+        id:
+          type: string
+          example: 97a079e5-b784-469e-947f-db2d8a4d4b93
+        forename:
+          type: string
+          example: Joe
+        surname:
+          type: string
+          example: Bloggs
+        homeTelephone:
+          type: string
+          example: 01234 567890
+        mobile:
+          type: string
+          example: 07123 456789
+        termtime:
+          type: boolean
+          example: false
+
+    MedicalPractice:
+      title: MedicalPractice
+      required:
+      - medicalPracticeId
+      - practiceName
+      - postcode
+      - localAuthorityCode
+      - normalHoursPhone
+      - healthBoardCode
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        medicalPracticeId:
+          type: string
+          example: 100
+        practiceName:
+          type: string
+          example: High Street Surgery
+        property:
+          type: string
+          example: 1
+        street:
+          type: string
+          example: High Street
+        locality:
+          type: string
+          example: City Centre
+        town:
+          type: string
+          example: Glasgow
+        postcode:
+          type: string
+          example: G1 1AA
+        uprn:
+          type: string
+          example: 1234
+        localAuthorityCode:
+          type: integer
+          format: int32
+          example: 1
+        normalHoursPhone:
+          type: string
+          example: 01234 567890
+        outOfHoursPhone:
+          type: string
+          example: 01234 567891
+        mobileNumber:
+          type: string
+          example: 07123 456789
+        emailAddress:
+          type: string
+          example: general@highstsurgery.co.uk
+        website:
+          type: string
+          example: www.highstsurgery.co.uk
+        healthBoardCode:
+          type: integer
+          format: int32
+          example: 123
+        nhsCode:
+          type: integer
+          format: int32
+          example: 123
+        status:
+          $ref: '#/components/schemas/Active'
+    MedicalPracticeSummary:
+      title: MedicalPracticeSummary
+      required:
+      - medicalPracticeId
+      - practiceName
+      - postcode
+      - localAuthorityCode
+      - phone
+      - healthBoardCode
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        medicalPracticeId:
+          type: string
+          example: 100
+        practiceName:
+          type: string
+          example: High Street Surgery
+        postcode:
+          type: string
+          example: G1 1AA
+        localAuthorityCode:
+          type: integer
+          format: int32
+          example: 01
+        phone:
+          type: string
+          example: 01234 567890
+        healthBoardCode:
+          type: integer
+          format: int32
+          example: 1
+        status:
+          $ref: '#/components/schemas/Active'
+    MedicalPracticeSummaryResponse:
+      title: MedicalPracticeSummaryResponse
+      required:
+      - results
+      - pagination
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicalPracticeSummary'
+          description: Array of MedicalPracticeSummary items
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    OpeningHours:
+      title: OpeningHours
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DayOpeningHours'
+          description: Array of DayOpeningHours items
+    Region:
+      title: Region
+      required:
+      - region-establishmentmanagementName
+      type: object
+      properties:
+        id:
+          type: string
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        regionName:
+          type: string
+          example: Glasgow City
+        regionCode:
+          type: string
+          example: 01
+    RegionSummary:
+      title: RegionSummary
+      required:
+      - region-establishmentmanagementName
+      type: object
+      properties:
+        id:
+          type: string
+          example: e559a23c-66fa-4524-9c88-72e9102baa04
+        regionName:
+          type: string
+          example: Glasgow City
+        regionCode:
+          type: string
+          example: 01
+    RegionSummaryResponse:
+      title: RegionSummaryResponse
+      required:
+      - results
+      - pagination
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegionSummary'
+          description: Array of RegionSummary items
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    Room:
+      title: Room
+      required:
+      - roomNumber
+      - roomType
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        roomName:
+          type: string
+          example: Assembly Hall
+        roomNumber:
+          type: string
+          example: 101
+        buildingId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        departmentId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        ownerId:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        phoneNumber:
+          type: string
+          example: 01234 567890
+        floor:
+          type: integer
+          format: int32
+          example: 1
+        wheelchairAccess:
+          type: boolean
+          example: True
+        areaSquareMetres:
+          type: number
+          example: 100
+        roomCategory:
+          $ref: '#/components/schemas/RoomCategory'
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        capactities:
+          type: array
+          items: 
+            $ref: '#/components/schemas/RoomCapacity'
+    RoomCapacity:
+      title: RoomCapacity
+      type: object
+      properties:
+        id: 
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e68997d9fa
+        capacity:
+          type: integer
+          format: int32
+          example: 30
+        roomUsageType:
+          $ref: '#/components/schemas/RoomUsageType'
+    RoomCategory:
+      title: RoomCategory
+      enum:
+      - Teaching Space
+      - Practical Space
+      - General Space
+      - Outdoor Space
+      type: string
+      description: room classification
+      example: Teaching Space
+    RoomSummary:
+      title: RoomSummary
+      required:
+      - buildingId
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        roomName:
+          type: string
+          example: Assembly Hall
+        roomNumber:
+          type: string
+          example: 101
+        ownerid:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+    RoomSummaryResponse:
+      title: RoomSummaryResponse
+      required:
+      - results
+      - pagination
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoomSummary'
+          description: ''
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    RoomUsageType:
+      title: RoomUsageType
+      enum:
+      - Teaching
+      - Practical
+      - Teaching Exam
+      - Practical Exam
+      type: string
+      description: ways in which a room can be used
+      example: Teaching
+    SCN:
+      title: SCN
+      type: object
+      properties:
+        scn:
+          type: string
+          example: 123456789
+    SCNBlock:
+      title: SCNBlock
+      type: object
+      properties:
+        id: 
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa 
+        SEEDCode:
+          type: string
+          example: 123456
+        startNumber:
+          type: string
+          example: 456789123
+        endNumber:
+          type: string
+          example: 456789223
+        lastNumberIssued:
+          type: string
+          example: 456789124
+        replenishmentRequestThreshold:
+          type: integer
+          example: 5
+    Sector:
+      title: Sector
+      enum:
+      - Early Years
+      - Primary
+      - Secondary
+      - Special
+      - Headquarters
+      - Through School
+      type: string
+      description: Used to ensure correct timetabling structure is setup, preset list
+      example: Early Years
+    SIMD:
+      title: SIMD
+      required:
+      - postcode
+      - rank
+      - vigintile
+      - decile
+      - quintile
+      type: object
+      properties:
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        postcode:
+          type: string
+          example: G1 1AA
+        rank:
+          type: integer
+          format: int32
+          example: 123
+        vigintile:
+          type: integer
+          format: int32
+          example: 10
+        decile:
+          type: integer
+          format: int32
+          example: 5
+        quintile:
+          type: integer
+          format: int32
+          example: 2
+    StaffSummaryEstablishmentRecord:
+      title: StaffSummaryEstablishmentRecord
+      required:
+        - knownAsForename
+        - knownAsSurname
+      type: object
+      properties:
+        staffid:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+        knownAsForename:
+          type: string
+          example: Joe
+        knownAsSurname:
+          type: string
+          example: Bloggs
+        id:
+          type: string
+          example: 20f50f57-4a3f-4058-abac-81e688d7d9fa
+    Status:
+      title: Status
+      enum:
+      - Open
+      - Closed
+      type: string
+      description: Status of the establishment
+      example: Open
+    UPRN:
+      title: UPRN
+      required:
+      - uprn
+      type: object
+      properties:
+        uprn:
+          type: string
+          example: 123
+tags:
+  - name: central-regionmanagement
+    description: Paths for centrally administered items
+  - name: central-regionlogo
+    description: Paths to handle region logos
+  - name: region-establishmentmanagement
+    description: Details of establishments
+  - name: region-establishmentlogo
+    description: Paths to handle establishment logos
+  - name: region-establishmentsummaries
+    description: Paths for establishment summary GET methods
+  - name: establishmentgroup
+    description: Details about our establishment groups
+  - name: accommodation
+    description: Accommodation Details
+  - name: accommodation-gets
+    description: Accommodation GET methods
+  - name: faculty
+    description: Faculty Details
+  - name: faculty-gets
+    description: Faculty GET methods
+  - name: department
+    description: Description of department services
+  - name: department-gets
+    description: Department GET methods
+  - name: catchment
+    description: Catchment Details
+  - name: catchment-getschools
+    description: Catchment get schools for UPRN method
+  - name: reference
+    description: Grouping of supporting reference data

@@ -5,11 +5,11 @@ import javax.validation.constraints.Size;
 
 public class BasicCountry {
     private Integer id;
-    @Size(min = 1, max = 150, message = "Country name cannot be more than 150 characters")
+    @Size(min = 1, max = 150, message = "Country name cannot be more than 150 characters: ")
     @NotNull
     private String name;
     @NotNull
-    @Size(min = 0, max = 150, message = "Capital cannot be more than 150 characters")
+    @Size(min = 0, max = 150, message = "Capital cannot be more than 150 characters: ")
     private String capital;
     @NotNull
     private long population;
@@ -17,7 +17,7 @@ public class BasicCountry {
     @Size(max = 200)
     private String flag;
     @NotNull
-    @Size(min = 1, max = 150, message = "Region cannot be more than 150 characters")
+    @Size(min = 1, max = 150, message = "Region cannot be more than 150 characters: ")
     private String region;
 
     public BasicCountry(){

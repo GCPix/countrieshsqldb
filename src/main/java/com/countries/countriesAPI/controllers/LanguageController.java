@@ -119,7 +119,7 @@ public class LanguageController {
         Response response;
         ValidatorHelper validator = new ValidatorHelper();
         String validationMessage = validator.validate(language);
-        if (!validationMessage.isEmpty()) {
+        if (validationMessage == null) {
 	        if (languageId >= 0 && language != null) {
 	
 	            try {
