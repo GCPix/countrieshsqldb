@@ -20,35 +20,7 @@ import com.countries.countriesAPI.models.Currency;
 
 @Path("currency")
 public class CurrencyController {
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCurrency(@PathParam("id") int currencyId) {
-        Response response;
-        CurrencyDataAccess cda = new CurrencyDataAccess();
-        Currency c = null;
-        try {
-            c = cda.getCurrency(currencyId);
-        } catch (ClassNotFoundException | SQLException | IOException e) {
-
-            e.printStackTrace();
-            response = Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity("Something went wrong, contact someone who can sort it").build();
-        }
-        
-        if (c != null) {
-            response = Response.ok().entity(c).build();
-
-        } else {
-            
-            String errorString = "Something went wrong check your data";
-            response = Response.status(404).entity(errorString).build();
-
-        }
-        return response;
-    }
-
-    @POST
+	@POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
 
@@ -77,6 +49,35 @@ public class CurrencyController {
         return response;
 
     }
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCurrency(@PathParam("id") int currencyId) {
+        Response response;
+        CurrencyDataAccess cda = new CurrencyDataAccess();
+        Currency c = null;
+        try {
+            c = cda.getCurrency(currencyId);
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+
+            e.printStackTrace();
+            response = Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Something went wrong, contact someone who can sort it").build();
+        }
+        
+        if (c != null) {
+            response = Response.ok().entity(c).build();
+
+        } else {
+            
+            String errorString = "Something went wrong check your data";
+            response = Response.status(404).entity(errorString).build();
+
+        }
+        return response;
+    }
+
+    
 
     @PUT
     @Path("/{id}")

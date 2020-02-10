@@ -84,6 +84,7 @@ public class LanguageDataAccess {
         try(Connection  con = dc.getConnection();){
         	SqlScriptParser ssp = new SqlScriptParser();
         	String sqlString = ssp.getSqlString(sqlScript);
+        	
             try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 ps.setString(1, language.getIso639_1());
                 ps.setString(2, language.getIso639_2());
