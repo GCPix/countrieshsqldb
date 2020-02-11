@@ -1,7 +1,7 @@
 package com.countries.countriesAPI.models;
 
 public class RegionalBlock {
-    private int id;
+    private Integer id;
     private String name;
     private String acronym;
 
@@ -17,7 +17,7 @@ public class RegionalBlock {
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

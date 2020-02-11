@@ -25,11 +25,14 @@ public class CurrencyController {
     @Produces(MediaType.APPLICATION_JSON)
 
     public Response addCurrency(Currency currency) {
+		System.out.println("just before cda created");
         Response response;
         CurrencyDataAccess cda = new CurrencyDataAccess();
         int currencyId = -1;
         try {
+        	System.out.println("just before addcurrency runs");
             currencyId = cda.addCurrency(currency);
+            System.out.println(currencyId);
         } catch (ClassNotFoundException | SQLException | IOException e) {
 
             e.printStackTrace();
@@ -41,6 +44,7 @@ public class CurrencyController {
         // URI createdUri =
         // UriBuilder.fromResource(CurrencyController.class).path("/{id}").build(Integer.toString(currencyId));
         if (currencyId >= 0) {
+        	System.out.println("get response with currency id as: " + currencyId);
             response = Response.status(Status.CREATED).entity(currencyId).build();
         } else {
             response = Response.status(Status.BAD_REQUEST).entity("Something went wrong, check your data").build();

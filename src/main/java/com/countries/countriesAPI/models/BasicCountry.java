@@ -42,7 +42,7 @@ public class BasicCountry {
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

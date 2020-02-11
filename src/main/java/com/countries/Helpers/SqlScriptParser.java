@@ -22,7 +22,7 @@ public class SqlScriptParser {
 		 }
 	                
 		
-		String sqlScript = sb.toString();
+		String sqlScript = sb.toString().trim();
 		return sqlScript;
 	}
 }

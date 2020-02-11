@@ -2,7 +2,11 @@ package com.countries.countriesAPI.models;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 public class Currency {
+	@JsonIgnore
     private Integer id;
     @NotNull
     private String code;
@@ -12,10 +16,12 @@ public class Currency {
     private String symbol;
 
     public Currency(){};
+    
 
     /**
      * @return the id
      */
+//    @JsonIgnore
     public Integer getId() {
         return id;
     }
@@ -23,7 +29,8 @@ public class Currency {
     /**
      * @param id the id to set
      */
-    public void setId(int id) {
+//    @JsonIgnore
+    public void setId(Integer id) {
         this.id = id;
     }
     /**

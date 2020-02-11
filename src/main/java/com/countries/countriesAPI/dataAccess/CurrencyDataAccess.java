@@ -72,9 +72,9 @@ public class CurrencyDataAccess {
 
             try(Connection con = dbc.getConnection();){
             	SqlScriptParser  ssp = new SqlScriptParser();
-//            	String sqlString = ssp.getSqlString(sqlScript);
+            	// String sqlString = ssp.getSqlString(sqlScript);
             
-            	String sqlString = "INSERT INTO currency (code, name, symbol) SELECT * FROM (VALUES (?,?,?)) WHERE NOT EXISTS (SELECT * FROM currency WHERE name =?);";
+           	String sqlString = "INSERT INTO currency (code, name, symbol) SELECT * FROM (VALUES (?,?,?)) WHERE NOT EXISTS (SELECT * FROM currency WHERE name =?);";
 	            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS)) {
 	                ps.setString(1, currency.getCode());
 	                ps.setString(2, currency.getName());
