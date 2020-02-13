@@ -89,7 +89,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"iso639_1\": \"GMgc\",\n\t\"iso639_2\": \"GMMgc\",\n\t\"name\": \"Gerrygc\",\n\t\"nativeName\": \"Geraldgc\"\n}"
+					"raw": "{\n\t\"iso639_1\": \"xx\",\n\t\"iso639_2\": \"xxx\",\n\t\"name\": \"Gerrygc\",\n\t\"nativeName\": \"Geraldgc\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/language",
@@ -147,7 +147,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/language/113",
+					"raw": "http://localhost:8080/language/111",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -155,7 +155,7 @@
 					"port": "8080",
 					"path": [
 						"language",
-						"113"
+						"111"
 					]
 				}
 			},
@@ -284,10 +284,26 @@
 		{
 			"name": "getCountrySummary",
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"currencyFilterList\": [1]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8080/countries/summary?sortField=capital&filterField=population&filterValue='English'",
+					"raw": "http://localhost:8080/countries/summary?sortField=id&pageSize=30&pageNumber=3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -300,15 +316,25 @@
 					"query": [
 						{
 							"key": "sortField",
-							"value": "capital"
-						},
-						{
-							"key": "filterField",
-							"value": "population"
+							"value": "id"
 						},
 						{
 							"key": "filterValue",
-							"value": "'English'"
+							"value": "'English'",
+							"disabled": true
+						},
+						{
+							"key": "filter",
+							"value": "{\"languageFilterList\": [6, 52]}",
+							"disabled": true
+						},
+						{
+							"key": "pageSize",
+							"value": "30"
+						},
+						{
+							"key": "pageNumber",
+							"value": "3"
 						}
 					]
 				}
