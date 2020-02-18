@@ -57,7 +57,8 @@ public class CountryController {
         Response response;
         CountryDataAccess cda = new CountryDataAccess();
         try {
-            cda.updateCountry(country, deletedCurrencies, deletedRegionalBlocks, deletedRegionalBlocks,
+
+            cda.updateCountry(country, deletedCurrencies,  deletedLanguages, deletedBorders,
                     deletedRegionalBlocks);
         } catch (ClassNotFoundException | SQLException | IOException e) {
 

@@ -156,18 +156,18 @@ public class CountryDataAccess {
     	String sqlScript = "../../db/sqlScripts/populateBorderTable.sql";
     	SqlScriptParser ssp = new SqlScriptParser();
         String sqlString = ssp.getSqlString(sqlScript);
-            
-            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
-                for (BasicCountry b : country.getBorderCountriesList()) {
+           if(country.getBorderCountriesList() != null && country.getBorderCountriesList().size() > 0) {
+               try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
+                   for (BasicCountry b : country.getBorderCountriesList()) {
 
-                    ps.setInt(1, country.getId());
-                    ps.setInt(2, b.getId());
-                    ps.setInt(3, country.getId());
-                    ps.setInt(4, b.getId());
-                    ps.execute();
-                }
-            }
-
+                       ps.setInt(1, country.getId());
+                       ps.setInt(2, b.getId());
+                       ps.setInt(3, country.getId());
+                       ps.setInt(4, b.getId());
+                       ps.execute();
+                   }
+               }
+           }
    }
 	//TODO: not sure how to properly check this for errors
     public void updateCountry(Country country, List<Integer> deletedCurrencies, List<Integer> deletedLanguages,
@@ -234,7 +234,7 @@ public class CountryDataAccess {
         String sqlScript = "../../db/sqlScripts/populateCountryRBTable.sql";
         SqlScriptParser ssp = new SqlScriptParser();  
         String sqlString = ssp.getSqlString(sqlScript);
-        
+        if(country.getRegionalBlocks()!= null && country.getRegionalBlocks().size() >0) {
             try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
                 for (RegionalBlock rb : country.getRegionalBlocks()) {
 
@@ -247,6 +247,8 @@ public class CountryDataAccess {
                 }
             }
    
+        }
+
     }
 
     private Country getAllLanguagesForCountry(Country country, Connection con)
@@ -372,38 +374,45 @@ public class CountryDataAccess {
     }
 
     private void populateCountryCurrencyTable(Country country, Connection con) throws SQLException, IOException {
+    	
         String sqlScript = "../../db/sqlScripts/populateCountryCurrencyTable.sql";
        SqlScriptParser ssp = new SqlScriptParser();
        String sqlString  = ssp.getSqlString(sqlScript);
-            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
-                for (Currency cocu : country.getCurrencies()) {
+       if (country.getCurrencies() != null && country.getCurrencies().size() > 0) {
+           try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
+               for (Currency cocu : country.getCurrencies()) {
 
-                    ps.setInt(1, country.getId());
-                    ps.setInt(2, cocu.getId());
-                    ps.setInt(3, country.getId());
-                    ps.setInt(4, cocu.getId());
-                    ps.execute();
+                   ps.setInt(1, country.getId());
+                   ps.setInt(2, cocu.getId());
+                   ps.setInt(3, country.getId());
+                   ps.setInt(4, cocu.getId());
+                   ps.execute();
 
-                }
-            }
+               }
+           }
+       }
+     
     }
  
     private void populateCountryLanguageTable(Country country, Connection con) throws SQLException, IOException {
         String sqlScript = "../../db/sqlScripts/populateCountryLanguageTable.sql";
         SqlScriptParser ssp = new SqlScriptParser();
         String sqlString = ssp.getSqlString(sqlScript);
-           
-            try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
-                for (Language l : country.getLanguages()) {
+          
+        if( country.getLanguages() != null && country.getLanguages().size() > 0) {
+        	  try (PreparedStatement ps = con.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);) {
+                  for (Language l : country.getLanguages()) {
 
-                    ps.setInt(1, country.getId());
-                    ps.setInt(2, l.getId());
-                    ps.setInt(3, country.getId());
-                    ps.setInt(4, l.getId());
-                    ps.execute();
+                      ps.setInt(1, country.getId());
+                      ps.setInt(2, l.getId());
+                      ps.setInt(3, country.getId());
+                      ps.setInt(4, l.getId());
+                      ps.execute();
 
-                }
-            }
+                  }
+              }
+        }
+          
     }
 
     private int getCountriesCount(Connection con, String sqlString) throws SQLException {
