@@ -176,6 +176,7 @@ public class CountryDataAccess {
         DbConnection dbc = new DbConnection();
         Connection con = dbc.getConnection();
 
+        updateBasicCountryTable(country, con);
         // checks for missing relationships and adds them
         populateCountryCurrencyTable(country, con);
 
@@ -187,50 +188,69 @@ public class CountryDataAccess {
 
         // checks for removed currencies and deletes from relationship table
         int i = -1;
+        
         ArrayList<Integer> dc = new ArrayList<>();
-        dc.addAll(deletedCurrencies);
-        for (int x : dc) {
-            try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_currency WHERE country_id = "
-                    + country.getId() + " AND currency_id = " + x + ";")) {
-                i = ps.executeUpdate();
+        if (deletedCurrencies != null && deletedCurrencies.size() > 0){
+            dc.addAll(deletedCurrencies);
+            for (int x : dc) {
+                try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_currency WHERE country_id = "
+                        + country.getId() + " AND currency_id = " + x + ";")) {
+                    i = ps.executeUpdate();
+                }
             }
-        }
 
+
+        }
         // checks for removed languages and deletes from relationship table
         int j = -1;
-      
-        for (int x : deletedLanguages) {
-            try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_language WHERE country_id = "
-                    + country.getId() + " AND language_id = " + x + ";")) {
-                j = ps.executeUpdate();
+        if (deletedLanguages != null && deletedLanguages.size() > 0){    
+            for (int x : deletedLanguages) {
+                try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_language WHERE country_id = "
+                        + country.getId() + " AND language_id = " + x + ";")) {
+                    j = ps.executeUpdate();
+                }
             }
         }
-
         // checks for removed borders and deletes them from the relationship table
         int k = -1;
-
-        for (int x : deletedBorders) {
-            try (PreparedStatement ps = con.prepareStatement("DELETE FROM border WHERE country_id = " + country.getId()
-                    + " AND country_border_id = " + x + ";")) {
-                k = ps.executeUpdate();
+        if (deletedBorders != null && deletedBorders.size() > 0){  
+            for (int x : deletedBorders) {
+                try (PreparedStatement ps = con.prepareStatement("DELETE FROM border WHERE country_id = " + country.getId()
+                        + " AND country_border_id = " + x + ";")) {
+                    k = ps.executeUpdate();
+                }
+                
             }
-            
         }
-
         // checks for removed regional blocks and deletes them from the relationship
         // table
         int l = -1;
-
-        for (int x : deletedRegionalBlocks) {
-            try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_regionalblock WHERE country_id = "
-                    + country.getId() + " AND regionalblock_id = " + x + ";")) {
-                l = ps.executeUpdate();
+        if (deletedRegionalBlocks != null && deletedRegionalBlocks.size() > 0){  
+            for (int x : deletedRegionalBlocks) {
+                try (PreparedStatement ps = con.prepareStatement("DELETE FROM country_regionalblock WHERE country_id = "
+                        + country.getId() + " AND regionalblock_id = " + x + ";")) {
+                    l = ps.executeUpdate();
+                }
+                
             }
-            
         }
     }
  
-    private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException, IOException {
+    private void updateBasicCountryTable(Country country, Connection con) throws SQLException {
+		String sql = "update country set name = ?, capital = ?, population = ?, flag = ?, region = ? where id = ?";
+		
+		try(PreparedStatement ps = con.prepareStatement(sql)){
+			ps.setString(1, country.getName());
+			ps.setString(2,  country.getCapital());
+			ps.setLong(3, country.getPopulation());
+			ps.setString(4, country.getFlag());
+			ps.setString(5, country.getRegion());
+			ps.setInt(6, country.getId());
+			ps.execute();
+		}
+	}
+
+	private void populateCountryRegionalBlock(Country country, Connection con) throws SQLException, IOException {
         String sqlScript = "../../db/sqlScripts/populateCountryRBTable.sql";
         SqlScriptParser ssp = new SqlScriptParser();  
         String sqlString = ssp.getSqlString(sqlScript);
