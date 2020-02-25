@@ -34,6 +34,8 @@ public class CountriesController {
         ResponsePaged countrySummary = null;
         CountryDataAccess cda = new CountryDataAccess();
         Response response;
+        
+
         try {
             // As they can't do anything to sort it I think it should be internal server error, wondering if I should just have one catch?
         	

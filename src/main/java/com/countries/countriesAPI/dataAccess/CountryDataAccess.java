@@ -84,13 +84,14 @@ public class CountryDataAccess {
         // get summary list
         try (Connection con = dbc.getConnection()) {
             String sqlQuery;
-
+            boolean alreadyInList;
             sqlQuery = createCountrySummaryQuery(filter, page, startRecord);
 
             try (PreparedStatement ps = con.prepareStatement(sqlQuery)) {
 
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
+                    	alreadyInList = false;
                         c = new BasicCountry();
                         c.setId(rs.getInt("id"));
                         c.setName(rs.getString("name"));
@@ -98,7 +99,15 @@ public class CountryDataAccess {
                         c.setPopulation(rs.getLong("population"));
                         c.setRegion(rs.getString("region"));
                         c.setFlag(rs.getString("flag"));
-                        countriesSummary.add(c);
+                        for (BasicCountry bc: countriesSummary) {
+                        	
+                        	if (c.getId() == bc.getId()) {
+                        		alreadyInList = true;
+                        	}
+                        }
+                        if (!alreadyInList) {
+                        	countriesSummary.add(c);
+                        }
                     }
                 }
             }
@@ -484,7 +493,7 @@ public class CountryDataAccess {
             sqlRegionalBlockJoinCondition = sqlRegionalBlockStart + filter.getRegionalBlockFilterList().get(0).toString();
             //set remaining language ids 
             if (filter.getRegionalBlockFilterList().size()>1){
-                for (int x =1; x<=filter.getCurrencyFilterList().size()-1; x++){
+                for (int x =1; x<=filter.getRegionalBlockFilterList().size()-1; x++){
                     sqlRegionalBlockJoinCondition = sqlRegionalBlockJoinCondition + "," + filter.getRegionalBlockFilterList().get(x).toString();
                 }
             }
@@ -547,8 +556,10 @@ public class CountryDataAccess {
         String sqlQuery;
         
         String sqlStringStartGetCountry = "SELECT * FROM country c";
-        String sqlStringOrderPaged = " ORDER BY " + page.getSortBy() + " LIMIT " + startRecord + "," + page.getPageSize() + ";";
+        String sqlStringGroupBy = "GROUP BY c.id, c.name, c.capital, c.flag, c.population, c.region, cl.id ";
+        String sqlStringOrderPaged =  "ORDER BY " + page.getSortBy() + " LIMIT " + startRecord + "," + page.getPageSize() + ";";
  
+        // distinct and group by should have got me single versions, clearly wrong need to look at it further. fix in list for now
         sqlStringConditions = getConditionalBlock(filter);
         sqlQuery = sqlStringStartGetCountry + sqlStringConditions + sqlStringOrderPaged;
         
