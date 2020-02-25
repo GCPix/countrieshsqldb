@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.ws.rs.NotFoundException;
 
@@ -73,6 +75,7 @@ public class CountryDataAccess {
             MalformedURLException {
         BasicCountry c;
         List<BasicCountry> countriesSummary = new ArrayList<>();
+        Map<Integer, BasicCountry> countryMap = new HashMap<Integer, BasicCountry>();
         
         ResponsePaged rp = null;
         
@@ -84,14 +87,18 @@ public class CountryDataAccess {
         // get summary list
         try (Connection con = dbc.getConnection()) {
             String sqlQuery;
-            boolean alreadyInList;
+
             sqlQuery = createCountrySummaryQuery(filter, page, startRecord);
 
             try (PreparedStatement ps = con.prepareStatement(sqlQuery)) {
 
                 try (ResultSet rs = ps.executeQuery()) {
+
+                	
+                	
+                	
                     while (rs.next()) {
-                    	alreadyInList = false;
+//                        boolean alreadyInList = false;
                         c = new BasicCountry();
                         c.setId(rs.getInt("id"));
                         c.setName(rs.getString("name"));
@@ -99,15 +106,18 @@ public class CountryDataAccess {
                         c.setPopulation(rs.getLong("population"));
                         c.setRegion(rs.getString("region"));
                         c.setFlag(rs.getString("flag"));
-                        for (BasicCountry bc: countriesSummary) {
-                        	
-                        	if (c.getId() == bc.getId()) {
-                        		alreadyInList = true;
-                        	}
-                        }
-                        if (!alreadyInList) {
-                        	countriesSummary.add(c);
-                        }
+                        countryMap.put(c.getId(), c);
+                        
+//                        for (int i = countriesSummary.size()-1; i>=0; i--) {
+//                        
+//                        	if (c.getId() == countriesSummary.get(i).getId()) {
+//                        		alreadyInList = true;
+//                        		
+//                        	}
+//                        }
+//                        if (!alreadyInList) {
+//                        	countriesSummary.add(c);
+//                        }
                     }
                 }
             }
@@ -120,7 +130,8 @@ public class CountryDataAccess {
         this.setPagePaths(page);
         
         if (page.getTotalPages()>=page.getPageNumber()&& countriesSummary != null){
-        	rp = new ResponsePaged(page, countriesSummary);
+//        	rp = new ResponsePaged(page, countriesSummary);
+        	rp = new ResponsePaged(page, countryMap.values());
         }
         
         return rp;
