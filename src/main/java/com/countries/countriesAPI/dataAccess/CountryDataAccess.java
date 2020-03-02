@@ -136,8 +136,9 @@ public class CountryDataAccess {
         
         return rp;
     }
-    
-    public int deleteCountry(int countryId) throws SQLException, ClassNotFoundException {
+   
+
+	public int deleteCountry(int countryId) throws SQLException, ClassNotFoundException {
         DbConnection dbc = new DbConnection();
         int noRowsReturned;
         try (Connection con = dbc.getConnection();
@@ -456,17 +457,22 @@ public class CountryDataAccess {
     }
 
     private int getCountriesCount(Connection con, String sqlString) throws SQLException {
-        String sql = "SELECT COUNT(*) AS total FROM country c";
-        sql = sql + sqlString;
-        int count;
+        String sql = "SELECT DISTINCT c.id, COUNT(*) AS total FROM country c";
+        sql = sql + sqlString + " GROUP BY c.id";
+        int count = 0;
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery();) {
-                rs.next();
-                count = rs.getInt("total");
+                while(rs.next()) {
+//                	count += rs.getInt("total");
+                	count++;
+                }
+     
+       
+               
             }
 
         }
-
+    
         return count;
     }
 
@@ -566,7 +572,7 @@ public class CountryDataAccess {
         String sqlStringConditions;
         String sqlQuery;
         
-        String sqlStringStartGetCountry = "SELECT * FROM country c";
+        String sqlStringStartGetCountry = "SELECT * FROM country c ";
         String sqlStringGroupBy = "GROUP BY c.id, c.name, c.capital, c.flag, c.population, c.region, cl.id ";
         String sqlStringOrderPaged =  "ORDER BY " + page.getSortBy() + " LIMIT " + startRecord + "," + page.getPageSize() + ";";
  
@@ -618,7 +624,7 @@ public class CountryDataAccess {
         String sqlRegionalBlockJoinCondition;
         String joinDefinition;
         String joinedConditions = "";
-        String sqlStringConditions = null;
+        String sqlStringConditions = "";
 
         // gets the field and value relating to Country and checks the db for it
         if (filter.getCountryFilterField() != null) {
